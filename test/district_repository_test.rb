@@ -37,7 +37,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
     actual = dr.find_all_matching("AG")
-    expected = ["AGATE 300", "AGUILAR REORGANIZED 6"]
-    assert_equal expected, actual
+    assert_instance_of District, actual[0]
+    assert_instance_of District, actual[1]
   end
 end

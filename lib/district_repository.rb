@@ -26,7 +26,7 @@ class DistrictRepository
   def find_all_matching(name)
     @districts.keys.select do |districts|
       name == districts[0..(name.length - 1)]
-    end
+    end.map{|key| @districts[key]}
   end
 
 private
@@ -42,6 +42,5 @@ private
       row[:location]
     end.uniq!
   end
-
 
 end
