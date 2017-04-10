@@ -23,4 +23,17 @@ class EnrollmentTest < Minitest::Test
    p "#{e.name} => #{e.enrollment_statistics}"
   end
 
+  def test_it_can_find_k_participation_by_year
+    e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+    actual = e.kindergarten_participation_by_year
+    expected = {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}
+    assert_equal expected, actual
+  end
+
+  def test_it_can_find_k_participation_in_year
+    e = Enrollment.new({:name => "ACADEMY 20", :kindergarten_participation => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+    actual = e.kindergarten_participation_in_year(2011)
+    expected = 0.354
+    assert_equal expected, actual
+  end
 end
