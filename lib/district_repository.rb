@@ -20,12 +20,7 @@ class DistrictRepository
   end
 
   def find_by_name(name)
-    name.upcase!
-    if !@districts.keys.include?(name)
-      nil
-    else
-      @districts[name]
-    end
+    @districts[name.upcase]if @districts.keys.include?(name.upcase)
   end
 
   def find_all_matching(name)

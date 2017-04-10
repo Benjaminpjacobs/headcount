@@ -6,7 +6,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     assert_instance_of DistrictRepository, dr
   end
-  
+
   def test_it_can_create_district_hash
     dr = DistrictRepository.new
     dr.add_district(District.new(:name => "ACADEMY 20"))
