@@ -13,9 +13,13 @@ class EnrollmentRepository
 
   def parse_csv(enrollment_heading, enrollment_info)
     contents = CSV.open enrollment_info, headers: true, header_converters: :symbol
-    enrollment_data = []
     district_enrollments = divide_districts(contents)
     district_enrollments = format_district_enrollments(district_enrollments)
+    add_study_heading(enrollment_heading, district_enrollments)
+  end
+
+  def add_study_heading(enrollment_heading, district_enrollments)
+    enrollment_data = []
     district_enrollments.each do |k, v|
       enrollment_data << [enrollment_heading, k, v]
     end
