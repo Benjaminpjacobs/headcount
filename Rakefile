@@ -1,11 +1,11 @@
 task :default => [:test]
 
 task :test do
-  ruby "test/district_repository_test.rb"
-  ruby "test/district_test.rb"
-  ruby "test/enrollment_repository_test.rb"
-  ruby "test/enrollment_test.rb"
-  ruby "test/headcount_analyst_test.rb"
+  ruby "./test/district_repository_test.rb"
+  ruby "./test/district_test.rb"
+  ruby "./test/enrollment_repository_test.rb"
+  ruby "./test/enrollment_test.rb"
+  ruby "./test/headcount_analyst_test.rb"
 
 end
 

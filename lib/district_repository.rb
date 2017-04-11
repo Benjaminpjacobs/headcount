@@ -6,29 +6,38 @@ require 'pry'
 class DistrictRepository
   attr_accessor :districts, :enrollment_repository
 
-  def initialize  
+  def initialize
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
   end
 
   def load_data(args)
-    # binding.pry
     generate_districts(args)
     @enrollment_repository.load_data(args)
     update_districts
   end
 
   def find_by_name(name)
-    @districts[name.upcase]if @districts.keys.include?(name.upcase)
+    @districts[name.upcase]if district_exists?(name)
   end
 
   def find_all_matching(name)
-    @districts.keys.select do |districts|
-      name == districts[0..(name.length - 1)]
-    end.map{|key| @districts[key]}
+    collect_matching_keys(name).map do |key| 
+      @districts[key]
+    end
   end
 
 private
+
+  def collect_matching_keys(name)
+    @districts.keys.select do |districts|
+      name == districts[0..(name.length - 1)]
+    end
+  end
+
+  def district_exists?(name)
+    @districts.keys.include?(name.upcase)
+  end
 
   def add_district(district)
     @districts[district.name] = district
@@ -41,10 +50,9 @@ private
   end
 
   def generate_districts(args)
-    # binding.pry
     contents = CSV.open args[args.keys[0]].values[0], headers: true, header_converters: :symbol
     district_list = map_individual_districts(contents)
-    create_district_objects(district_list) 
+    create_district_objects(district_list)
   end
 
   def create_district_objects(district_list)
