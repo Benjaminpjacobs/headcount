@@ -1,9 +1,12 @@
 require './lib/enrollment'
+require 'forwardable'
 require 'csv'
 require 'pry'
 
 class EnrollmentRepository
+  extend Forwardable
   attr_accessor :enrollments
+
   def initialize
     @enrollments = {}
   end
@@ -59,9 +62,9 @@ class EnrollmentRepository
 
   def populate_hash(district_enrollments, row)
     if district_enrollments.keys.include?(row[:location].upcase)
-      district_enrollments[row[:location].upcase] << [row[:timeframe], row[:data].to_f]
+      district_enrollments[row[:location].upcase] << [row[:timeframe].to_i, row[:data].to_f]
     else
-      district_enrollments[row[:location].upcase] = [[row[:timeframe], row[:data].to_f]]
+      district_enrollments[row[:location].upcase] = [[row[:timeframe].to_i, row[:data].to_f]]
     end
   end
 

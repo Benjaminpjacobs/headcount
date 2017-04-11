@@ -23,10 +23,10 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     actual = er.parse_csv(:kindergarten, "./data/Kindergartners in full-day program.csv")[0]
     expected = [:kindergarten, "COLORADO", {
-      "2007"=>0.39465, "2006"=>0.33677, "2005"=>0.27807,
-      "2004"=>0.24014, "2008"=>0.5357,  "2009"=>0.598,
-      "2010"=>0.64019, "2011"=>0.672,   "2012"=>0.695,
-      "2013"=>0.70263, "2014"=>0.74118}]
+      2007=>0.39465, 2006=>0.33677, 2005=>0.27807,
+      2004=>0.24014, 2008=>0.5357,  2009=>0.598,
+      2010=>0.64019, 2011=>0.672,   2012=>0.695,
+      2013=>0.70263, 2014=>0.74118}]
     assert_equal expected, actual
   end
 
@@ -50,7 +50,7 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv", :high_school_graduation => './data/High school graduation rates.csv', :pupil_enrollment => "./data/Pupil enrollment.csv", :special_education => "./data/Special education.csv"}})
     actual = er.enrollments["COLORADO"].enrollment_statistics[:high_school_graduation]
-    expected = {"2010"=>0.724, "2011"=>0.739, "2012"=>0.75354, "2013"=>0.769, "2014"=>0.773}
+    expected = {2010=>0.724, 2011=>0.739, 2012=>0.75354, 2013=>0.769, 2014=>0.773}
     assert_equal expected, actual
   end
 

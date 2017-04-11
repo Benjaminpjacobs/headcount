@@ -1,9 +1,8 @@
 class District
-  attr_accessor :name, :enrollments
+  attr_accessor :name, :enrollments, :testing, :economic_profile
   
   def initialize(args)
     @name = args[:name]
-    @enrollments = args[:enrollments]
   end
   
 end

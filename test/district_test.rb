@@ -8,7 +8,7 @@ class DistrictTest < Minitest::Test
   end
 
   def test_it_can_take_hash_argument
-    d = District.new({:name => "ACADEMY 20"})
+    d = District.new({:name => "ACADEMY 20", :enrollments => "test", :testing => "test2", :economic_profile => "test3"})
     assert_equal "ACADEMY 20", d.name
   end
 end
