@@ -3,7 +3,7 @@ require 'csv'
 require 'pry'
 
 class EnrollmentRepository
-  attr_reader :enrollments
+  attr_accessor :enrollments
   def initialize
     @enrollments = {}
   end
@@ -31,8 +31,7 @@ class EnrollmentRepository
     arg[:enrollment].each do |key, value|
       enrollment_study = parse_csv(key, value)
       enrollment_study.each do |district|
-        generate_enrollment(district)
-        
+        insert_enrollment_data(district)
       end
     end
   end
@@ -41,7 +40,7 @@ class EnrollmentRepository
     @enrollments[name.upcase] if @enrollments.keys.include?(name.upcase)
   end
 
-  def generate_enrollment(enrollment_data)
+  def insert_enrollment_data(enrollment_data)
     if @enrollments.keys.include?(enrollment_data[1])
       @enrollments[enrollment_data[1]].enrollment_statistics[enrollment_data[0]] = enrollment_data[2]
     else
