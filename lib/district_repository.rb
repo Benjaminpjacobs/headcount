@@ -40,14 +40,14 @@ private
   end
 
   def generate_districts(args)
-    contents = CSV.open args[:enrollment][:kindergarten], headers: true, header_converters: :symbol
+    contents = CSV.open args[args.keys[0]].values.join, headers: true, header_converters: :symbol
     district_list = map_individual_districts(contents)
     create_district_objects(district_list) 
   end
 
   def create_district_objects(district_list)
     district_list.each do |district|
-      add_district(District.new(:name => district.upcase))
+      add_district(District.new(:name => district.upcase)) if !@districts.keys.include?(district.upcase)
     end
   end
 

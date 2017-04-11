@@ -1,6 +1,7 @@
 {
   "Unit Tests": {
     "coverage": {
+
       "/Users/benjaminross/turing/1module/projects/headcount/lib/headcount_analyst.rb": [
         1,
         null,
@@ -10,5 +11,6 @@
       ]
     },
     "timestamp": 1491918426
+
   }
 }
