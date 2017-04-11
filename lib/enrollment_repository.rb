@@ -46,7 +46,6 @@ class EnrollmentRepository
     end
   end
 
-
   private
 
   def add_study_heading(enrollment_heading, district_enrollments)
