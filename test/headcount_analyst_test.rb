@@ -4,13 +4,9 @@ require './lib/district_repository'
 
 class HeadcountAnalystTest < Minitest::Test
 
-  def setup
-    @dr = DistrictRepository.new
-    @dr.load_data({
-      :enrollment => {
-        :kindergarten => "./data/Kindergartners in full-day program.csv"
-      }
-      })
+    def setup
+      @dr = DistrictRepository.new
+      @dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
       district = @dr.find_by_name("ACADEMY 20")
     end
 
