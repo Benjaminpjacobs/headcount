@@ -14,7 +14,7 @@
       <img src="./assets/0.10.0/loading.gif" alt="loading"/>
     </div>
     <div id="wrapper" style="display:none;">
-      <div class="timestamp">Generated <abbr class="timeago" title="2017-04-11T08:35:31-06:00">2017-04-11T08:35:31-06:00</abbr></div>
+      <div class="timestamp">Generated <abbr class="timeago" title="2017-04-11T08:46:02-06:00">2017-04-11T08:46:02-06:00</abbr></div>
       <ul class="group_tabs"></ul>
 
       <div id="content">
@@ -25,7 +25,7 @@
      covered at
      <span class="covered_strength">
        <span class="green">
-         450.66
+         450.71
        </span>
     </span> hits/line)
   </h2>
@@ -93,11 +93,11 @@
       <tr>
         <td class="strong"><a href="#592fa66a68e26584d7dea634fc3bc17fadbbb765" class="src_link" title="lib/headcount_analyst.rb">lib/headcount_analyst.rb</a></td>
         <td class="green strong">100.0 %</td>
-        <td>32</td>
+        <td>34</td>
         <td>19</td>
         <td>19</td>
         <td>0</td>
-        <td>2.4</td>
+        <td>2.7</td>
       </tr>
       
     </tbody>
@@ -1333,43 +1333,43 @@
         <li class="covered" data-hits="1" data-linenumber="15">
           <span class="hits">1</span>
           
-          <code class="ruby">    comparison = district_repository.find_by_name(comparison)</code>
+          <code class="ruby">    base = base[:against]</code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="16">
           <span class="hits">1</span>
           
-          <code class="ruby">    comparison_values = comparison.enrollments.kindergarten_participation_by_year</code>
+          <code class="ruby">    comparison_values = district_kindergarten_participation(comparison)</code>
         </li>
       
         <li class="covered" data-hits="1" data-linenumber="17">
           <span class="hits">1</span>
           
-          <code class="ruby">    base = base[:against]</code>
+          <code class="ruby">    base_values = district_kindergarten_participation(base)</code>
         </li>
       
-        <li class="covered" data-hits="1" data-linenumber="18">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    base = district_repository.find_by_name(base)</code>
-        </li>
-      
-        <li class="covered" data-hits="1" data-linenumber="19">
-          <span class="hits">1</span>
-          
-          <code class="ruby">    base_values = base.enrollments.kindergarten_participation_by_year</code>
-        </li>
-      
-        <li class="covered" data-hits="12" data-linenumber="20">
+        <li class="covered" data-hits="12" data-linenumber="18">
           <span class="hits">12</span>
           
           <code class="ruby">    comparison_values.merge(base_values) { |key, c_value, b_value| (c_value/b_value).round(3)}.sort.to_h</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="21">
+        <li class="never" data-hits="" data-linenumber="19">
           
           
           <code class="ruby">  end</code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="20">
+          
+          
+          <code class="ruby"></code>
+        </li>
+      
+        <li class="covered" data-hits="1" data-linenumber="21">
+          <span class="hits">1</span>
+          
+          <code class="ruby">  private</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="22">
@@ -1381,58 +1381,70 @@
         <li class="covered" data-hits="1" data-linenumber="23">
           <span class="hits">1</span>
           
-          <code class="ruby">  private</code>
-        </li>
-      
-        <li class="never" data-hits="" data-linenumber="24">
-          
-          
-          <code class="ruby"></code>
-        </li>
-      
-        <li class="covered" data-hits="1" data-linenumber="25">
-          <span class="hits">1</span>
-          
           <code class="ruby">  def generate_yearly_statistical_average(district)</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="26">
+        <li class="covered" data-hits="4" data-linenumber="24">
           <span class="hits">4</span>
           
-          <code class="ruby">    district = district_repository.find_by_name(district)</code>
+          <code class="ruby">    district_values = district_kindergarten_participation(district).values</code>
         </li>
       
-        <li class="covered" data-hits="4" data-linenumber="27">
-          <span class="hits">4</span>
-          
-          <code class="ruby">    district_values = district.enrollments.kindergarten_participation_by_year.values</code>
-        </li>
-      
-        <li class="covered" data-hits="4" data-linenumber="28">
+        <li class="covered" data-hits="4" data-linenumber="25">
           <span class="hits">4</span>
           
           <code class="ruby">    district_stat = (district_values.inject(&amp;:+)/district_values.length).round(3)</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="29">
+        <li class="never" data-hits="" data-linenumber="26">
           
           
           <code class="ruby">  end</code>
         </li>
       
-        <li class="never" data-hits="" data-linenumber="30">
+        <li class="never" data-hits="" data-linenumber="27">
           
           
           <code class="ruby"></code>
+        </li>
+      
+        <li class="covered" data-hits="1" data-linenumber="28">
+          <span class="hits">1</span>
+          
+          <code class="ruby">  def district_kindergarten_participation(district)</code>
+        </li>
+      
+        <li class="covered" data-hits="6" data-linenumber="29">
+          <span class="hits">6</span>
+          
+          <code class="ruby">    district = district_repository.find_by_name(district)</code>
+        </li>
+      
+        <li class="covered" data-hits="6" data-linenumber="30">
+          <span class="hits">6</span>
+          
+          <code class="ruby">    district.enrollments.kindergarten_participation_by_year</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="31">
           
           
-          <code class="ruby"></code>
+          <code class="ruby">  end</code>
         </li>
       
         <li class="never" data-hits="" data-linenumber="32">
+          
+          
+          <code class="ruby"></code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="33">
+          
+          
+          <code class="ruby"></code>
+        </li>
+      
+        <li class="never" data-hits="" data-linenumber="34">
           
           
           <code class="ruby">end</code>
