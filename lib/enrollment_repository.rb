@@ -22,13 +22,6 @@ class EnrollmentRepository
     add_study_heading(enrollment_heading, district_enrollments)
   end
 
-  def add_study_heading(enrollment_heading, district_enrollments)
-    enrollment_data = []
-    district_enrollments.each do |k, v|
-      enrollment_data << [enrollment_heading, k, v]
-    end
-    enrollment_data
-  end
 
   def load_data(arg)
     arg[:enrollment].each do |key, value|
@@ -43,6 +36,7 @@ class EnrollmentRepository
     @enrollments[name.upcase] if @enrollments.keys.include?(name.upcase)
   end
 
+
   def insert_enrollment_data(enrollment_data)
     if @enrollments.keys.include?(enrollment_data[1])
       @enrollments[enrollment_data[1]].enrollment_statistics[enrollment_data[0]] = enrollment_data[2]
@@ -50,6 +44,17 @@ class EnrollmentRepository
       district = Enrollment.new({:name => enrollment_data[1], enrollment_data[0] => enrollment_data[2]})
       add_enrollment(district)
     end
+  end
+
+
+  private
+
+  def add_study_heading(enrollment_heading, district_enrollments)
+    enrollment_data = []
+    district_enrollments.each do |k, v|
+      enrollment_data << [enrollment_heading, k, v]
+    end
+    enrollment_data
   end
 
   def divide_districts(contents)

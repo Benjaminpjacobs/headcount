@@ -36,4 +36,18 @@ class EnrollmentTest < Minitest::Test
     expected = 0.354
     assert_equal expected, actual
   end
+  def test_it_can_find_graduation_rate_by_year
+    e = Enrollment.new({:name => "ACADEMY 20", :kindergarten => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+    e.add_new_statistics({:name => "ACADEMY 20", :high_school_graduation=> {2010 => 0.895, 2011 => 0.895, 2012 => 0.889, 2013 => 0.913, 2014 => 0.898}})
+    actual = e.graduation_rate_by_year
+    expected = { 2010 => 0.895,2011 => 0.895, 2012 => 0.889, 2013 => 0.913,2014 => 0.898}
+    assert_equal expected, actual
+  end
+  def test_it_can_find_graduation_rate_in_year
+    e = Enrollment.new({:name => "ACADEMY 20", :kindergarten => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}})
+    e.add_new_statistics({:name => "ACADEMY 20", :high_school_graduation => {2010 => 0.895, 2011 => 0.895, 2012 => 0.889, 2013 => 0.913, 2014 => 0.898}})
+    actual = e.graduation_rate_in_year(2010)
+    expected = 0.895
+    assert_equal expected, actual
+  end
 end

@@ -7,12 +7,6 @@ class DistrictRepositoryTest < Minitest::Test
     assert_instance_of DistrictRepository, dr
   end
 
-  def test_it_can_create_district_hash
-    dr = DistrictRepository.new
-    dr.add_district(District.new(:name => "ACADEMY 20"))
-    assert_instance_of District, dr.districts["ACADEMY 20"]
-  end
-
   def test_it_can_parse_districts_from_csv
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})

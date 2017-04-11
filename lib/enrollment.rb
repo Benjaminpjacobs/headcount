@@ -17,4 +17,12 @@ class Enrollment
   def kindergarten_participation_in_year(year)
     @enrollment_statistics[:kindergarten][year].round(3)
   end
+
+  def graduation_rate_by_year
+    @enrollment_statistics[:high_school_graduation]
+  end
+
+  def graduation_rate_in_year(year)
+    @enrollment_statistics[:high_school_graduation][year].round(3)
+  end
 end
