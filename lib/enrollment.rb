@@ -3,7 +3,7 @@ class Enrollment
   def initialize(args)
     @name = args[:name]
     @enrollment_statistics = {}
-    @enrollment_statistics[:kindergarten] = args[:kindergarten]
+    @enrollment_statistics[args.keys[1]] = args[args.keys[1]]
   end
 
   def add_new_statistics(args)

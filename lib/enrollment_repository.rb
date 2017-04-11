@@ -1,10 +1,8 @@
 require './lib/enrollment'
 require 'forwardable'
 require 'csv'
-require 'pry'
 
 class EnrollmentRepository
-  extend Forwardable
   attr_accessor :enrollments
 
   def initialize
@@ -45,7 +43,6 @@ class EnrollmentRepository
       add_enrollment(district)
     end
   end
-
 
   private
 
