@@ -20,6 +20,19 @@ class HeadcountAnalyst
     statistical_average_per_year(comparison_values, base_values)
   end
 
+  def kindergarten_participation_against_high_school_graduation(district)
+    (high_school_graduation_variation(district)/
+    kindergarten_participation_rate_variation(district, :against => 'COLORADO')).round(3)
+  end
+
+  def high_school_graduation_variation(district)
+    binding.pry
+    base = district_repository.find_by_name("COLORADO").enrollments.graduation_rate_by_year
+    comparison = district_repository.find_by_name(district).enrollments.graduation_rate_by_year
+    (generate_yearly_statistical_average(comparison.values) / 
+    generate_yearly_statistical_average(base.values)).round(3)
+  end
+
   private
 
   def statistical_average_per_year(comparison_values, base_values)

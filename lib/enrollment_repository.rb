@@ -1,4 +1,4 @@
-require './lib/enrollment'
+require_relative 'enrollment'
 require 'forwardable'
 require 'csv'
 
@@ -57,12 +57,12 @@ class EnrollmentRepository
   def divide_districts(contents)
     district_enrollments = {}
     contents = contents.map do |row|
-      populate_hash(district_enrollments, row)
+      populate_district_enrollments(district_enrollments, row)
     end
     district_enrollments
   end
 
-  def populate_hash(district_enrollments, row)
+  def populate_district_enrollments(district_enrollments, row)
     if district_enrollments.keys.include?(row[:location].upcase)
       district_enrollments[row[:location].upcase] << [row[:timeframe].to_i, row[:data].to_f]
     else

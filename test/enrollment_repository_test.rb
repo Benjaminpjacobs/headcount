@@ -1,6 +1,6 @@
-require './test/test_helper.rb'
-require './lib/enrollment_repository.rb'
-require './lib/enrollment'
+require_relative 'test_helper.rb'
+require_relative '../lib/enrollment_repository.rb'
+require_relative '../lib/enrollment'
 require 'pry'
 class EnrollmentRepositoryTest < Minitest::Test
 

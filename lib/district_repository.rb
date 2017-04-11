@@ -1,17 +1,18 @@
-require './lib/district'
-require './lib/enrollment_repository'
+require_relative 'district'
+require_relative 'enrollment_repository'
 require 'csv'
 require 'pry'
 
 class DistrictRepository
   attr_accessor :districts, :enrollment_repository
 
-  def initialize
+  def initialize  
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
   end
 
   def load_data(args)
+    # binding.pry
     generate_districts(args)
     @enrollment_repository.load_data(args)
     update_districts
@@ -40,7 +41,8 @@ private
   end
 
   def generate_districts(args)
-    contents = CSV.open args[args.keys[0]].values.join, headers: true, header_converters: :symbol
+    # binding.pry
+    contents = CSV.open args[args.keys[0]].values[0], headers: true, header_converters: :symbol
     district_list = map_individual_districts(contents)
     create_district_objects(district_list) 
   end

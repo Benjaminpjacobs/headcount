@@ -1,6 +1,7 @@
-require './test/test_helper'
-require './lib/district_repository'
-require './lib/district'
+require_relative 'test_helper'
+require_relative '../lib/district_repository'
+require_relative '../lib/district'
+
 class DistrictRepositoryTest < Minitest::Test
   def test_it_exists
     dr = DistrictRepository.new
@@ -61,7 +62,7 @@ class DistrictRepositoryTest < Minitest::Test
 
   def test_interaction_pattern
     dr = DistrictRepository.new
-    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
+    dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv", :high_school_graduation => "./data/High school graduation rates.csv"}})
     district = dr.find_by_name("ACADEMY 20")
     actual = district.enrollments.kindergarten_participation_in_year(2010)
     expected = 0.436
