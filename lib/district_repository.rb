@@ -36,7 +36,7 @@ private
 
   def update_districts
     @districts.each do |k, v|
-      @districts[k].enrollments = @enrollment_repository.enrollments[k]
+      @districts[k].enrollment = @enrollment_repository.enrollment[k]
     end
   end
 

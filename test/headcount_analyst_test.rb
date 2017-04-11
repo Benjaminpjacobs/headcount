@@ -52,8 +52,29 @@ class HeadcountAnalystTest < Minitest::Test
     def test_kindergarten_participation_against_hs_graduation
       hc = HeadcountAnalyst.new(@dr)
       actual = hc.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
-      expected = 1.234
+      expected = 0.642
       assert_equal expected, actual
+    end
+
+    def test_kindergarten_participation_against_hs_graduation
+      hc = HeadcountAnalyst.new(@dr)
+      assert hc.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    end
+
+    def test_compile_statewide_participation_correlations
+      hc = HeadcountAnalyst.new(@dr)
+      refute hc.compile_statewide_participation_correlation
+    end
+
+    def test_calculates_statewide_correlation
+      hc = HeadcountAnalyst.new(@dr)
+      refute hc.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
+    end
+
+    def test_calculates_across_subsets
+      hc = HeadcountAnalyst.new(@dr)
+      assert hc.kindergarten_participation_correlates_with_high_school_graduation(
+      :across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
     end
 
   end

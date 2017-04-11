@@ -1,5 +1,5 @@
 class District
-  attr_accessor :name, :enrollments, :testing, :economic_profile
+  attr_accessor :name, :enrollment, :testing, :economic_profile
   
   def initialize(args)
     @name = args[:name]

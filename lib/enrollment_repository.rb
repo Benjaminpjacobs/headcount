@@ -3,14 +3,14 @@ require 'forwardable'
 require 'csv'
 
 class EnrollmentRepository
-  attr_accessor :enrollments
+  attr_accessor :enrollment
 
   def initialize
-    @enrollments = {}
+    @enrollment = {}
   end
 
   def add_enrollment(enrollment)
-    @enrollments[enrollment.name] = enrollment
+    @enrollment[enrollment.name] = enrollment
   end
 
   def parse_csv(enrollment_heading, enrollment_info)
@@ -31,13 +31,13 @@ class EnrollmentRepository
   end
 
   def find_by_name(name)
-    @enrollments[name.upcase] if @enrollments.keys.include?(name.upcase)
+    @enrollment[name.upcase] if @enrollment.keys.include?(name.upcase)
   end
 
 
   def insert_enrollment_data(enrollment_data)
-    if @enrollments.keys.include?(enrollment_data[1])
-      @enrollments[enrollment_data[1]].enrollment_statistics[enrollment_data[0]] = enrollment_data[2]
+    if @enrollment.keys.include?(enrollment_data[1])
+      @enrollment[enrollment_data[1]].enrollment_statistics[enrollment_data[0]] = enrollment_data[2]
     else
       district = Enrollment.new({:name => enrollment_data[1], enrollment_data[0] => enrollment_data[2]})
       add_enrollment(district)

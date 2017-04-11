@@ -39,7 +39,7 @@ class DistrictRepositoryTest < Minitest::Test
   def test_if_can_instance_and_load_enrollment_repo
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
-    actual = dr.enrollment_repository.enrollments["COLORADO"].enrollment_statistics[:kindergarten]
+    actual = dr.enrollment_repository.enrollment["COLORADO"].enrollment_statistics[:kindergarten]
     expected = {2007=>0.39465, 2006=>0.33677, 
                 2005=>0.27807, 2004=>0.24014, 
                 2008=>0.5357, 2009=>0.598, 
@@ -51,7 +51,7 @@ class DistrictRepositoryTest < Minitest::Test
   def test_it_can_connect_district_object_to_enrollment_info
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
-    actual = dr.districts["COLORADO"].enrollments.enrollment_statistics[:kindergarten]
+    actual = dr.districts["COLORADO"].enrollment.enrollment_statistics[:kindergarten]
     expected = {2007=>0.39465, 2006=>0.33677, 
                 2005=>0.27807, 2004=>0.24014, 
                 2008=>0.5357, 2009=>0.598, 
@@ -64,7 +64,7 @@ class DistrictRepositoryTest < Minitest::Test
     dr = DistrictRepository.new
     dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv", :high_school_graduation => "./data/High school graduation rates.csv"}})
     district = dr.find_by_name("ACADEMY 20")
-    actual = district.enrollments.kindergarten_participation_in_year(2010)
+    actual = district.enrollment.kindergarten_participation_in_year(2010)
     expected = 0.436
     assert_equal expected, actual
     

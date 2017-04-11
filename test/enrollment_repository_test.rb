@@ -13,8 +13,8 @@ class EnrollmentRepositoryTest < Minitest::Test
     er = EnrollmentRepository.new
     er.add_enrollment(Enrollment.new({:name => "ACADEMY 20",
       :kindergarten => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}}))
-    assert_instance_of Enrollment, er.enrollments["ACADEMY 20"]
-    expected = er.enrollments.keys
+    assert_instance_of Enrollment, er.enrollment["ACADEMY 20"]
+    expected = er.enrollment.keys
     actual = ["ACADEMY 20"]
     assert_equal expected, actual
   end
@@ -41,7 +41,7 @@ class EnrollmentRepositoryTest < Minitest::Test
   def test_enrollment_can_load_data
     er = EnrollmentRepository.new
     er.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv"}})
-    actual = er.enrollments.keys.count
+    actual = er.enrollment.keys.count
     expected = 181
     assert_equal expected, actual
   end
@@ -49,7 +49,7 @@ class EnrollmentRepositoryTest < Minitest::Test
   def test_enrollment_can_load_more_than_one_study
     er = EnrollmentRepository.new
     er.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv", :high_school_graduation => './data/High school graduation rates.csv', :pupil_enrollment => "./data/Pupil enrollment.csv", :special_education => "./data/Special education.csv"}})
-    actual = er.enrollments["COLORADO"].enrollment_statistics[:high_school_graduation]
+    actual = er.enrollment["COLORADO"].enrollment_statistics[:high_school_graduation]
     expected = {2010=>0.724, 2011=>0.739, 2012=>0.75354, 2013=>0.769, 2014=>0.773}
     assert_equal expected, actual
   end
