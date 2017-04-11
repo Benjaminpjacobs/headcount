@@ -1,5 +1,6 @@
 require './lib/enrollment'
 require 'csv'
+require 'pry'
 
 class EnrollmentRepository
   attr_reader :enrollments
@@ -30,8 +31,8 @@ class EnrollmentRepository
     arg[:enrollment].each do |key, value|
       enrollment_study = parse_csv(key, value)
       enrollment_study.each do |district|
-        district = generate_enrollment(district)
-        add_enrollment(district)
+        generate_enrollment(district)
+        
       end
     end
   end
@@ -41,7 +42,12 @@ class EnrollmentRepository
   end
 
   def generate_enrollment(enrollment_data)
-    Enrollment.new({:name => enrollment_data[1], enrollment_data[0] => enrollment_data[2]})
+    if @enrollments.keys.include?(enrollment_data[1])
+      @enrollments[enrollment_data[1]].enrollment_statistics[enrollment_data[0]] = enrollment_data[2]
+    else
+      district = Enrollment.new({:name => enrollment_data[1], enrollment_data[0] => enrollment_data[2]})
+      add_enrollment(district)
+    end
   end
 
   def divide_districts(contents)
