@@ -1,8 +1,12 @@
 require './lib/enrollment'
+require 'forwardable'
 require 'csv'
+require 'pry'
 
 class EnrollmentRepository
-  attr_reader :enrollments
+  extend Forwardable
+  attr_accessor :enrollments
+
   def initialize
     @enrollments = {}
   end
@@ -18,20 +22,12 @@ class EnrollmentRepository
     add_study_heading(enrollment_heading, district_enrollments)
   end
 
-  def add_study_heading(enrollment_heading, district_enrollments)
-    enrollment_data = []
-    district_enrollments.each do |k, v|
-      enrollment_data << [enrollment_heading, k, v]
-    end
-    enrollment_data
-  end
 
   def load_data(arg)
     arg[:enrollment].each do |key, value|
       enrollment_study = parse_csv(key, value)
       enrollment_study.each do |district|
-        district = generate_enrollment(district)
-        add_enrollment(district)
+        insert_enrollment_data(district)
       end
     end
   end
@@ -40,8 +36,25 @@ class EnrollmentRepository
     @enrollments[name.upcase] if @enrollments.keys.include?(name.upcase)
   end
 
-  def generate_enrollment(enrollment_data)
-    Enrollment.new({:name => enrollment_data[1], enrollment_data[0] => enrollment_data[2]})
+
+  def insert_enrollment_data(enrollment_data)
+    if @enrollments.keys.include?(enrollment_data[1])
+      @enrollments[enrollment_data[1]].enrollment_statistics[enrollment_data[0]] = enrollment_data[2]
+    else
+      district = Enrollment.new({:name => enrollment_data[1], enrollment_data[0] => enrollment_data[2]})
+      add_enrollment(district)
+    end
+  end
+
+
+  private
+
+  def add_study_heading(enrollment_heading, district_enrollments)
+    enrollment_data = []
+    district_enrollments.each do |k, v|
+      enrollment_data << [enrollment_heading, k, v]
+    end
+    enrollment_data
   end
 
   def divide_districts(contents)
@@ -54,9 +67,9 @@ class EnrollmentRepository
 
   def populate_hash(district_enrollments, row)
     if district_enrollments.keys.include?(row[:location].upcase)
-      district_enrollments[row[:location].upcase] << [row[:timeframe], row[:data].to_f]
+      district_enrollments[row[:location].upcase] << [row[:timeframe].to_i, row[:data].to_f]
     else
-      district_enrollments[row[:location].upcase] = [[row[:timeframe], row[:data].to_f]]
+      district_enrollments[row[:location].upcase] = [[row[:timeframe].to_i, row[:data].to_f]]
     end
   end
 
