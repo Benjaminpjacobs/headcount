@@ -75,20 +75,28 @@ class StatewideTestRepository
   def populate_district_tests(district_tests, row)
     if district_tests.keys.include?(row[:location].upcase)
       district_tests[row[:location].upcase] << 
-      [row[:timeframe].to_i, row[:score].downcase.to_sym, row[:data].to_f]
+      [row[:timeframe].to_i, row[:score].downcase.to_sym, check_if_na(row[:data])]
     else
       district_tests[row[:location].upcase] = 
-      [[row[:timeframe].to_i, row[:score].downcase.to_sym, row[:data].to_f]]
+      [[row[:timeframe].to_i, row[:score].downcase.to_sym, check_if_na(row[:data])]]
+    end
+  end
+
+  def check_if_na(datum)
+    if datum == "N/A"
+      datum
+    else
+      datum.to_f
     end
   end
 
   def populate_district_tests_subject(district_tests, row)
     if district_tests.keys.include?(row[:location].upcase)
       district_tests[row[:location].upcase] << 
-      [row[:race_ethnicity].split(' ').join.downcase.to_sym, row[:timeframe].to_i, row[:data].to_f]
+      [row[:race_ethnicity].split(' ').join.downcase.to_sym, row[:timeframe].to_i, check_if_na(row[:data])]
     else
       district_tests[row[:location].upcase] = 
-      [[row[:race_ethnicity].split(' ').join.downcase.to_sym, row[:timeframe].to_i, row[:data].to_f]]
+      [[row[:race_ethnicity].split(' ').join.downcase.to_sym, row[:timeframe].to_i, check_if_na(row[:data])]]
     end
   end
 

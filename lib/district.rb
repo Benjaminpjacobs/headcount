@@ -3,6 +3,11 @@ class District
 
   def initialize(args)
     @name = args[:name]
+    @testing = ''
+  end
+
+  def statewide_test
+    @testing
   end
 
 end

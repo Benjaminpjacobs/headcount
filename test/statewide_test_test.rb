@@ -46,4 +46,15 @@ class StatewideTestTest < Minitest::Test
       assert_equal expected, actual
   end
   
+  def test_proficient_for_subject_by_grade_in_year
+    actual = @str.tests["ACADEMY 20"].proficient_for_subject_by_grade_in_year(:math, 3, 2008)
+    expected = 0.857
+    assert_equal expected, actual
+  end
+
+  def test_proficient_by_race_in_year_subject
+    actual = @str.tests["ACADEMY 20"].proficient_for_subject_by_race_in_year(:math, :asian, 2012)
+    expected = 0.818
+    assert_equal expected, actual
+  end
 end
