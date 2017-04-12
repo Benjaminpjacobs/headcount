@@ -60,12 +60,7 @@ class HeadcountAnalystTest < Minitest::Test
       hc = HeadcountAnalyst.new(@dr)
       assert hc.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
     end
-
-    def test_compile_statewide_participation_correlations
-      hc = HeadcountAnalyst.new(@dr)
-      refute hc.compile_statewide_participation_correlation
-    end
-
+    
     def test_calculates_statewide_correlation
       hc = HeadcountAnalyst.new(@dr)
       refute hc.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
