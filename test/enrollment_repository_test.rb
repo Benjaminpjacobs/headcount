@@ -9,34 +9,34 @@ class EnrollmentRepositoryTest < Minitest::Test
     assert_instance_of EnrollmentRepository, er
   end
 
-  def test_it_can_create_repository_hash
-    er = EnrollmentRepository.new
-    er.add_enrollment(Enrollment.new({:name => "ACADEMY 20",
-      :kindergarten => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}}))
-    assert_instance_of Enrollment, er.enrollment["ACADEMY 20"]
-    expected = er.enrollment.keys
-    actual = ["ACADEMY 20"]
-    assert_equal expected, actual
-  end
+  # def test_it_can_create_repository_hash
+  #   er = EnrollmentRepository.new
+  #   er.add_enrollment(Enrollment.new({:name => "ACADEMY 20",
+  #     :kindergarten => {2010 => 0.3915, 2011 => 0.35356, 2012 => 0.2677}}))
+  #   assert_instance_of Enrollment, er.enrollment["ACADEMY 20"]
+  #   expected = er.enrollment.keys
+  #   actual = ["ACADEMY 20"]
+  #   assert_equal expected, actual
+  # end
 
-  def test_can_parse_csv_data
-    er = EnrollmentRepository.new
-    actual = er.parse_csv(:kindergarten, "./data/Kindergartners in full-day program.csv")[0]
-    expected = [:kindergarten, "COLORADO", {
-      2007=>0.39465, 2006=>0.33677, 2005=>0.27807,
-      2004=>0.24014, 2008=>0.5357,  2009=>0.598,
-      2010=>0.64019, 2011=>0.672,   2012=>0.695,
-      2013=>0.70263, 2014=>0.74118}]
-    assert_equal expected, actual
-  end
+  # def test_can_parse_csv_data
+  #   er = EnrollmentRepository.new
+  #   actual = er.parse_csv(:kindergarten, "./data/Kindergartners in full-day program.csv")[0]
+  #   expected = [:kindergarten, "COLORADO", {
+  #     2007=>0.39465, 2006=>0.33677, 2005=>0.27807,
+  #     2004=>0.24014, 2008=>0.5357,  2009=>0.598,
+  #     2010=>0.64019, 2011=>0.672,   2012=>0.695,
+  #     2013=>0.70263, 2014=>0.74118}]
+  #   assert_equal expected, actual
+  # end
 
-  def test_it_can_create_enrollment_object
-    er = EnrollmentRepository.new
-    data = er.parse_csv(:kindergarten, "./data/Kindergartners in full-day program.csv")
-    actual = er.insert_enrollment_data(data[0]).name
-    expected ="COLORADO"
-    assert_equal expected, actual
-  end
+  # def test_it_can_create_enrollment_object
+  #   er = EnrollmentRepository.new
+  #   data = er.parse_csv(:kindergarten, "./data/Kindergartners in full-day program.csv")
+  #   actual = er.insert_enrollment_data(data[0]).name
+  #   expected ="COLORADO"
+  #   assert_equal expected, actual
+  # end
 
   def test_enrollment_can_load_data
     er = EnrollmentRepository.new

@@ -3,12 +3,18 @@ class StatewideTest
   VALID_RACES = [:asian, :black, :pacific_islander, :hispanic, :native_american, :two_or_more, :white]
   VALID_SUBJECTS = [:math, :reading, :writing]
   GRADE_MAP = {3 => :third_grade, 8 => :eighth_grade}
+
+
   def initialize(args)
     @name = args[:name]
     @tests = {}
     @tests[args.keys[1]] = args[args.keys[1]]
   end
 
+  def statistics
+    @tests
+  end
+  
   def proficient_by_grade(grade)
     raise UnknownDataError unless GRADE_MAP.keys.include?(grade)
     yearly_proficiency = @tests[GRADE_MAP[grade]]

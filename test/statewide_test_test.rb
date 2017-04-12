@@ -1,3 +1,4 @@
+require 'pry'
 require_relative 'test_helper'
 require_relative '../lib/statewide_test'
 require_relative '../lib/statewide_test_repository'

@@ -13,14 +13,9 @@ class DistrictRepository
     @statewide_test_repository = StatewideTestRepository.new
   end
 
-  def statewide_test
-    @statewide_test_repository
-  end
-  
   def load_data(args)
     generate_districts(args)
     @enrollment_repository.load_data(args) if args.keys.include?(:enrollment)
-    # binding.pry
     @statewide_test_repository.load_data(args) if args.keys.include?(:statewide_testing)
     update_districts
   end
@@ -54,7 +49,6 @@ private
   def update_districts
     @districts.each do |k, v|
       @districts[k].enrollment = @enrollment_repository.enrollment[k]
-      # binding.pry
       @districts[k].testing = @statewide_test_repository.tests[k]
     end
   end

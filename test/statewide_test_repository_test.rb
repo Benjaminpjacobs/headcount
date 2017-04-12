@@ -1,3 +1,4 @@
+require 'pry'
 require_relative 'test_helper'
 require_relative '../lib/statewide_test_repository'
 require_relative '../lib/statewide_test'
@@ -9,22 +10,22 @@ class StatewideTestRepositoryTest < Minitest::Test
     assert_instance_of StatewideTestRepository, swtr
   end
 
-  def test_it_can_create_test_hash
-    str = StatewideTestRepository.new
-    str.add_test(StatewideTest.new({:name => "ACADEMY 20",
-      :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv" }))
-    assert_instance_of StatewideTest, str.tests["ACADEMY 20"]
-    expected = str.tests.keys
-    actual = ["ACADEMY 20"]
-    assert_equal expected, actual
-  end
+  # def test_it_can_create_test_hash
+  #   str = StatewideTestRepository.new
+  #   str.add_test(StatewideTest.new({:name => "ACADEMY 20",
+  #     :third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv" }))
+  #   assert_instance_of StatewideTest, str.tests["ACADEMY 20"]
+  #   expected = str.tests.keys
+  #   actual = ["ACADEMY 20"]
+  #   assert_equal expected, actual
+  # end
 
-  def test_can_parse_csv_data
-    str = StatewideTestRepository.new
-    actual = str.parse_csv(:statewide_testing, "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv")[0][0]
-    expected = :statewide_testing
-    assert_equal expected, actual
-  end
+  # def test_can_parse_csv_data
+  #   str = StatewideTestRepository.new
+  #   actual = str.parse_csv(:statewide_testing, "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv")[0][0]
+  #   expected = :statewide_testing
+  #   assert_equal expected, actual
+  # end
 
   def test_it_can_create_tests_object
     str = StatewideTestRepository.new

@@ -7,6 +7,10 @@ class Enrollment
     @enrollment_statistics[args.keys[1]] = args[args.keys[1]]
   end
 
+  def statistics
+    @enrollment_statistics
+  end
+
   def add_new_statistics(args)
     @enrollment_statistics[args.keys[1]] = args[args.keys[1]]
   end
