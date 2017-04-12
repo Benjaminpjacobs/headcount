@@ -4,12 +4,13 @@ require_relative 'statewide_test'
 require 'csv'
 
 module Repository
-  
+
   class ObjectFactory
   TYPES = {
       district: District,
       enrollment: Enrollment,
-      statewide_test: StatewideTest
+      statewide_test: StatewideTest,
+      economic_profile: EconomicProfile
     }
 
     def self.for(type, attributes)
@@ -35,6 +36,8 @@ module Repository
       format_district_enrollments(divided_districts)
     elsif type == :statewide_test
       format_district_tests(divided_districts)
+    elsif type == :economic_profile
+      format_district_profiles(divided_districts)
     end
   end
 
@@ -56,7 +59,7 @@ module Repository
   def heading_already_exists?(repo, heading)
     repo.keys.include?(heading)
   end
-  
+
   def add_new_statistics(repo, heading, study, data)
     repo[heading].statistics[study] = data
   end
@@ -68,7 +71,7 @@ module Repository
   def add_statistic(repo, district)
     repo[district.name] = district
   end
-  
+
   def check_if_na(datum)
     if datum == "N/A"
       datum
