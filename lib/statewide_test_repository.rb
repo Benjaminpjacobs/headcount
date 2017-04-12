@@ -19,10 +19,11 @@ class StatewideTestRepository
       insert_testing_data(district)
     end
   end
-  
+
   def parse_csv(test_heading, test_info)
     contents = CSV.open test_info, headers: true, header_converters: :symbol
     divided_districts = divide_districts(contents).to_h
+    binding.pry
     formated_districts = format_district_tests(divided_districts)
     add_study_heading(test_heading, formated_districts)
   end
@@ -39,7 +40,7 @@ class StatewideTestRepository
   def add_test(test_stat)
     @tests[test_stat.name] = test_stat
   end
-  
+
   def test_stat_exists?(name)
     @tests.keys.include?(name.upcase)
   end
@@ -70,20 +71,19 @@ class StatewideTestRepository
 
   def populate_district_tests(district_tests, row)
     if district_tests.keys.include?(row[:location].upcase)
-      district_tests[row[:location].upcase] << [row[:score], row[:timeframe].to_i, row[:data].to_f]
+      district_tests[row[:location].upcase] << [row[:timeframe].to_i, row[:score], row[:data].to_f]
     else
-      district_tests[row[:location].upcase] = [[row[:score], row[:timeframe].to_i, row[:data].to_f]]
+      district_tests[row[:location].upcase] = [[row[:timeframe].to_i, row[:score], row[:data].to_f]]
     end
   end
 
   def populate_district_tests_subject(district_tests, row)
     if district_tests.keys.include?(row[:location].upcase)
-      district_tests[row[:location].upcase] << [row[:race_ethnicity], row[:timeframe].to_i, row[:data].to_f]
+      district_tests[row[:location].upcase] << [row[:timeframe].to_i, row[:race_ethnicity], row[:data].to_f]
     else
-      district_tests[row[:location].upcase] = [[row[:race_ethnicity], row[:timeframe].to_i, row[:data].to_f]]
+      district_tests[row[:location].upcase] = [[row[:timeframe].to_i, row[:race_ethnicity], row[:data].to_f]]
     end
   end
-
 
   def format_district_tests(district_enrollments)
     district_enrollments.each do |k, v|
@@ -96,5 +96,7 @@ class StatewideTestRepository
       [enrollment_heading, k, v]
     end
   end
-  
 end
+
+str = StatewideTestRepository.new
+#binding.pry
