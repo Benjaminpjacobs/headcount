@@ -1,5 +1,6 @@
 require_relative 'district'
 require_relative 'enrollment_repository'
+require_relative 'statewide_test_repository'
 require 'csv'
 require 'pry'
 
@@ -9,6 +10,7 @@ class DistrictRepository
   def initialize
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
+    @statewide_test_repository = StatewideTestRepository.new
   end
 
   def load_data(args)

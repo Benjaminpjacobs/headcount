@@ -51,26 +51,13 @@ class StatewideTestRepositoryTest < Minitest::Test
   end
 
   def test_find_by_name
-    skip
+    # skip
     str = StatewideTestRepository.new
     str.load_data({:statewide_testing => {:third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"}})
     actual = str.find_by_name("colorado").name
     expected = 'COLORADO'
     assert_equal expected, actual
     assert_nil str.find_by_name("millburn")
-  end
-
-  def test_tests_interaction_pattern
-    skip
-    str = StatewideTestRepository.new
-    str.load_data({:statewide_testing => {:third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"}})
-    tests = str.find_by_name("ACADEMY 20")
-    actual = tests.###
-    expected = {2010=>0.895, 2011=>0.895, 2012=>0.88983, 2013=>0.91373, 2014=>0.898}
-    assert_equal expected, actual
-    actual = tests.###(2011)
-    expected = 0.895
-    assert_equal expected, actual
   end
 
 end
