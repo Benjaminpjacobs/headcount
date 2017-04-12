@@ -64,14 +64,6 @@ class StatewideTestRepository
     end
   end
   
-  def check_if_na(datum)
-    if datum == "N/A"
-      datum
-    else
-      datum.to_f
-    end
-  end
-
   def format_race_heading(race)
     if race.include?("Hawaiian")
       race = race.scan(/\w+/)
