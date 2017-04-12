@@ -19,9 +19,15 @@ class EconomicProfileTest < Minitest::Test
 
   def test_median_household_income_in_year
     ec = @epr.profiles["ACADEMY 20"]
-    actual = ec.median_household_income_in_year(2010)
-    expected = ''
+    actual = ec.median_household_income_in_year(2012)
+    expected = 89784
     assert_equal expected, actual
+  end
 
+  def test_median_household_income_average
+    ec = @epr.profiles["ACADEMY 20"]
+    actual = ec.median_household_income_average
+    expected = 87635
+    assert_equal expected, actual
   end
 end
