@@ -17,12 +17,9 @@ class DistrictRepository
 
   def load_data(args)
     generate_districts(args)
-    @enrollment_repository.load_data(args) if
-    args.keys.include?(:enrollment)
-    @statewide_test_repository.load_data(args) if
-    args.keys.include?(:statewide_testing)
-    @economic_profile_repository.load_data(args) if
-    args.keys.include?(:economic_profile)
+    load_enrollment_repo(args)
+    load_testing_repo(args)
+    load_economics_repo(args)
     update_districts
   end
 
@@ -37,6 +34,18 @@ class DistrictRepository
   end
 
 private
+
+  def load_enrollment_repo(args)
+    @enrollment_repository.load_data(args) if args.keys.include?(:enrollment)
+  end
+
+  def load_testing_repo(args)
+    @statewide_test_repository.load_data(args) if args.keys.include?(:statewide_testing)
+  end
+
+  def load_economics_repo(args)
+    @economic_profile_repository.load_data(args) if args.keys.include?(:economic_profile)
+  end
 
   def collect_matching_keys(name)
     @districts.keys.select do |districts|
@@ -54,10 +63,14 @@ private
 
   def update_districts
     @districts.each do |k, v|
-      @districts[k].enrollment = @enrollment_repository.enrollment[k]
-      @districts[k].testing = @statewide_test_repository.tests[k]
-      @districts[k].economic_profile = @economic_profile_repository.profiles[k]
+      update_each_repository(k)
     end
+  end
+
+  def update_each_repository(k)
+    @districts[k].enrollment = @enrollment_repository.enrollment[k]
+    @districts[k].testing = @statewide_test_repository.tests[k]
+    @districts[k].economic_profile = @economic_profile_repository.profiles[k]
   end
 
   def generate_districts(args)
@@ -69,8 +82,7 @@ private
 
   def create_district_objects(district_list)
     district_list.each do |district|
-      add_district(District.new(:name => district.upcase)) if
-      !@districts.keys.include?(district.upcase)
+      add_district(District.new(:name => district.upcase))
     end
   end
 
@@ -79,5 +91,4 @@ private
       row[:location]
     end.uniq!
   end
-
 end

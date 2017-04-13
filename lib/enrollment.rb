@@ -1,6 +1,6 @@
-require 'pry'
 class Enrollment
   attr_accessor :name, :enrollment_statistics
+
   def initialize(args)
     @name = args[:name]
     @enrollment_statistics = {}

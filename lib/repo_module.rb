@@ -3,12 +3,12 @@ require_relative 'district'
 require_relative 'statewide_test'
 require_relative 'economic_profile'
 require 'csv'
+require 'pry'
 
 module Repository
 
   class ObjectFactory
   TYPES = {
-      district: District,
       enrollment: Enrollment,
       statewide_test: StatewideTest,
       economic_profile: EconomicProfile

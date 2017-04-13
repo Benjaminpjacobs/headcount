@@ -1,6 +1,7 @@
 require_relative 'enrollment'
 require_relative 'repo_module'
 require 'csv'
+require 'pry'
 
 class EnrollmentRepository
   include Repository
@@ -25,10 +26,6 @@ class EnrollmentRepository
     @enrollments
   end
 
-  def enrollment_exists?(name)
-    @enrollments.keys.include?(name.upcase)
-  end
-
   def divide_districts(contents)
     district_enrollments = {}
     contents.map do |row|
@@ -44,13 +41,30 @@ class EnrollmentRepository
   end
 
   def populate_district_contents(district_contents, row)
-    if district_contents.keys.include?(row[:location].upcase)
-      district_contents[row[:location].upcase] <<
-      [row[:timeframe].to_i, check_if_na(row[:data])]
+    if district_exists?(district_contents, row)
+      add_data_to_district(district_contents, row)
     else
-      district_contents[row[:location].upcase] =
-      [[row[:timeframe].to_i, check_if_na(row[:data])]]
+      create_new_district_item(district_contents, row)
     end
   end
 
+  private
+
+  def create_new_district_item(district_contents, row)
+    district_contents[row[:location].upcase] =
+    [[row[:timeframe].to_i, check_if_na(row[:data])]]  
+  end
+
+  def add_data_to_district(district_contents, row)
+    district_contents[row[:location].upcase] <<
+    [row[:timeframe].to_i, check_if_na(row[:data])]
+  end
+
+  def district_exists?(district_contents, row)
+    district_contents.keys.include?(row[:location].upcase)
+  end
+
+  def enrollment_exists?(name)
+    @enrollments.keys.include?(name.upcase)
+  end
 end

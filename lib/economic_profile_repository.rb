@@ -60,11 +60,9 @@ class EconomicProfileRepository
 
   def format_date_range(dates)
     dates.split("-").map!(&:to_i)
-    #binding.pry
   end
 
   def populate_district_contents_lunch(district_profiles, row)
-    #binding.pry
     if district_profiles.keys.include?(row[:location].upcase)
       district_profiles[row[:location].upcase] <<
       [row[:timeframe].to_i, row[:poverty_level],
@@ -140,6 +138,8 @@ class EconomicProfileRepository
     data.each do |key, value|
       value[0][0] = "Total" if value[0][0] == "Number"
       value[1][0] = "Total" if value[1][0] == "Number"
+      value[0][0] = "Percentage" if value[0][0] == "Percent"
+      value[1][0] = "Percentage" if value[1][0] == "Percent"
       data[key] = {value[0][0].downcase.to_sym =>
                    value[0][1], value[1][0].downcase.to_sym =>
                    value[1][1]}

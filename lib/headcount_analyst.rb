@@ -1,4 +1,3 @@
-require 'pry'
 class HeadcountAnalyst
   attr_reader :district_repository
 
@@ -74,7 +73,6 @@ class HeadcountAnalyst
   end
 
   def rate_variation(comparison, base)
-    # binding.pry
     comparison = comparison.reject{|value| value == "N/A" || value == "NA"}
     base = base.reject{|value| value == "N/A" || value == "NA"}
     if comparison.empty?|| base.empty?

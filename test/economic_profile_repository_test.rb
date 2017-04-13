@@ -34,7 +34,7 @@ class EconomicProfileRepositoryTest < Minitest::Test
     :median_household_income => "./data/Median household income.csv",
     :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv"}})
     actual = ec.profiles["ASPEN 1"].economic_profile[:free_or_reduced_price_lunch][2014]
-    expected = {:total=>89.0, :percent=>0.05068}
+    expected = {:total=>89.0, :percentage=>0.05068}
     assert_equal expected, actual
   end
 
@@ -56,7 +56,7 @@ class EconomicProfileRepositoryTest < Minitest::Test
     :median_household_income => "./data/Median household income.csv"}})
     colorado = ec.find_by_name("COLORADO")
     actual = colorado.economic_profile[:median_household_income]
-    expected = {[2005, 2009]=>56222.0, [2006, 2010]=>56456.0, [2008, 2012]              =>58244.0, [2007, 2011]=> 57685.0, [2009, 2013]=>58433.0}
+    expected = {[2005, 2009]=>56222.0, [2006, 2010]=>56456.0, [2008, 2012]=>58244.0, [2007, 2011]=> 57685.0, [2009, 2013]=>58433.0}
     assert_equal expected, actual
   end
   
