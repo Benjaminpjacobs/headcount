@@ -1,6 +1,5 @@
 require_relative 'economic_profile'
 require_relative 'repo_module'
-require 'pry'
 
 class EconomicProfileRepository
   include Repository

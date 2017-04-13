@@ -29,10 +29,11 @@ class EnrollmentRepository
   def divide_districts(contents)
     district_enrollments = {}
     contents.map do |row|
-      populate_district_contents(district_enrollments, row)
+      add_or_create_district(district_enrollments, row)
     end
     district_enrollments
   end
+
 
   def format_district_enrollments(district_enrollments)
     district_enrollments.each do |k, v|
@@ -40,15 +41,15 @@ class EnrollmentRepository
     end
   end
 
-  def populate_district_contents(district_contents, row)
-    if district_exists?(district_contents, row)
-      add_data_to_district(district_contents, row)
+  private
+  
+  def add_or_create_district(district_enrollments, row)
+    if district_exists?(district_enrollments, row)
+      add_data_to_district(district_enrollments, row)
     else
-      create_new_district_item(district_contents, row)
+      create_new_district_item(district_enrollments, row)
     end
   end
-
-  private
 
   def create_new_district_item(district_contents, row)
     district_contents[row[:location].upcase] =
