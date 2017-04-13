@@ -1,3 +1,5 @@
+require_relative 'custom_errors'
+
 class StatewideTest
   attr_accessor :name, :tests
   VALID_RACES = [:asian, :black, :pacific_islander, :hispanic, :native_american, :two_or_more, :white]
@@ -70,10 +72,3 @@ class StatewideTest
   end
 
 end
-
-class UnknownDataError < Exception
-end
-
-class UnknownRaceError < Exception
-end
-

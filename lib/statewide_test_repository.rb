@@ -58,12 +58,6 @@ class StatewideTestRepository
     end
   end
 
-  def format_district_tests(district_enrollments)
-    district_enrollments.each do |k, v|
-      district_enrollments[k] = v.group_by{|v| v.shift}
-    end
-  end
-  
   def format_race_heading(race)
     if race.include?("Hawaiian")
       race = race.scan(/\w+/)
@@ -80,70 +74,6 @@ def format_district_tests(district_enrollments)
   end
 end
 
-# def load_individual_study(key, value)
-#   parse_csv(key, value).each do |district|
-#     insert_testing_data(district)
-#   end
-# end
-
-# def parse_csv(test_heading, test_info)
-#   contents = CSV.open test_info, headers: true, header_converters: :symbol
-#   divided_districts = divide_districts(contents)
-#   formated_districts = format_district_tests(divided_districts)
-#   add_study_heading(test_heading, formated_districts)
-# end
-
-# def add_test(test_stat)
-#   @tests[test_stat.name] = test_stat
-# end
-
-
-# def insert_testing_data(testing_data)
-#   if heading_already_exists?(testing_data[1])
-#     add_new_test_statistics(testing_data[1], testing_data[0],
-#     testing_data[2])
-#   else
-#     district = create_new_testing_object(testing_data[1], testing_data[0],testing_data[2])
-#     add_test(district)
-#   end
-# end
-
-#   def format_race_heading(race)
-#     if race.include?("Hawaiian")
-#       race = race.scan(/\w+/)
-#       race.delete("Hawaiian")
-#       race.join("_").downcase.to_sym
-#     else
-#     race.scan(/\w+/).join("_").downcase.to_sym
-#   end
-# end
-
-#   def create_new_testing_object(heading, study, data)
-#     StatewideTest.new({:name => heading, study => data})
-#   end
-
-#   def heading_already_exists?(heading)
-#     @tests.keys.include?(heading)
-#   end
-
-#   def add_new_test_statistics(heading, study, data)
-#     @tests[heading].tests[study] = data
-#   end
-
-#   def add_study_heading(test_heading, district_tests)
-#     district_tests.collect do |k, v|
-#       [test_heading, k, v]
-#     end
-#   end
-
-
-#   def check_if_na(datum)
-#     if datum == "N/A"
-#       datum
-#     else
-#       datum.to_f
-#     end
-#   end
 end
 
 

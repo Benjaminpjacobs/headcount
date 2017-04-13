@@ -3,11 +3,11 @@ require_relative '../lib/economic_profile_repository'
 
 class EconomicProfileRepositoryTest < Minitest::Test
 
-  # def test_it_exists
-  #   ec = EconomicProfileRepository.new
-  #   assert_instance_of EconomicProfileRepository, ec
-  # end
-  #
+  def test_it_exists
+    ec = EconomicProfileRepository.new
+    assert_instance_of EconomicProfileRepository, ec
+  end
+  
   def test_economic_profile_can_load_data
     ec = EconomicProfileRepository.new
     ec.load_data({:economic_profile => {
@@ -45,7 +45,7 @@ class EconomicProfileRepositoryTest < Minitest::Test
     :children_in_poverty => "./data/School-aged children in poverty.csv",
     :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
     :title_i => "./data/Title I students.csv"}})
-    actual = ec.profiles["BENNETT 29J"].economic_profile#.keys
+    actual = ec.profiles["BENNETT 29J"].economic_profile.keys
     expected = [:median_household_income, :children_in_poverty, :free_or_reduced_price_lunch, :title_i]
     assert_equal expected, actual
   end

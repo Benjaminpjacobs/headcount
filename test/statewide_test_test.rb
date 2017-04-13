@@ -58,4 +58,10 @@ class StatewideTestTest < Minitest::Test
     expected = 0.818
     assert_equal expected, actual
   end
+
+  def test_n_a_handling
+    actual = @str.tests["AGATE 300"].proficient_for_subject_by_grade_in_year(:math, 3, 2010)
+    expected = 'N/A'
+    assert_equal expected, actual
+  end
 end
