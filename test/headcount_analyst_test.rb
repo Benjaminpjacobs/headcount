@@ -6,7 +6,11 @@ class HeadcountAnalystTest < Minitest::Test
 
     def setup
       @dr = DistrictRepository.new
-      @dr.load_data({:enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv", :high_school_graduation => "./data/High school graduation rates.csv"}})
+      @dr.load_data({
+      :enrollment => {
+        :kindergarten => "./data/Kindergartners in full-day program.csv",
+        :high_school_graduation => "./data/High school graduation rates.csv",
+      }})
       district = @dr.find_by_name("ACADEMY 20")
     end
 
@@ -69,7 +73,7 @@ class HeadcountAnalystTest < Minitest::Test
     def test_calculates_across_subsets
       hc = HeadcountAnalyst.new(@dr)
       assert hc.kindergarten_participation_correlates_with_high_school_graduation(
-      :across => ["ACADEMY 20", 'PARK (ESTES PARK) R-3', 'YUMA SCHOOL DISTRICT 1'])
+      :across => ["ACADEMY 20", "ARICKAREE R-2", 'YUMA SCHOOL DISTRICT 1'])
     end
 
   end

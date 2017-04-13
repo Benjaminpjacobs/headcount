@@ -43,12 +43,11 @@ class EnrollmentRepository
     end
   end
 
-
   def populate_district_contents(district_contents, row)
     if district_contents.keys.include?(row[:location].upcase)
-      district_contents[row[:location].upcase] << [row[:timeframe].to_i, row[:data].to_f]
+      district_contents[row[:location].upcase] << [row[:timeframe].to_i, check_if_na(row[:data])]
     else
-      district_contents[row[:location].upcase] = [[row[:timeframe].to_i, row[:data].to_f]]
+      district_contents[row[:location].upcase] = [[row[:timeframe].to_i, check_if_na(row[:data])]]
     end
   end
 

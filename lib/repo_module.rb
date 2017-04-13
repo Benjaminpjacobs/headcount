@@ -1,6 +1,7 @@
 require_relative 'enrollment'
 require_relative 'district'
 require_relative 'statewide_test'
+require_relative 'economic_profile'
 require 'csv'
 
 module Repository
@@ -73,7 +74,7 @@ module Repository
   end
 
   def check_if_na(datum)
-    if datum == "N/A"
+    if datum == "N/A" || datum == "NA"
       datum
     else
       datum.to_f
