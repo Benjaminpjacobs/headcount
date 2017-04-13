@@ -6,10 +6,14 @@ class EconomicProfile
   def initialize(args)
     @name = args[:name]
     @economic_profile = {}
-    @economic_profile[args.keys[0]] = args[args.keys[0]] unless args.keys[0] == :name
-    @economic_profile[args.keys[1]] = args[args.keys[1]] if args.keys[1]
-    @economic_profile[args.keys[2]] = args[args.keys[2]] if args.keys[2]
-    @economic_profile[args.keys[3]] = args[args.keys[3]] if args.keys[3]
+    @economic_profile[args.keys[0]] = args[args.keys[0]] unless
+    args.keys[0] == :name
+    @economic_profile[args.keys[1]] = args[args.keys[1]] if
+    args.keys[1]
+    @economic_profile[args.keys[2]] = args[args.keys[2]] if
+    args.keys[2]
+    @economic_profile[args.keys[3]] = args[args.keys[3]] if
+    args.keys[3]
   end
 
   def statistics
@@ -41,17 +45,20 @@ class EconomicProfile
   end
 
   def median_household_income_average
-    all_ranges = map_incomes_to_ranges(@economic_profile[:median_household_income].keys)
+    all_ranges =
+    map_incomes_to_ranges(@economic_profile[:median_household_income].keys)
     average(all_ranges)
   end
 
   def children_in_poverty_in_year(year)
-    raise UnknownDataError unless @economic_profile[:children_in_poverty].keys.include?(year)
+    raise UnknownDataError unless
+    @economic_profile[:children_in_poverty].keys.include?(year)
     @economic_profile[:children_in_poverty][year]
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
-    raise UnknownDataError unless @economic_profile[:free_or_reduced_price_lunch].keys.include?(year)
+    raise UnknownDataError unless
+    @economic_profile[:free_or_reduced_price_lunch].keys.include?(year)
     stat = @economic_profile[:free_or_reduced_price_lunch][year][:percent]
     if stat.nil?
       @economic_profile[:free_or_reduced_price_lunch][year][:percentage]
@@ -61,12 +68,14 @@ class EconomicProfile
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
-    raise UnknownDataError unless @economic_profile[:free_or_reduced_price_lunch].keys.include?(year)
+    raise UnknownDataError unless
+    @economic_profile[:free_or_reduced_price_lunch].keys.include?(year)
     @economic_profile[:free_or_reduced_price_lunch][year][:total]
   end
 
   def title_i_in_year(year)
-    raise UnknownDataError unless @economic_profile[:title_i].keys.include?(year)
+    raise UnknownDataError unless
+    @economic_profile[:title_i].keys.include?(year)
     @economic_profile[:title_i][year]
   end
 end

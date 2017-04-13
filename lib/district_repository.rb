@@ -17,9 +17,12 @@ class DistrictRepository
 
   def load_data(args)
     generate_districts(args)
-    @enrollment_repository.load_data(args) if args.keys.include?(:enrollment)
-    @statewide_test_repository.load_data(args) if args.keys.include?(:statewide_testing)
-    @economic_profile_repository.load_data(args) if args.keys.include?(:economic_profile)
+    @enrollment_repository.load_data(args) if
+    args.keys.include?(:enrollment)
+    @statewide_test_repository.load_data(args) if
+    args.keys.include?(:statewide_testing)
+    @economic_profile_repository.load_data(args) if
+    args.keys.include?(:economic_profile)
     update_districts
   end
 
@@ -28,7 +31,7 @@ class DistrictRepository
   end
 
   def find_all_matching(name)
-    collect_matching_keys(name).map do |key| 
+    collect_matching_keys(name).map do |key|
       @districts[key]
     end
   end
@@ -58,14 +61,16 @@ private
   end
 
   def generate_districts(args)
-    contents = CSV.open args[args.keys[0]].values[0], headers: true, header_converters: :symbol
+    contents = CSV.open args[args.keys[0]].values[0],
+    headers: true, header_converters: :symbol
     district_list = map_individual_districts(contents)
     create_district_objects(district_list)
   end
 
   def create_district_objects(district_list)
     district_list.each do |district|
-      add_district(District.new(:name => district.upcase)) if !@districts.keys.include?(district.upcase)
+      add_district(District.new(:name => district.upcase)) if
+      !@districts.keys.include?(district.upcase)
     end
   end
 

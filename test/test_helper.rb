@@ -4,7 +4,6 @@ SimpleCov.start
 require 'minitest/autorun'
 require 'minitest/pride'
 
-
 require "./test/district_repository_test.rb"
 require "./test/district_test.rb"
 require "./test/economic_profile_repository_test.rb"

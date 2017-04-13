@@ -10,7 +10,7 @@ class EnrollmentRepository
   def initialize
     @enrollments = {}
   end
- 
+
   def load_data(arg)
     arg[:enrollment].each do |key, value|
       load_individual_study(:enrollment, @enrollments, key, value)
@@ -45,9 +45,11 @@ class EnrollmentRepository
 
   def populate_district_contents(district_contents, row)
     if district_contents.keys.include?(row[:location].upcase)
-      district_contents[row[:location].upcase] << [row[:timeframe].to_i, check_if_na(row[:data])]
+      district_contents[row[:location].upcase] <<
+      [row[:timeframe].to_i, check_if_na(row[:data])]
     else
-      district_contents[row[:location].upcase] = [[row[:timeframe].to_i, check_if_na(row[:data])]]
+      district_contents[row[:location].upcase] =
+      [[row[:timeframe].to_i, check_if_na(row[:data])]]
     end
   end
 

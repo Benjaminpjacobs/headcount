@@ -19,7 +19,8 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    kinder_part_var = kindergarten_participation_rate_variation(district, :against => 'COLORADO')
+    kinder_part_var =
+    kindergarten_participation_rate_variation(district, :against => 'COLORADO')
     hs_grad_var = high_school_graduation_variation(district)
     variation_quotient(kinder_part_var, hs_grad_var)
   end
@@ -41,7 +42,8 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
-    participations= kindergarten_participation_against_high_school_graduation(district)
+    participations =
+    kindergarten_participation_against_high_school_graduation(district)
     participation_correlated?(participations)
   end
 
@@ -51,7 +53,7 @@ class HeadcountAnalyst
     end
      participations_correlated?(correlation)
   end
-  
+
   private
 
   def all_districts
@@ -67,7 +69,8 @@ class HeadcountAnalyst
   end
 
   def graduation_rate_by_year(district)
-    district_repository.find_by_name(district).enrollment.graduation_rate_by_year
+    district_repository.find_by_name(district)
+    .enrollment.graduation_rate_by_year
   end
 
   def rate_variation(comparison, base)
@@ -77,7 +80,6 @@ class HeadcountAnalyst
     if comparison.empty?|| base.empty?
       return
     else
-      
     (generate_yearly_statistical_average(comparison)/
     generate_yearly_statistical_average(base)).round(3)
     end
@@ -91,8 +93,10 @@ class HeadcountAnalyst
     end
   end
 
-  def statistical_average_per_year(comparison_values, base_values)
-    comparison_values.merge(base_values) { |key, c_value, b_value| (c_value/b_value).round(3)}.sort.to_h
+  def statistical_average_per_year(comp_values, base_values)
+    comp_values =
+    comp_values.merge(base_values){ |key, comp, base| (comp/base).round(3) }
+    comp_values.sort.to_h
   end
 
   def generate_yearly_statistical_average(district_values)
