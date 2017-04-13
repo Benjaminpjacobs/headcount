@@ -29,20 +29,14 @@ class StatewideTestRepository
   def divide_districts(contents)
     district_tests = {}
     contents.map do |row|
-      if row[:score]
-        populate_district_tests(district_tests, row)
-      elsif row[:race_ethnicity]
-        populate_district_tests_subject(district_tests, row)
-      end
+      which_populate(district_tests, row)
     end
     district_tests
   end
 
   def populate_district_tests(district_tests, row)
-    if district_tests.keys.include?(row[:location].upcase)
-      district_tests[row[:location].upcase] <<
-      [row[:timeframe].to_i, row[:score].downcase.to_sym,
-      check_if_na(row[:data])]
+    if district_exists?(district_tests, row)
+      add_test_to_district(district_tests, row)
     else
       district_tests[row[:location].upcase] =
       [[row[:timeframe].to_i, row[:score].downcase.to_sym,
@@ -50,8 +44,14 @@ class StatewideTestRepository
     end
   end
 
+  def add_test_to_district(district_tests, row)
+    district_tests[row[:location].upcase] <<
+    [row[:timeframe].to_i, row[:score].downcase.to_sym,
+    check_if_na(row[:data])]
+  end
+
   def populate_district_tests_subject(district_tests, row)
-    if district_tests.keys.include?(row[:location].upcase)
+    if district_exists?(district_tests, row)
       district_tests[row[:location].upcase] <<
       [format_race_heading(row[:race_ethnicity]),
       row[:timeframe].to_i, check_if_na(row[:data])]
@@ -68,15 +68,29 @@ class StatewideTestRepository
       race.delete("Hawaiian")
       race.join("_").downcase.to_sym
     else
-    race.scan(/\w+/).join("_").downcase.to_sym
+      race.scan(/\w+/).join("_").downcase.to_sym
+    end
   end
-end
 
-def format_district_tests(district_enrollments)
-  district_enrollments.each do |k, v|
-    district_enrollments[k] = v.group_by{|v| v.shift}
+  def format_district_tests(district_enrollments)
+    district_enrollments.each do |k, v|
+      district_enrollments[k] = v.group_by{|v| v.shift}
+    end
   end
-end
+
+  private
+
+  def district_exists?(district_tests, row)
+    district_tests.keys.include?(row[:location].upcase)
+  end
+
+  def which_populate(district_tests, row)
+    if row[:score]
+      populate_district_tests(district_tests, row)
+    elsif row[:race_ethnicity]
+      populate_district_tests_subject(district_tests, row)
+    end
+  end
 
 end
 
