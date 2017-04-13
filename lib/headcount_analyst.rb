@@ -53,6 +53,34 @@ class HeadcountAnalyst
      participations_correlated?(correlation)
   end
 
+  def top_statewide_test_year_over_year_growth(args)
+    subject_stats_per_district = @district_repository.districts.collect do |key, value|
+      [key, value.testing.proficient_by_grade(args[:grade])]
+    end
+    year_stats = subject_stats_per_district.collect do |sub_array|
+      sub_array[1].collect do |key, value|
+        [key, value[args[:subject]]]
+      end
+    end
+    year_stats = year_stats.collect do |array|
+      if array[-1][1].is_a?(Float) && array[0][-1].is_a?(Float)
+        ((array[-1][1] - array[0][-1])/(array[-1][0] - array[0][0])).round(3)
+      else
+        0.0
+      end
+    end
+
+    districts = subject_stats_per_district.collect do |sub|
+      sub[0]
+    end
+
+    districts.zip(year_stats).sort_by do |array|
+      array[1]
+    end
+
+
+  end
+
   private
 
   def all_districts
