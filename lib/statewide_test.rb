@@ -51,11 +51,11 @@ private
 
   def add_headings(value)
     values = {}
-    add_each_heading(value, v, index, values)
+    add_each_heading(value, values)
     values
   end
 
-  def add_each_headings(value, v, index, values)
+  def add_each_heading(value, values)
     value.each_with_index do |v, index|
       which_heading(values, v, index)
     end
