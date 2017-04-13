@@ -26,16 +26,7 @@ class EconomicProfileRepository
 
   def divide_districts(contents)
     district_profiles = {}
-    contents.map do |row|
-      if row[:poverty_level]
-        populate_district_contents_lunch(district_profiles, row)
-      elsif row[:dataformat].include?("Currency")
-        populate_district_contents_income(district_profiles, row)
-      else
-        populate_district_contents(district_profiles, row)
-      end
-    end
-    district_profiles
+    populate_based_on_study(contents, district_profiles)
   end
 
   def populate_district_contents(district_profiles, row)
@@ -56,10 +47,6 @@ class EconomicProfileRepository
       district_profiles[row[:location].upcase] =
       [[format_date_range(row[:timeframe]), row[:data].to_f]]
     end
-  end
-
-  def format_date_range(dates)
-    dates.split("-").map!(&:to_i)
   end
 
   def populate_district_contents_lunch(district_profiles, row)
@@ -146,9 +133,33 @@ class EconomicProfileRepository
     end
   end
 
+  private
+
   def remove_tag(data)
     data.each do |key, value|
       data[key] = value.each{|value| value.shift}
     end
   end
+
+  def format_date_range(dates)
+    dates.split("-").map!(&:to_i)
+  end
+
+  def populate_based_on_study(contents, district_profiles)
+    contents.map do |row|
+      check_data_for_study_keys(district_profiles, row)
+    end
+    district_profiles
+  end
+
+  def check_data_for_study_keys(district_profiles, row)
+    if row[:poverty_level]
+      populate_district_contents_lunch(district_profiles, row)
+    elsif row[:dataformat].include?("Currency")
+      populate_district_contents_income(district_profiles, row)
+    else
+      populate_district_contents(district_profiles, row)
+    end
+  end
+
 end

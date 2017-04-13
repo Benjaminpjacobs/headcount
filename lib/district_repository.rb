@@ -3,7 +3,6 @@ require_relative 'enrollment_repository'
 require_relative 'statewide_test_repository'
 require_relative 'economic_profile_repository'
 require 'csv'
-require 'pry'
 
 class DistrictRepository
   attr_accessor :districts, :enrollment_repository
