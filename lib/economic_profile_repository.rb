@@ -15,6 +15,14 @@ class EconomicProfileRepository
       load_individual_study(:economic_profile, @profiles, key, value)
     end
   end
+  
+  def find_by_name(name)
+    @profiles[name.upcase] if profile_exists?(name)
+  end
+
+  def profile_exists?(name)
+    @profiles.keys.include?(name.upcase)
+  end
 
   def divide_districts(contents)
     district_profiles = {}

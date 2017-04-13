@@ -3,6 +3,16 @@ require_relative '../lib/economic_profile'
 require_relative '../lib/economic_profile_repository'
 
 class EconomicProfileTest < Minitest::Test
+  # def test_economic_profile_basics
+  #   data = {:median_household_income => {[2014, 2015] => 50000, [2013, 2014] => 60000},
+  #           :children_in_poverty => {2012 => 0.1845},
+  #           :free_or_reduced_price_lunch => {2014 => {:percentage => 0.023, :total => 100}},
+  #           :title_i => {2015 => 0.543},
+  #           }
+  #   ep = EconomicProfile.new(data)
+  #   ep.free
+  #   assert_equal '', ep
+  # end
   def setup
     @epr = EconomicProfileRepository.new
     @epr.load_data({:economic_profile => {
@@ -29,5 +39,69 @@ class EconomicProfileTest < Minitest::Test
     actual = ec.median_household_income_average
     expected = 87635
     assert_equal expected, actual
+  end
+
+  def test_unknown_data_error_income
+    assert_raises(UnknownDataError) do  
+      ec = @epr.profiles["ACADEMY 20"]
+      ec.median_household_income_in_year(2016)
+    end
+  end
+
+  def test_children_in_poverty_in_year
+    ec = @epr.profiles["BETHUNE R-5"]
+    actual = ec.children_in_poverty_in_year(2012)
+    expected = 0.237
+    assert_equal expected, actual
+  end
+
+  def test_unknown_data_error_children
+    assert_raises(UnknownDataError) do  
+      ec = @epr.profiles["BETHUNE R-5"]
+      ec.children_in_poverty_in_year(2016)
+    end
+  end
+
+  def test_free_or_reduced_price_percentage
+    ec = @epr.profiles["BETHUNE R-5"]
+    actual = ec.free_or_reduced_price_lunch_percentage_in_year(2010)
+    expected = 0.662
+    assert_equal expected, actual
+  end
+
+  def test_unknown_data_error_lunch
+    assert_raises(UnknownDataError) do  
+      ec = @epr.profiles["BETHUNE R-5"]
+      ec.free_or_reduced_price_lunch_percentage_in_year(2016)
+    end
+  end
+  
+  def test_free_or_reduced_price_percentage
+    ec = @epr.profiles["BETHUNE R-5"]
+    actual = ec.free_or_reduced_price_lunch_number_in_year(2010)
+    expected = 86
+    assert_equal expected, actual
+  end
+
+  def test_unknown_data_error_lunch_number
+    assert_raises(UnknownDataError) do  
+      ec = @epr.profiles["BETHUNE R-5"]
+      ec.free_or_reduced_price_lunch_number_in_year(2016)
+    end
+  end
+
+  def test_title_i_in_year
+    ec = @epr.profiles["PLATTE VALLEY RE-3"]
+    actual = ec.title_i_in_year(2009)
+    expected = 0.026
+    assert_equal expected, actual
+  end
+
+
+  def test_unknown_data_error_lunch_number
+    assert_raises(UnknownDataError) do  
+      ec = @epr.profiles["BETHUNE R-5"]
+      ec.title_i_in_year(2016)
+    end
   end
 end

@@ -1,6 +1,7 @@
 require_relative 'district'
 require_relative 'enrollment_repository'
 require_relative 'statewide_test_repository'
+require_relative 'economic_profile_repository'
 require 'csv'
 require 'pry'
 
@@ -11,12 +12,14 @@ class DistrictRepository
     @districts = {}
     @enrollment_repository = EnrollmentRepository.new
     @statewide_test_repository = StatewideTestRepository.new
+    @economic_profile_repository = EconomicProfileRepository.new
   end
 
   def load_data(args)
     generate_districts(args)
     @enrollment_repository.load_data(args) if args.keys.include?(:enrollment)
     @statewide_test_repository.load_data(args) if args.keys.include?(:statewide_testing)
+    @economic_profile_repository.load_data(args) if args.keys.include?(:economic_profile)
     update_districts
   end
 
@@ -50,6 +53,7 @@ private
     @districts.each do |k, v|
       @districts[k].enrollment = @enrollment_repository.enrollment[k]
       @districts[k].testing = @statewide_test_repository.tests[k]
+      @districts[k].economic_profile = @economic_profile_repository.profiles[k]
     end
   end
 
