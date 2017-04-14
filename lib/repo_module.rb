@@ -20,12 +20,12 @@ module Repository
   end
 
   def load_individual_study(type, repo, key, value)
-    parse_csv(type, repo, key, value).each do |district|
+    parse_csv(type, key, value).each do |district|
       insert_data(repo, type, district)
     end
   end
 
-  def parse_csv(type, repo, heading, info)
+  def parse_csv(type,heading, info)
     contents = CSV.open info, headers: true, header_converters: :symbol
     divided_districts = divide_districts(contents)
     formated_districts = format_district_type(type, divided_districts)

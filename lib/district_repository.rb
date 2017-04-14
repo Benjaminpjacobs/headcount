@@ -61,7 +61,7 @@ private
   end
 
   def update_districts
-    @districts.each do |k, v|
+    @districts.keys.each do |k|
       update_each_repository(k)
     end
   end
@@ -86,7 +86,7 @@ private
   end
 
   def map_individual_districts(contents)
-    contents = contents.map do |row|
+    contents.map do |row|
       row[:location]
     end.uniq!
   end

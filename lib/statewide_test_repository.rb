@@ -61,7 +61,7 @@ class StatewideTestRepository
       row[:timeframe].to_i, check_if_na(row[:data])]]
     end
   end
-
+  
   def format_race_heading(race)
     if race.include?("Hawaiian")
       race = race.scan(/\w+/)

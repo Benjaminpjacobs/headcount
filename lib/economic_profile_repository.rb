@@ -76,14 +76,14 @@ class EconomicProfileRepository
 
   def sort_by_year(data)
     data.each do |key, value|
-      data[key] = value.group_by { |value| value.shift }
+      data[key] = value.group_by { |v| v.shift }
     end
   end
   
   def select_eligible_for_free_or_reduced(data)
     data.each do |key, value|
       data[key] =
-      value.select{|value| value[1] == "Eligible for Free or Reduced Lunch"}
+      value.select{|v| v[1] == "Eligible for Free or Reduced Lunch"}
     end
   end
 
@@ -175,7 +175,7 @@ class EconomicProfileRepository
 
   def remove_tag(data)
     data.each do |key, value|
-      data[key] = value.each{|value| value.shift}
+      data[key] = value.each{|v| v.shift}
     end
   end
 
