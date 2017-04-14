@@ -61,29 +61,54 @@ class HeadcountAnalyst
       statewide_test_year_over_year_growth(args).shift(args[:top])
     elsif args[:grade] && args[:subject]
       statewide_test_year_over_year_growth(args).shift
+    elsif args[:grade] && args[:weight]
+      
     else
       top_statewide_test_year_over_year_growth_across_subjects(args)
     end
   end
 
   def top_statewide_test_year_over_year_growth_across_subjects(args)
-    # binding.pry
-    # arg = {grade: args[:grade], subject: :math}
-    # math = top_statewide_test_year_over_year_growth(arg)
-    # arg = {grade: args[:grade], subject: :reading}
-    # reading = top_statewide_test_year_over_year_growth(arg)
-    # arg = {grade: args[:grade], subject: :writing}
-    # writing = top_statewide_test_year_over_year_growth(arg)
-    # [math, reading, writing]
+    # weight = weighted?(args)
+
+    math = find_subject_stats(args, "math")
+    reading = find_subject_stats(args, "reading")
+    writing = find_subject_stats(args, "writing")
+    all = cross_subject_statistcs(math, reading, writing)
+    round_stats(all).shift
   end
 
   private
 
+  # def weighted?(args)
+  #   if args[:weighting] 
+  #     args[:weighting]
+  #   else
+  #     {:math => 0.5, :reading => 0.5, :writing => 0.0}
+  # end
+
+  def round_stats(all)
+    map_growth_stats(all).each{|val| val[1] = val[1].round(3)}
+  end
+  
+  def cross_subject_statistcs(math, reading, writing)
+    math.zip(reading).zip(writing).map{|a| (a.flatten.inject(:+)/3)}
+  end
+
+  def find_subject_stats(args, subject)
+    new_arg = {grade: args[:grade], subject: subject.to_sym}
+    compile_subject_data(new_arg)
+  end
+
   def statewide_test_year_over_year_growth(args)
+    percent_growth = compile_subject_data(args)
+    round_stats(percent_growth)
+  end
+
+  def compile_subject_data(args)
     subject_stats_per_district =  subject_stats_per_district(args)
     valid_statistics = valid_stats(subject_stats_per_district)
-    percent_growth = calculate_growth(valid_statistics)
-    map_growth_stats(percent_growth)
+    calculate_growth(valid_statistics) 
   end
 
   def map_growth_stats(percent_growth)
@@ -97,11 +122,10 @@ class HeadcountAnalyst
       if stats.empty? || stats.count == 1
         0.0
       else
-        (stat_diff(stats).round(3)/ year_diff(stats)).round(3)
+        (stat_diff(stats)/ year_diff(stats))
       end
     end
   end
-
 
   def valid_stats(all_stats)
     all_stats.map do |stats|
@@ -122,7 +146,7 @@ class HeadcountAnalyst
 
   def collect_valid_statistic(array)
     array.select do |value|
-      value[1].is_a?(Float)
+      value[1].is_a?(Float) || value[1].is_a?(Integer)
     end
   end  
 
