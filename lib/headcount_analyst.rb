@@ -110,7 +110,7 @@ class HeadcountAnalyst
   end
 
   def subject_stats_per_district(args)
-    @district_repository.districts.collect do |key, value|
+    @district_repository.districts.values.collect do |value|
       proficiency_for_subject_in_all_years(args, value)
     end
   end

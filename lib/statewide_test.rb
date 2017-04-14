@@ -75,7 +75,7 @@ private
   def compile_proficiencies(yearly_proficiency)
     yearly_proficiency.each do |key, value|
       yearly_proficiency[key] =
-      Hash[value.map{ |key, v| [key, round_if_float(v)] }]
+      Hash[value.map{ |k, v| [k, round_if_float(v)] }]
     end
   end
 

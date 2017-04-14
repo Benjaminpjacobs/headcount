@@ -73,8 +73,8 @@ class StatewideTestRepository
   end
 
   def format_district_tests(district_enrollments)
-    district_enrollments.each do |k, v|
-      district_enrollments[k] = v.group_by{|v| v.shift}
+    district_enrollments.each do |district, enrollment|
+      district_enrollments[district] = enrollment.group_by{|v| v.shift}
     end
   end
 
