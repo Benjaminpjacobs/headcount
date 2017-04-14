@@ -70,22 +70,30 @@ class HeadcountAnalyst
 
   def top_statewide_test_year_over_year_growth_across_subjects(args)
     # weight = weighted?(args)
-
     math = find_subject_stats(args, "math")
     reading = find_subject_stats(args, "reading")
     writing = find_subject_stats(args, "writing")
-    all = cross_subject_statistcs(math, reading, writing)
-    round_stats(all).shift
+    if args[:weighting]
+      math = apply_weighting(math, args[:weighting][:math])
+      reading = apply_weighting(reading, args[:weighting][:reading])
+      writing = apply_weighting(writing, args[:weighting][:writing])
+      all = cross_subject_statistcs_weighted(math, reading, writing)
+      round_stats(all).shift
+    else
+      all = cross_subject_statistcs(math, reading, writing)
+      round_stats(all).shift
+    end
+    
   end
 
   private
+  def cross_subject_statistcs_weighted(math, reading, writing)
+    math.zip(reading).zip(writing).map{|a| (a.flatten.inject(:+))}
+  end
 
-  # def weighted?(args)
-  #   if args[:weighting] 
-  #     args[:weighting]
-  #   else
-  #     {:math => 0.5, :reading => 0.5, :writing => 0.0}
-  # end
+  def apply_weighting(stats, weight)
+    stats.map{|stat| stat * weight}
+  end
 
   def round_stats(all)
     map_growth_stats(all).each{|val| val[1] = val[1].round(3)}
