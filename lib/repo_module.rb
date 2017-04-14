@@ -74,7 +74,8 @@ module Repository
   end
 
   def check_if_na(datum)
-    if datum == "N/A" || datum == "NA"
+    range = ("A".."z").to_a
+    if datum.nil? || datum.chars.any?{|char| range.include?(char)}
       datum
     else
       datum.to_f

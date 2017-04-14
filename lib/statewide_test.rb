@@ -80,7 +80,11 @@ private
   end
 
   def round_if_float(value)
-    value == "N/A" ? value : value.round(3)
+    if value.is_a?(Float)
+      value.round(3)
+    else
+      value 
+    end
   end
 
   def compile_subject_stats(race)

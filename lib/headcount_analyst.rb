@@ -1,3 +1,4 @@
+require 'pry'
 class HeadcountAnalyst
   attr_reader :district_repository
 
@@ -54,34 +55,84 @@ class HeadcountAnalyst
   end
 
   def top_statewide_test_year_over_year_growth(args)
-    subject_stats_per_district = @district_repository.districts.collect do |key, value|
-      [key, value.testing.proficient_by_grade(args[:grade])]
+    valid_grades = [3, 8]
+    raise InsufficientInformationError unless valid_grades.include?(args[:grade])
+    if args[:top] && args[:grade]
+      statewide_test_year_over_year_growth(args).shift(args[:top])
+    elsif args[:grade] && args[:subject]
+      statewide_test_year_over_year_growth(args).shift
+    else
+      top_statewide_test_year_over_year_growth_across_subjects(args)
     end
-    year_stats = subject_stats_per_district.collect do |sub_array|
-      sub_array[1].collect do |key, value|
-        [key, value[args[:subject]]]
-      end
-    end
-    year_stats = year_stats.collect do |array|
-      if array[-1][1].is_a?(Float) && array[0][-1].is_a?(Float)
-        ((array[-1][1] - array[0][-1])/(array[-1][0] - array[0][0])).round(3)
-      else
-        0.0
-      end
-    end
+  end
 
-    districts = subject_stats_per_district.collect do |sub|
-      sub[0]
-    end
-
-    districts.zip(year_stats).sort_by do |array|
-      array[1]
-    end
-
-
+  def top_statewide_test_year_over_year_growth_across_subjects(args)
+    # binding.pry
+    # arg = {grade: args[:grade], subject: :math}
+    # math = top_statewide_test_year_over_year_growth(arg)
+    # arg = {grade: args[:grade], subject: :reading}
+    # reading = top_statewide_test_year_over_year_growth(arg)
+    # arg = {grade: args[:grade], subject: :writing}
+    # writing = top_statewide_test_year_over_year_growth(arg)
+    # [math, reading, writing]
   end
 
   private
+
+  def statewide_test_year_over_year_growth(args)
+    subject_stats_per_district =  subject_stats_per_district(args)
+    valid_statistics = valid_stats(subject_stats_per_district)
+    percent_growth = calculate_growth(valid_statistics)
+    map_growth_stats(percent_growth)
+  end
+
+  def map_growth_stats(percent_growth)
+    all_districts.zip(percent_growth).sort_by do |array|
+      array[1]
+    end.reverse
+  end
+
+  def calculate_growth(valid_statistics)
+    valid_statistics.map do |stats|
+      if stats.empty? || stats.count == 1
+        0.0
+      else
+        (stat_diff(stats).round(3)/ year_diff(stats)).round(3)
+      end
+    end
+  end
+
+
+  def valid_stats(all_stats)
+    all_stats.map do |stats|
+      collect_valid_statistic(stats)
+    end
+  end
+
+  def subject_stats_per_district(args)
+    @district_repository.districts.collect do |key, value|
+      proficiency_for_subject_in_all_years(args, value)
+    end
+  end
+  def proficiency_for_subject_in_all_years(args, value)
+    (2008..2014).collect do |number|
+      [number, value.testing.proficient_for_subject_by_grade_in_year(args[:subject],args[:grade], number)]
+    end
+  end
+
+  def collect_valid_statistic(array)
+    array.select do |value|
+      value[1].is_a?(Float)
+    end
+  end  
+
+  def stat_diff(stat)
+    (stat[-1][1] - stat[0][1])
+  end
+
+  def year_diff(stat)
+    (stat[-1][0] - stat[0][0])
+  end
 
   def all_districts
     @district_repository.districts.keys
@@ -101,8 +152,8 @@ class HeadcountAnalyst
   end
 
   def rate_variation(comparison, base)
-    comparison = comparison.reject{|value| value == "N/A" || value == "NA"}
-    base = base.reject{|value| value == "N/A" || value == "NA"}
+    comparison = comparison.reject{|value| !value.is_a?(Float)}
+    base = base.reject{|value| !value.is_a?(Float)}
     if comparison.empty?|| base.empty?
       return
     else
@@ -126,7 +177,7 @@ class HeadcountAnalyst
   end
 
   def generate_yearly_statistical_average(district_values)
-      (district_values.inject(&:+)/district_values.length).round(3)
+    (district_values.inject(&:+)/district_values.length).round(3)
   end
 
   def district_kindergarten_participation(district)
