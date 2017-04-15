@@ -1,8 +1,9 @@
 class District
-  attr_accessor :name, :enrollment, :testing, :economic_profile
+  attr_accessor :name, :repo, :enrollment, :testing, :economic_profile
 
   def initialize(args)
     @name = args[:name]
+    @repo = args[:repo]
   end
 
   def statewide_test

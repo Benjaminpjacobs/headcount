@@ -81,7 +81,7 @@ private
 
   def create_district_objects(district_list)
     district_list.each do |district|
-      add_district(District.new(:name => district.upcase))
+      add_district(District.new({:name => district.upcase, :repo => self}))
     end
   end
 
