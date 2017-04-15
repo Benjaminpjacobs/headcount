@@ -28,67 +28,67 @@ class HeadcountAnalystTest < Minitest::Test
       district = @dr.find_by_name("ACADEMY 20")
     end
 
-    # def test_it_exists
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   assert_instance_of HeadcountAnalyst, hc
-    # end
-    #
-    # def test_can_take_arg_from_direct_repository
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.district_repository
-    #   assert_instance_of DistrictRepository, actual
-    # end
-    #
-    # def test_kindergarten_participation_rate_variation_colorado
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
-    #   expected = 0.766
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_kindergarten_participation_rate_variation_district
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'YUMA SCHOOL DISTRICT 1')
-    #   expected = 0.447
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_kindergarten_participation_rate_variation_trend
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
-    #   expected = {2004=>1.258, 2005=>0.961, 2006=>1.05, 2007=>0.992, 2008=>0.718, 2009=>0.652, 2010=>0.681, 2011=>0.728, 2012=>0.689, 2013=>0.694, 2014=>0.661}
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_high_school_graduation_variation
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.high_school_graduation_variation('ACADEMY 20')
-    #   expected = 1.194
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_kindergarten_participation_against_hs_graduation
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
-    #   expected = 0.642
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_kindergarten_participation_against_hs_graduation
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   assert hc.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-    # end
-    #
-    # def test_calculates_statewide_correlation
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   refute hc.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
-    # end
-    #
-    # def test_calculates_across_subsets
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   assert hc.kindergarten_participation_correlates_with_high_school_graduation(
-    #   :across => ["ACADEMY 20", "ARICKAREE R-2", 'YUMA SCHOOL DISTRICT 1'])
-    # end
+    def test_it_exists
+      hc = HeadcountAnalyst.new(@dr)
+      assert_instance_of HeadcountAnalyst, hc
+    end
+    
+    def test_can_take_arg_from_direct_repository
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.district_repository
+      assert_instance_of DistrictRepository, actual
+    end
+    
+    def test_kindergarten_participation_rate_variation_colorado
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+      expected = 0.766
+      assert_equal expected, actual
+    end
+    
+    def test_kindergarten_participation_rate_variation_district
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'YUMA SCHOOL DISTRICT 1')
+      expected = 0.447
+      assert_equal expected, actual
+    end
+    
+    def test_kindergarten_participation_rate_variation_trend
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
+      expected = {2004=>1.258, 2005=>0.961, 2006=>1.05, 2007=>0.992, 2008=>0.718, 2009=>0.652, 2010=>0.681, 2011=>0.728, 2012=>0.689, 2013=>0.694, 2014=>0.661}
+      assert_equal expected, actual
+    end
+    
+    def test_high_school_graduation_variation
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.high_school_graduation_variation('ACADEMY 20')
+      expected = 1.194
+      assert_equal expected, actual
+    end
+    
+    def test_kindergarten_participation_against_hs_graduation
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+      expected = 0.642
+      assert_equal expected, actual
+    end
+    
+    def test_kindergarten_participation_against_hs_graduation
+      hc = HeadcountAnalyst.new(@dr)
+      assert hc.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    end
+    
+    def test_calculates_statewide_correlation
+      hc = HeadcountAnalyst.new(@dr)
+      refute hc.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
+    end
+    
+    def test_calculates_across_subsets
+      hc = HeadcountAnalyst.new(@dr)
+      assert hc.kindergarten_participation_correlates_with_high_school_graduation(
+      :across => ["ACADEMY 20", "ARICKAREE R-2", 'YUMA SCHOOL DISTRICT 1'])
+    end
     
     def test_top_statewide_test_year_over_year_growth
       hc = HeadcountAnalyst.new(@dr)
@@ -117,41 +117,35 @@ class HeadcountAnalystTest < Minitest::Test
       expected =  ["OURAY R-1", 0.154]
       assert_equal expected, actual
     end
-    #
-    # def test_high_poverty_and_high_school_graduation
-    #   skip
-    #   hc = HeadcountAnalyst.new(@dr)
-    #
-    # end
+    
 
-    # def test_find_statewide_average_free_reduced_lunch
-    #   # skip
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.statewide_average_free_reduced_lunch
-    #   expected = 1584.368
-    #   assert_equal expected, actual
-    # end
+    def test_find_statewide_average_free_reduced_lunch
+      # skip
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.statewide_average_free_reduced_lunch
+      expected = 1584.368
+      assert_equal expected, actual
+    end
 
-    # def test_find_districts_over_avg_free_reduced_lunch
-    #   # skip
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.districts_over_state_avg_free_reduced_lunch.first.name
-    #   expected = "ACADEMY 20"
-    #   assert_equal expected, actual
-    # end
+    def test_find_districts_over_avg_free_reduced_lunch
+      # skip
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.districts_over_state_avg_free_reduced_lunch.first.name
+      expected = "ACADEMY 20"
+      assert_equal expected, actual
+    end
 
-    # def test_find_single_district_avg_percentage_s_a_children_poverty
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.district_avg_school_age_poverty("AGUILAR REORGANIZED 6")
-    #   expected = 0.389
-    #   assert_equal expected, actual
-    # end
+    def test_find_single_district_avg_percentage_s_a_children_poverty
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.district_avg_school_age_poverty("AGUILAR REORGANIZED 6")
+      expected = 0.389
+      assert_equal expected, actual
+    end
 
-    # def test_find_state_avg_school_age_poverty
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.statewide_school_age_poverty
-    #   expected = 0.164
-    #   assert_equal expected, actual
-
-    # end
+    def test_find_state_avg_school_age_poverty
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.statewide_school_age_poverty
+      expected = 0.164
+      assert_equal expected, actual
+    end
   end
