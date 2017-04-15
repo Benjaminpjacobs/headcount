@@ -51,7 +51,7 @@ class HeadcountAnalyst
     correlation = districts.map do |district|
       kindergarten_participation_correlates_with_high_school_graduation(for: district)
     end
-     participations_correlated?(correlation)
+    participations_correlated?(correlation)
   end
 
   def top_statewide_test_year_over_year_growth(args)
@@ -61,8 +61,6 @@ class HeadcountAnalyst
       statewide_test_year_over_year_growth(args).shift(args[:top])
     elsif args[:grade] && args[:subject]
       statewide_test_year_over_year_growth(args).shift
-    elsif args[:grade] && args[:weight]
-      
     else
       top_statewide_test_year_over_year_growth_across_subjects(args)
     end
@@ -73,17 +71,67 @@ class HeadcountAnalyst
     math = find_subject_stats(args, "math")
     reading = find_subject_stats(args, "reading")
     writing = find_subject_stats(args, "writing")
+    check_for_weighting(args, math, reading, writing)
+  end
+
+  def check_for_weighting(args, math, reading, writing)
     if args[:weighting]
-      math = apply_weighting(math, args[:weighting][:math])
-      reading = apply_weighting(reading, args[:weighting][:reading])
-      writing = apply_weighting(writing, args[:weighting][:writing])
-      all = cross_subject_statistcs_weighted(math, reading, writing)
-      round_stats(all).shift
+      weight_statistics(args, math, reading, writing)
     else
       all = cross_subject_statistcs(math, reading, writing)
       round_stats(all).shift
     end
-    
+  end
+
+  def weight_statistics(args, math, reading, writing)
+    math = apply_weighting(math, args[:weighting][:math])
+    reading = apply_weighting(reading, args[:weighting][:reading])
+    writing = apply_weighting(writing, args[:weighting][:writing])
+    all = cross_subject_statistcs_weighted(math, reading, writing)
+    round_stats(all).shift
+  end
+
+  def statewide_average_free_reduced_lunch(year=2014)
+    total = @district_repository.economic_profile_repository.profiles["COLORADO"]
+    .economic_profile[:free_or_reduced_price_lunch].each_value.map do |v|
+      v[:total]
+    end
+    (total.inject(:+)/ @district_repository.economic_profile_repository.profiles["COLORADO"]
+    .economic_profile[:free_or_reduced_price_lunch].keys.count)/(@district_repository.districts.keys.count - 1)
+  end
+
+  def districts_over_state_avg_free_reduced_lunch
+    all = map_districts_lunch_data
+    compare_stat_to_statewide_avg(all)
+  end
+
+  def compare_stat_to_statewide_avg(all)
+    all.compact.collect do |stat|
+      @district_repository.districts[stat[0]] if stat[1] > statewide_average_free_reduced_lunch
+    end
+  end
+
+  def map_districts_lunch_data
+    @district_repository.economic_profile_repository.profiles.map do |k,v|
+      if k == "COLORADO"
+        next
+      else
+        [k, average_across_years(v)]
+      end
+    end
+  end
+
+  def average_across_years(v)
+    totals = v.economic_profile[:free_or_reduced_price_lunch].each_value.map do |v|
+      v[:total]
+    end
+    totals.inject(:+)/v.economic_profile[:free_or_reduced_price_lunch].keys.count
+  end
+
+  def district_avg_school_age_poverty
+    @district_repository.districts.map do |district|
+      district.economic_profile[:children_in_poverty]
+    end
   end
 
   private
@@ -98,7 +146,7 @@ class HeadcountAnalyst
   def round_stats(all)
     map_growth_stats(all).each{|val| val[1] = val[1].round(3)}
   end
-  
+
   def cross_subject_statistcs(math, reading, writing)
     math.zip(reading).zip(writing).map{|a| (a.flatten.inject(:+)/3)}
   end
@@ -116,7 +164,7 @@ class HeadcountAnalyst
   def compile_subject_data(args)
     subject_stats_per_district =  subject_stats_per_district(args)
     valid_statistics = valid_stats(subject_stats_per_district)
-    calculate_growth(valid_statistics) 
+    calculate_growth(valid_statistics)
   end
 
   def map_growth_stats(percent_growth)
@@ -156,7 +204,7 @@ class HeadcountAnalyst
     array.select do |value|
       value[1].is_a?(Float) || value[1].is_a?(Integer)
     end
-  end  
+  end
 
   def stat_diff(stat)
     (stat[-1][1] - stat[0][1])
@@ -189,8 +237,8 @@ class HeadcountAnalyst
     if comparison.empty?|| base.empty?
       return
     else
-    (generate_yearly_statistical_average(comparison)/
-    generate_yearly_statistical_average(base)).round(3)
+      (generate_yearly_statistical_average(comparison)/
+      generate_yearly_statistical_average(base)).round(3)
     end
   end
 
