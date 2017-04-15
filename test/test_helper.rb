@@ -13,3 +13,5 @@ require 'minitest/pride'
 # require "./test/headcount_analyst_test.rb"
 # require "./test/statewide_test_repository_test"
 # require "./test/statewide_test_test"
+# require "./test/result_entry_test.rb"
+# require "./test/result_entry.rb"

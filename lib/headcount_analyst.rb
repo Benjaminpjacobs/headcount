@@ -73,9 +73,6 @@ class HeadcountAnalyst
     round_stats(combined_stats).shift
   end
 
-###############################################
-
-
   def statewide_average_free_reduced_lunch(year=2014)
     state_statistics = state_economic_statistics(:free_or_reduced_price_lunch)
     total = state_statistics.each_value.map{ |v| v[:total] }
