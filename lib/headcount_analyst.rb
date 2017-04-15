@@ -84,24 +84,43 @@ class HeadcountAnalyst
     collect_districts_over_state_avg_for_free_reduced_lunch(all)
   end
 
-  def statewide_school_age_poverty
+  def statewide_child_poverty
     stats = @district_repository.districts.keys.map do |key|
-      key == "COLORADO"? next : district_avg_school_age_poverty(key)
+      key == "COLORADO"? next : district_avg_child_poverty(key)
     end
     average(stats.compact, stats)
   end
 
-  def district_avg_school_age_poverty(district)
+  def district_avg_child_poverty(district)
     stats = @district_repository.districts[district].economic_profile.economic_profile[:children_in_poverty]
-    average(stats.values, stats.keys)
+    average_or_nil(stats)
+  end
+
+  def districts_over_state_avg_child_poverty
+    state_avg = statewide_child_poverty
+    collect_districts_over_state_avg_for_child_poverty(state_avg)
   end
 
   private
+
+  def average_or_nil(stats)
+    if stats.nil?
+      0.0
+    else
+      average(stats.values, stats.keys)
+    end
+  end
 
   def collect_districts_over_state_avg_for_free_reduced_lunch(all)
     all.compact.collect do |stat|
       @district_repository.districts[stat[0]] if stat[1] > statewide_average_free_reduced_lunch
     end
+  end
+
+  def collect_districts_over_state_avg_for_child_poverty(state_avg)
+    @district_repository.districts.keys.map do |key|
+      @district_repository.districts[key] if district_avg_child_poverty(key) > state_avg
+    end.compact
   end
 
   def map_districts_lunch_data
