@@ -79,7 +79,7 @@ class EconomicProfileRepository
       data[key] = value.group_by { |v| v.shift }
     end
   end
-  
+
   def select_eligible_for_free_or_reduced(data)
     data.each do |key, value|
       data[key] =
@@ -100,7 +100,7 @@ class EconomicProfileRepository
   end
 
   def value_hash(value)
-    {value[0][0].downcase.to_sym => value[0][1], 
+    {value[0][0].downcase.to_sym => value[0][1],
     value[1][0].downcase.to_sym => value[1][1]}
   end
 
@@ -112,6 +112,10 @@ class EconomicProfileRepository
   end
 
   def format_normal(district_profiles)
+    district_profiles.each do |k, v|
+      district_profiles[k] = v.reject{ |stat| stat[1] > 1.0}
+    end
+    
     district_profiles.each do |key, value|
       district_profiles[key] = Hash[*value.flatten]
     end
@@ -122,7 +126,7 @@ class EconomicProfileRepository
       district_profiles[key] = hash_value(value)
     end
   end
-  
+
   def hash_value(data)
     hash = {}
     data.each{|value| hash[value[0]] = value[1]}
@@ -130,9 +134,9 @@ class EconomicProfileRepository
   end
 
   def standard_data?(district_profiles)
-    district_profiles[district_profiles.keys[0]][0].count == 2  
+    district_profiles[district_profiles.keys[0]][0].count == 2
   end
-  
+
   def income_data?(district_profiles)
     district_profiles[district_profiles.keys[0]][0][0].is_a?(Array)
   end
@@ -146,27 +150,27 @@ class EconomicProfileRepository
   def create_lunch_profile_data(district_profiles, row)
     district_profiles[row[:location].upcase] =
     [[row[:timeframe].to_i, row[:poverty_level],
-    row[:dataformat],  row[:data].to_f]] 
+    row[:dataformat],  row[:data].to_f]]
   end
 
   def add_income_profile_data(district_profiles, row)
-    district_profiles[row[:location].upcase] << 
+    district_profiles[row[:location].upcase] <<
     [format_date_range(row[:timeframe]), row[:data].to_f]
   end
 
   def create_income_profile_data(district_profiles, row)
-    district_profiles[row[:location].upcase] = 
+    district_profiles[row[:location].upcase] =
     [[format_date_range(row[:timeframe]), row[:data].to_f]]
   end
 
   def add_profile_data(district_profiles, row)
-    district_profiles[row[:location].upcase] << 
+    district_profiles[row[:location].upcase] <<
     [row[:timeframe].to_i, row[:data].to_f]
   end
-  
+
   def create_new_profile(district_profiles, row)
-    district_profiles[row[:location].upcase] = 
-    [[row[:timeframe].to_i, row[:data].to_f]]
+    district_profiles[row[:location].upcase] =
+    [[row[:timeframe].to_i,row[:data].to_f]]
   end
 
   def district_exists?(district_profiles, row)

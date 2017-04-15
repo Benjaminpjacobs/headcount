@@ -96,8 +96,8 @@ class HeadcountAnalyst
     .economic_profile[:free_or_reduced_price_lunch].each_value.map do |v|
       v[:total]
     end
-    (total.inject(:+)/ @district_repository.economic_profile_repository.profiles["COLORADO"]
-    .economic_profile[:free_or_reduced_price_lunch].keys.count)/(@district_repository.districts.keys.count - 1)
+    ((total.inject(:+)/ @district_repository.economic_profile_repository.profiles["COLORADO"]
+    .economic_profile[:free_or_reduced_price_lunch].keys.count)/(@district_repository.districts.keys.count - 1)).round(3)
   end
 
   def districts_over_state_avg_free_reduced_lunch
@@ -125,13 +125,23 @@ class HeadcountAnalyst
     totals = v.economic_profile[:free_or_reduced_price_lunch].each_value.map do |v|
       v[:total]
     end
-    totals.inject(:+)/v.economic_profile[:free_or_reduced_price_lunch].keys.count
+    (totals.inject(:+)/v.economic_profile[:free_or_reduced_price_lunch].keys.count).round(3)
   end
 
-  def district_avg_school_age_poverty
-    @district_repository.districts.map do |district|
-      district.economic_profile[:children_in_poverty]
+  def statewide_school_age_poverty
+    stats = @district_repository.districts.keys.map do |key|
+      if key == "COLORADO"
+        next
+      else
+        district_avg_school_age_poverty(key)
+      end
     end
+    (stats.compact.inject(:+)/stats.count).round(3)
+  end
+
+  def district_avg_school_age_poverty(district)
+    stat = @district_repository.districts[district].economic_profile.economic_profile[:children_in_poverty]
+    (stat.values.inject(:+)/stat.keys.count).round(3)
   end
 
   private

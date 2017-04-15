@@ -127,22 +127,29 @@ class HeadcountAnalystTest < Minitest::Test
       # skip
       hc = HeadcountAnalyst.new(@dr)
       actual = hc.statewide_average_free_reduced_lunch
-      expected = 1584.3677777777777
+      expected = 1584.368
       assert_equal expected, actual
     end
 
     def test_find_districts_over_avg_free_reduced_lunch
       # skip
       hc = HeadcountAnalyst.new(@dr)
-      actual = hc.districts_over_state_avg_free_reduced_lunch
+      actual = hc.districts_over_state_avg_free_reduced_lunch.first.name
       expected = "ACADEMY 20"
       assert_equal expected, actual
     end
 
-    def test_find_district_avg_percentage_s_a_children_poverty
+    def test_find_single_district_avg_percentage_s_a_children_poverty
       hc = HeadcountAnalyst.new(@dr)
-      actual = hc.district_avg_school_age_poverty
-      expected = ''
+      actual = hc.district_avg_school_age_poverty("AGUILAR REORGANIZED 6")
+      expected = 0.389
+      assert_equal expected, actual
+    end
+
+    def test_find_state_avg_school_age_poverty
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.statewide_school_age_poverty
+      expected = 0.164
       assert_equal expected, actual
 
     end
