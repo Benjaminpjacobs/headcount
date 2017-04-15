@@ -67,28 +67,10 @@ class HeadcountAnalyst
   end
 
   def top_statewide_test_year_over_year_growth_across_subjects(args)
-    # weight = weighted?(args)
-    math = find_subject_stats(args, "math")
-    reading = find_subject_stats(args, "reading")
-    writing = find_subject_stats(args, "writing")
-    check_for_weighting(args, math, reading, writing)
-  end
-
-  def check_for_weighting(args, math, reading, writing)
-    if args[:weighting]
-      weight_statistics(args, math, reading, writing)
-    else
-      all = cross_subject_statistcs(math, reading, writing)
-      round_stats(all).shift
-    end
-  end
-
-  def weight_statistics(args, math, reading, writing)
-    math = apply_weighting(math, args[:weighting][:math])
-    reading = apply_weighting(reading, args[:weighting][:reading])
-    writing = apply_weighting(writing, args[:weighting][:writing])
-    all = cross_subject_statistcs_weighted(math, reading, writing)
-    round_stats(all).shift
+    all_stats = find_all_subject_stats(args)
+    weighted_stats = weight_stats(args, all_stats)
+    combined_stats = cross_subject_statistics(weighted_stats)
+    round_stats(combined_stats).shift
   end
 
   def statewide_average_free_reduced_lunch(year=2014)
@@ -145,9 +127,36 @@ class HeadcountAnalyst
   end
 
   private
-  def cross_subject_statistcs_weighted(math, reading, writing)
-    math.zip(reading).zip(writing).map{|a| (a.flatten.inject(:+))}
+
+
+  def weight_stats(args, all)
+    if args[:weighting]
+      all = weight_statistics(args, all) 
+      all[:divisor] = 1
+    else
+      all[:divisor] = 3
+    end
+    all 
   end
+
+  def find_all_subject_stats(args)
+    math = find_subject_stats(args, "math")
+    reading = find_subject_stats(args, "reading")
+    writing = find_subject_stats(args, "writing")
+    {math: math, reading: reading, writing: writing}
+  end
+
+  def weight_statistics(args, all)
+    math = apply_weighting(all[:math], args[:weighting][:math])
+    reading = apply_weighting(all[:reading], args[:weighting][:reading])
+    writing = apply_weighting(all[:writing], args[:weighting][:writing])
+    {math: math, reading: reading, writing: writing}
+  end
+
+  def cross_subject_statistics(all)
+    all[:math].zip(all[:reading]).zip(all[:writing]).map{|a| (a.flatten.inject(:+)/all[:divisor])}
+  end
+
 
   def apply_weighting(stats, weight)
     stats.map{|stat| stat * weight}
@@ -155,10 +164,6 @@ class HeadcountAnalyst
 
   def round_stats(all)
     map_growth_stats(all).each{|val| val[1] = val[1].round(3)}
-  end
-
-  def cross_subject_statistcs(math, reading, writing)
-    math.zip(reading).zip(writing).map{|a| (a.flatten.inject(:+)/3)}
   end
 
   def find_subject_stats(args, subject)

@@ -89,33 +89,34 @@ class HeadcountAnalystTest < Minitest::Test
     #   assert hc.kindergarten_participation_correlates_with_high_school_graduation(
     #   :across => ["ACADEMY 20", "ARICKAREE R-2", 'YUMA SCHOOL DISTRICT 1'])
     # end
-    #
-    # def test_top_statewide_test_year_over_year_growth
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
-    #   expected = ["WILEY RE-13 JT", 0.3]
-    #   assert_equal expected, actual
-    # end
-    # def test_top_three_statewide_test_year_over_year_growth
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
-    #   expected = [["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.072], ["COTOPAXI RE-3", 0.07]]
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_top_three_statewide_test_year_over_year_growth
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.top_statewide_test_year_over_year_growth(grade: 3)
-    #   expected = ["SANGRE DE CRISTO RE-22J", 0.071]
-    #   assert_equal expected, actual
-    # end
-    #
-    # def test_top_three_statewide_test_year_over_year_growth_weighted
-    #   hc = HeadcountAnalyst.new(@dr)
-    #   actual = hc.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-    #   expected =  ["OURAY R-1", 0.154]
-    #   assert_equal expected, actual
-    # end
+    
+    def test_top_statewide_test_year_over_year_growth
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+      expected = ["WILEY RE-13 JT", 0.3]
+      assert_equal expected, actual
+    end
+
+    def test_top_three_statewide_test_year_over_year_growth
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+      expected = [["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.072], ["COTOPAXI RE-3", 0.07]]
+      assert_equal expected, actual
+    end
+    
+    def test_top_three_statewide_test_year_over_year_growth
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.top_statewide_test_year_over_year_growth(grade: 3)
+      expected = ["SANGRE DE CRISTO RE-22J", 0.071]
+      assert_equal expected, actual
+    end
+    
+    def test_top_three_statewide_test_year_over_year_growth_weighted
+      hc = HeadcountAnalyst.new(@dr)
+      actual = hc.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+      expected =  ["OURAY R-1", 0.154]
+      assert_equal expected, actual
+    end
     #
     # def test_high_poverty_and_high_school_graduation
     #   skip
@@ -123,34 +124,34 @@ class HeadcountAnalystTest < Minitest::Test
     #
     # end
 
-    def test_find_statewide_average_free_reduced_lunch
-      # skip
-      hc = HeadcountAnalyst.new(@dr)
-      actual = hc.statewide_average_free_reduced_lunch
-      expected = 1584.368
-      assert_equal expected, actual
-    end
+    # def test_find_statewide_average_free_reduced_lunch
+    #   # skip
+    #   hc = HeadcountAnalyst.new(@dr)
+    #   actual = hc.statewide_average_free_reduced_lunch
+    #   expected = 1584.368
+    #   assert_equal expected, actual
+    # end
 
-    def test_find_districts_over_avg_free_reduced_lunch
-      # skip
-      hc = HeadcountAnalyst.new(@dr)
-      actual = hc.districts_over_state_avg_free_reduced_lunch.first.name
-      expected = "ACADEMY 20"
-      assert_equal expected, actual
-    end
+    # def test_find_districts_over_avg_free_reduced_lunch
+    #   # skip
+    #   hc = HeadcountAnalyst.new(@dr)
+    #   actual = hc.districts_over_state_avg_free_reduced_lunch.first.name
+    #   expected = "ACADEMY 20"
+    #   assert_equal expected, actual
+    # end
 
-    def test_find_single_district_avg_percentage_s_a_children_poverty
-      hc = HeadcountAnalyst.new(@dr)
-      actual = hc.district_avg_school_age_poverty("AGUILAR REORGANIZED 6")
-      expected = 0.389
-      assert_equal expected, actual
-    end
+    # def test_find_single_district_avg_percentage_s_a_children_poverty
+    #   hc = HeadcountAnalyst.new(@dr)
+    #   actual = hc.district_avg_school_age_poverty("AGUILAR REORGANIZED 6")
+    #   expected = 0.389
+    #   assert_equal expected, actual
+    # end
 
-    def test_find_state_avg_school_age_poverty
-      hc = HeadcountAnalyst.new(@dr)
-      actual = hc.statewide_school_age_poverty
-      expected = 0.164
-      assert_equal expected, actual
+    # def test_find_state_avg_school_age_poverty
+    #   hc = HeadcountAnalyst.new(@dr)
+    #   actual = hc.statewide_school_age_poverty
+    #   expected = 0.164
+    #   assert_equal expected, actual
 
-    end
+    # end
   end

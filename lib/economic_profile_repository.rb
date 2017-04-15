@@ -112,12 +112,19 @@ class EconomicProfileRepository
   end
 
   def format_normal(district_profiles)
-    district_profiles.each do |k, v|
-      district_profiles[k] = v.reject{ |stat| stat[1] > 1.0}
-    end
-    
+    district_profiles = reject_non_percentages(district_profiles)
+    hash_out_values(district_profiles)
+  end
+
+  def hash_out_values(district_profiles)
     district_profiles.each do |key, value|
       district_profiles[key] = Hash[*value.flatten]
+    end
+  end
+  
+  def reject_non_percentages(district_profiles)
+        district_profiles.each do |k, v|
+      district_profiles[k] = v.reject{ |stat| stat[1] > 1.0}
     end
   end
 
