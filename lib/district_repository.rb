@@ -5,7 +5,7 @@ require_relative 'economic_profile_repository'
 require 'csv'
 
 class DistrictRepository
-  attr_accessor :districts, :enrollment_repository, :economic_profile_repository
+  attr_accessor :districts, :enrollment_repository, :economic_profile_repository, :statewide_test_repository 
 
   def initialize
     @districts = {}
@@ -19,7 +19,6 @@ class DistrictRepository
     load_enrollment_repo(args)
     load_testing_repo(args)
     load_economics_repo(args)
-    update_districts
   end
 
   def find_by_name(name)
@@ -58,18 +57,6 @@ private
 
   def add_district(district)
     @districts[district.name] = district
-  end
-
-  def update_districts
-    @districts.keys.each do |k|
-      update_each_repository(k)
-    end
-  end
-
-  def update_each_repository(k)
-    @districts[k].enrollment = @enrollment_repository.enrollment[k]
-    @districts[k].testing = @statewide_test_repository.tests[k]
-    @districts[k].economic_profile = @economic_profile_repository.profiles[k]
   end
 
   def generate_districts(args)

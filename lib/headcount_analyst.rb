@@ -226,7 +226,7 @@ class HeadcountAnalyst
   end
   def proficiency_for_subject_in_all_years(args, value)
     (2008..2014).collect do |number|
-      [number, value.testing.proficient_for_subject_by_grade_in_year(args[:subject],args[:grade], number)]
+      [number, value.statewide_test.proficient_for_subject_by_grade_in_year(args[:subject],args[:grade], number)]
     end
   end
 

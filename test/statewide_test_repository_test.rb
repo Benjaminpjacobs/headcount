@@ -47,6 +47,7 @@ class StatewideTestRepositoryTest < Minitest::Test
     str.load_data({:statewide_testing => {:third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv",
     :eighth_grade => "./data/8th grade students scoring proficient or above on the CSAP_TCAP.csv"}})
     actual = str.tests["COLORADO"].tests.keys
+    binding.pry
     expected = [:third_grade, :eighth_grade]
     assert_equal expected, actual
   end
