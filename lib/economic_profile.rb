@@ -1,6 +1,6 @@
 require_relative "custom_errors"
-require_relative 'charts'
 require 'pry'
+
 class EconomicProfile
 
   attr_accessor :name, :economic_profile

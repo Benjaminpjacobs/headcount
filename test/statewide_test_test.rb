@@ -1,4 +1,3 @@
-require 'pry'
 require_relative 'test_helper'
 require_relative '../lib/statewide_test'
 require_relative '../lib/statewide_test_repository'
@@ -14,10 +13,11 @@ class StatewideTestTest < Minitest::Test
     :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"}})
   end
 
-  # def test_test_exists
-  #   swt = StatewideTest.new(:name => "COLORADO", :third_grade => {2010 => 0.3915})
-  #   assert_instance_of StatewideTest, swt
-  # end
+  def test_test_exists
+    binding.pry
+    swt = StatewideTest.new(:name => "COLORADO", :third_grade => {2010 => 0.3915})
+    assert_instance_of StatewideTest, swt
+  end
 
   # def test_unknown_data_error
   #   assert_raises(UnknownDataError) do  
@@ -60,15 +60,14 @@ class StatewideTestTest < Minitest::Test
   # end
 
   # def test_n_a_handling
-  #   binding.pry
   #   actual = @str.tests["AGATE 300"].proficient_for_subject_by_grade_in_year(:math, 3, 2010)
   #   expected = 'N/A'
   #   assert_equal expected, actual
   # end
 
-  def test_avg_prof_by_grade
-    actual = @str.tests["ACADEMY 20"].average_proficiency_by_grade(3)
-    expected = {:math=>0.838, :reading=>0.86, :writing=>0.669}
-    assert_equal expected, actual
-  end
+  # def test_avg_prof_by_grade
+  #   actual = @str.tests["ACADEMY 20"].average_proficiency_by_grade(3)
+  #   expected = {:math=>0.838, :reading=>0.86, :writing=>0.669}
+  #   assert_equal expected, actual
+  # end
 end

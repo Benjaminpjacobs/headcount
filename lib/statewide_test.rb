@@ -56,6 +56,10 @@ class StatewideTest
     hash_results(heading)
   end
 
+  def average_proficiency_by_grade_across_subject(grade)
+    subjects = average_proficiency_by_grade(grade)
+  end
+
 private
 
   def hash_results(heading)

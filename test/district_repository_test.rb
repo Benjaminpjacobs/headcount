@@ -84,7 +84,7 @@ class DistrictRepositoryTest < Minitest::Test
         :writing => "./data/Average proficiency on the CSAP_TCAP by race_ethnicity_ Writing.csv"
       }
     })
-    actual = dr.districts["COLORADO"].testing.tests[:third_grade][2011][0]
+    actual = dr.districts["COLORADO"].statewide_test.tests[:third_grade][2011][0]
     expected = [:math, 0.696]
     assert_equal expected, actual
   end
