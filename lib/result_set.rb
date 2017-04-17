@@ -1,21 +1,9 @@
 class ResultSet
-  attr_reader :result_entries
+  attr_reader :matching_districts, :statewide_average
 
-  def initialize(result_entries)
-    @result_entries = result_entries
+  def initialize(args)
+    @matching_districts = args[:matching_districts]
+    @statewide_average = args[:statewide_average]
   end
-
-  def matching_districts
-    @result_entries
-  end
-
-  def count
-    @result_entries.count
-  end
-
-  def first
-    @result_entries.first
-  end
-
-
+  
 end

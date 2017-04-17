@@ -65,6 +65,17 @@ class HeadcountAnalyst
     top
   end
 
+  def prep_statewide_average
+    {
+      free_and_reduced_price_lunch_rate:
+      average(all_district_lunch_statistics,all_district_lunch_statistics),
+      children_in_poverty_rate:
+      average(all_district_child_poverty_statistics,all_district_child_poverty_statistics),
+      high_school_graduation_rate:
+      average(all_district_hs_grad_stats, all_district_hs_grad_stats),
+    }
+  end
+
   def over_state_avg_free_reduced_lunch
     all_dist_stats = all_district_lunch_statistics
     state_avg = average(all_dist_stats, all_dist_stats)
@@ -82,10 +93,6 @@ class HeadcountAnalyst
     format_results(results, :children_in_poverty)
   end
 
-  def format_results(results, study)
-    Hash[*results.collect{|h| h.to_a}.flatten]
-  end
-
   def over_state_average_hs_graduation
     all_dist_stats = all_district_hs_grad_stats
     state_avg =  average(all_dist_stats, all_dist_stats)
@@ -97,7 +104,9 @@ class HeadcountAnalyst
   def high_poverty_and_high_school_graduation
     studies = all_study_data
     common = collect_district_names_in_common(studies)
-    ResultSet.new(prep_result_entries(common, studies))
+    districts = prep_result_entries(common, studies)
+    average = ResultEntry.new(prep_statewide_average)
+    ResultSet.new({matching_districts: districts, statewide_average: average})
   end
 
   def prep_result_entries(common, studies)
@@ -116,6 +125,11 @@ class HeadcountAnalyst
   
 
   private
+
+
+  def format_results(results, study)
+    Hash[*results.collect{|h| h.to_a}.flatten]
+  end
 
   def collect_district_names_in_common(studies)
     studies[:lunch].keys & 
