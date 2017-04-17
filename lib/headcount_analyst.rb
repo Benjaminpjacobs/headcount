@@ -72,36 +72,55 @@ class HeadcountAnalyst
     results = collect_stat_over_average(districts, all_dist_stats, state_avg)
     format_results(results, :high_school_graduation_rate)
   end
-  
-  def high_poverty_and_high_school_graduation
-    studies = all_study_data
-    common = collect_district_names_in_common(studies)
+
+  def create_result_set(arg)
+    studies = all_study_data(arg)
+    common = collect_district_names_in_common(studies, arg)
     districts = prep_result_entries(common, studies)
-    average = ResultEntry.new(prep_statewide_average)
+    average = ResultEntry.new(prep_statewide_average(arg))
     ResultSet.new({matching_districts: districts, statewide_average: average})
   end
 
+  def high_poverty_and_high_school_graduation
+    create_result_set([:lunch, :poverty, :graduation])
+  end
+
+  def high_income_disparity
+    create_result_set([:poverty, :income])
+  end
+  
   private
 
-  def prep_statewide_average
-    {
-      free_and_reduced_price_lunch_rate:
-      average(all_district_statistics(:lunch),all_district_statistics(:lunch)),
-      children_in_poverty_rate:
-      average(all_district_statistics(:poverty),all_district_statistics(:poverty)),
-      high_school_graduation_rate:
-      average(all_district_statistics(:graduation), all_district_statistics(:graduation)),
-    }
+  def prep_statewide_average(studies)
+    state_avg = {}
+    studies.each do |study|
+      case study
+      when :lunch
+        state_avg[:free_and_reduced_price_lunch_rate] = 
+        average(all_district_statistics(study),all_district_statistics(study))
+      when :poverty
+        state_avg[:children_in_poverty_rate] = 
+        average(all_district_statistics(study),all_district_statistics(study))
+      when :graduation
+        state_avg[:high_school_graduation_rate] = 
+        average(all_district_statistics(study),all_district_statistics(study))
+      when :income
+        state_avg[:median_household_income_average] = 
+        average(all_district_statistics(study),all_district_statistics(study))
+      end
+    end
+    state_avg
   end
 
   def prep_result_entries(common, studies)
     common.map do |district|
-      ResultEntry.new({
-      name: district, 
-      free_and_reduced_price_lunch_rate: studies[:lunch][district],
-      children_in_poverty_rate: studies[:poverty][district],
-      high_school_graduation_rate: studies[:graduation][district]
-     })
+      results = {}
+      results[:name] = district
+      results[:free_and_reduced_price_lunch_rate] = studies[:lunch][district] if studies[:lunch]
+      results[:children_in_poverty_rate] = studies[:poverty][district] if studies[:poverty]
+      results[:high_school_graduation_rate] = studies[:graduation][district] if studies[:graduation]
+      results[:median_household_income] = studies[:income][district] if studies[:income] 
+      ResultEntry.new(results)
     end  
   end
     
@@ -109,18 +128,31 @@ class HeadcountAnalyst
     Hash[*results.collect{|h| h.to_a}.flatten]
   end
 
-  def collect_district_names_in_common(studies)
-    studies[:lunch].keys & 
-    studies[:poverty].keys &
-    studies[:graduation].keys
+  def collect_district_names_in_common(studies, args)
+    compare = []
+    intersection = 
+    args.each do |arg|
+      compare << studies[arg].keys
+    end
+
+    if args.length == 2
+      intersection = compare[0] & compare[1]
+    else      
+      i = 0
+      until i == (args.length-2)
+        intersection = compare[i] & compare[i+1]
+        i += 1
+      end
+    end
+    intersection
   end
 
-  def all_study_data
-    {
-    lunch: over_state_average(:lunch),
-    poverty: over_state_average(:poverty),
-    graduation: over_state_average(:graduation)
-    }
+  def all_study_data(args)
+    study_data = {}
+    args.each do |arg|
+      study_data[arg] = over_state_average(arg)
+    end
+    study_data
   end
     
   def all_district_statistics(study)
@@ -133,6 +165,8 @@ class HeadcountAnalyst
         value.economic_profile.children_in_poverty_average
       elsif study == :graduation
         value.enrollment.graduation_rate_average
+      elsif study == :income
+        value.economic_profile.median_household_income_average
       end
     end.compact
   end

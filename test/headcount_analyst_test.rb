@@ -101,11 +101,11 @@ class HeadcountAnalystTest < Minitest::Test
     #   assert_equal expected, actual
     # end
     
-    # def test_top_three_statewide_test_year_over_year_growth_weighted
-    #   actual = @hc.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
-    #   expected =  ["OURAY R-1", 0.154]
-    #   assert_equal expected, actual
-    # end
+    def test_top_three_statewide_test_year_over_year_growth_weighted
+      actual = @hc.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+      expected =  ["OURAY R-1", 0.154]
+      assert_equal expected, actual
+    end
 
     def test_find_districts_over_avg_free_reduced_lunch
       actual = @hc.over_state_average(:lunch).first
@@ -128,6 +128,11 @@ class HeadcountAnalystTest < Minitest::Test
     def test_high_poverty_and_high_school_graduation
       actual = @hc.high_poverty_and_high_school_graduation
       assert_instance_of ResultSet, actual
+    end
+
+    def test_high_income_disparity
+      actual = @hc.high_income_disparity
+      assert_instance_of ResultSet, actual 
     end
     
   end
