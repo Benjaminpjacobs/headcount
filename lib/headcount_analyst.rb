@@ -105,7 +105,7 @@ class HeadcountAnalyst
         state_avg[:high_school_graduation_rate] = 
         average(all_district_statistics(study),all_district_statistics(study))
       when :income
-        state_avg[:median_household_income_average] = 
+        state_avg[:median_household_income] = 
         average(all_district_statistics(study),all_district_statistics(study))
       end
     end
@@ -137,12 +137,8 @@ class HeadcountAnalyst
 
     if args.length == 2
       intersection = compare[0] & compare[1]
-    else      
-      i = 0
-      until i == (args.length-2)
-        intersection = compare[i] & compare[i+1]
-        i += 1
-      end
+    else args.length == 3     
+      intersection = compare[0] & compare[1] & compare[2]
     end
     intersection
   end
