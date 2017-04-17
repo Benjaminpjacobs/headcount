@@ -47,20 +47,20 @@ class EconomicProfile
 
   def free_or_reduced_price_lunch_percentage_average
     yearly = @economic_profile[:free_or_reduced_price_lunch].values.map do |v|
-      v[:percentage] unless v[:percentage].nil? 
+      v[:percentage] unless v[:percentage].nil?
     end.compact
     average(yearly).round(3)
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
-    raise UnknownDataError unless 
+    raise UnknownDataError unless
     data_known?(:free_or_reduced_price_lunch, year)
     @economic_profile[:free_or_reduced_price_lunch][year][:total]
   end
-  
+
   def free_or_reduced_price_lunch_number_average
     yearly = @economic_profile[:free_or_reduced_price_lunch].values.map do |v|
-      v[:total] unless v[:total].nil? 
+      v[:total] unless v[:total].nil?
     end.compact
     average(yearly).to_i
   end

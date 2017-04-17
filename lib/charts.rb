@@ -1,7 +1,7 @@
 require 'gchart'
 
 class Chart
-  
+
   def initialize(args)
     @data = args[:data]
     @labels = args[:labels]
@@ -26,7 +26,7 @@ class Chart
         # a.label_positions = [14.2,    28.4,    43.6,    57.8,    72,   86.2, 100]
         a.text_color      = :black
       end
-    
+
       g.axis :left do |a|
         a.labels          = [@title]
         a.label_positions = [50]
@@ -34,7 +34,7 @@ class Chart
     end
 
     title = @title
-    chart.write title 
+    chart.write title
   end
-  
+
 end

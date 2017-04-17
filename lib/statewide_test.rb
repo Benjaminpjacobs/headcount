@@ -3,7 +3,7 @@ require "pry"
 
 class StatewideTest
   attr_accessor :name, :tests
-  
+
   VALID_RACES = [:asian, :black, :pacific_islander, :hispanic,
                  :native_american, :two_or_more, :white]
   VALID_SUBJECTS = [:math, :reading, :writing]
@@ -56,16 +56,72 @@ class StatewideTest
     hash_results(heading)
   end
 
-  def average_proficiency_by_grade_across_subject(grade)
-    subjects = average_proficiency_by_grade(grade)
+  def year_over_year_growth_across_subject(args)
+    stats = retrieve_yearly_growth_per_subject(args)
+    if args[:weighting]
+      weights = map_weights(args)
+      weighted_yearly_growth(stats, weights)
+    else
+      stats.inject(:+)/3
+    end
   end
 
-private
+  def year_over_year_growth_per_subject(args)
+    subject_stats = organize_subject_stats(args)
+    years = collect_years(args)
+    stats = collect_subject_statistics(subject_stats, args)
+    year_subject_stats = find_usable_yearly_statistics(years, stats)
+    yearly_growth(year_subject_stats)
+  end
+
+  private
+
+  def weighted_yearly_growth(stats, weights)
+    stats.zip(weights).map{|statweight| statweight.inject(:*)}.inject(:+)
+  end
+  def map_weights(args)
+    [args[:weighting][:math], args[:weighting][:reading], args[:weighting][:writing]]
+  end
+  
+  def retrieve_yearly_growth_per_subject(args)
+    m = year_over_year_growth_per_subject({grade: args[:grade], subject: :math})
+    r = year_over_year_growth_per_subject({grade: args[:grade], subject: :reading})
+    w = year_over_year_growth_per_subject({grade: args[:grade], subject: :writing})
+    [m, r, w]
+  end
+
+  def yearly_growth(year_subject_stats)
+    if year_subject_stats.count <= 1
+      0.0
+    else
+      (year_subject_stats.last[1]-year_subject_stats.first[1])/(year_subject_stats.last[0]-year_subject_stats.first[0])
+    end
+  end
+
+  def find_usable_yearly_statistics(years, stats)
+    years.zip(stats).reject{ |year| !year[1].is_a?(Float)}
+  end
+
+  def organize_subject_stats(args)
+    @tests[GRADE_MAP[args[:grade]]].values.map do |value|
+      Hash[*value.flatten]
+    end
+  end
+
+  def collect_subject_statistics(subject_stats, args)
+    subject_stats.collect do |hash|
+      hash[args[:subject]]
+    end
+  end
+
+  def collect_years(args)
+    @tests[GRADE_MAP[args[:grade]]].keys
+  end
 
   def hash_results(heading)
     {
-      math: average(heading[0]).round(3), 
-      reading: average(heading[1]).round(3), 
+      math: average(heading[0]).round(3),
+      reading: average(heading[1]).round(3),
       writing: average(heading[2]).round(3)
     }
   end
@@ -124,20 +180,20 @@ private
     if value.is_a?(Float)
       value.round(3)
     else
-      value 
+      value
     end
   end
 
   def compile_subject_stats(race)
     @tests[:math][race].zip(@tests[:reading][race]).zip(@tests[:writing][race])
   end
-  
+
   def display_proficiencies(race_stats)
     race_stats.each do |k, v|
       race_stats[k] = add_headings(v)
     end
   end
-  
+
   def group_stats_by_race(race_stats)
     race_stats.flatten.each_slice(2).to_a.group_by{ |sub| sub.shift }
   end

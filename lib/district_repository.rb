@@ -5,7 +5,7 @@ require_relative 'economic_profile_repository'
 require 'csv'
 
 class DistrictRepository
-  attr_accessor :districts, :enrollment_repository, :economic_profile_repository, :statewide_test_repository 
+  attr_accessor :districts, :enrollment_repository, :economic_profile_repository, :statewide_test_repository
 
   def initialize
     @districts = {}

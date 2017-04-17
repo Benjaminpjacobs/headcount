@@ -15,7 +15,7 @@ class District
   end
 
   def economic_profile
-    @repo.economic_profile_repository.profiles[@name] 
+    @repo.economic_profile_repository.profiles[@name]
   end
 
 end

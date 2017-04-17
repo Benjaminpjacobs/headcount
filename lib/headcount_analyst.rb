@@ -55,22 +55,11 @@ class HeadcountAnalyst
   end
 
   def top_statewide_test_year_over_year_growth(args)
-    valid_grades = [3, 8]
-    raise InsufficientInformationError unless valid_grades.include?(args[:grade])
-    if args[:top] && args[:grade]
-      statewide_test_year_over_year_growth(args).shift(args[:top])
-    elsif args[:grade] && args[:subject]
-      statewide_test_year_over_year_growth(args).shift
-    else
-      top_statewide_test_year_over_year_growth_across_subjects(args)
-    end
-  end
-
-  def top_statewide_test_year_over_year_growth_across_subjects(args)
-    all_stats = find_all_subject_stats(args)
-    weighted_stats = weight_stats(args, all_stats)
-    combined_stats = cross_subject_statistics(weighted_stats)
-    round_stats(combined_stats).shift
+    args[:top] = 1 if args[:top].nil?
+    districts = all_districts_year_over_year_growth(args)
+    top = map_top_districts(args, districts)
+    top.flatten! if top.count == 1
+    top
   end
 
   def statewide_average_free_reduced_lunch(year=2014)
@@ -102,6 +91,41 @@ class HeadcountAnalyst
   end
 
   private
+
+  def map_top_districts(args, districts)
+    (1..args[:top]).map do |x|
+      district = districts.shift
+      district[1] = district[1].round(3)
+      district
+    end
+  end
+
+  def all_districts_year_over_year_growth(args)
+    test_statistics = return_district_test_statistics(args)
+    sort_district_results(all_districts, test_statistics)
+  end
+
+  def across_or_per_subject(value, args)
+    if args[:subject].nil?
+      value.statewide_test.year_over_year_growth_across_subject(args)
+    else
+      value.statewide_test.year_over_year_growth_per_subject(args)
+    end
+  end  
+
+  def return_district_test_statistics(args)
+    @district_repository.districts.values.map do |value|
+      across_or_per_subject(value, args)
+    end
+  end
+
+  def sort_district_results(keys, values)
+    keys.zip(values).sort_by{|stat| stat[1]}.reverse
+  end
+  
+  def all_districts
+    @district_repository.districts.keys
+  end
 
   def average_or_nil(stats)
     if stats.nil?
@@ -143,109 +167,6 @@ class HeadcountAnalyst
 
   def state_economic_statistics(study)
     @district_repository.economic_profile_repository.profiles["COLORADO"].economic_profile[study]
-  end
-
-  def weight_stats(args, all)
-    if args[:weighting]
-      all = weight_statistics(args, all) 
-      all[:divisor] = 1
-    else
-      all[:divisor] = 3
-    end
-    all 
-  end
-
-  def find_all_subject_stats(args)
-    math = find_subject_stats(args, "math")
-    reading = find_subject_stats(args, "reading")
-    writing = find_subject_stats(args, "writing")
-    {math: math, reading: reading, writing: writing}
-  end
-
-  def weight_statistics(args, all)
-    math = apply_weighting(all[:math], args[:weighting][:math])
-    reading = apply_weighting(all[:reading], args[:weighting][:reading])
-    writing = apply_weighting(all[:writing], args[:weighting][:writing])
-    {math: math, reading: reading, writing: writing}
-  end
-
-  def cross_subject_statistics(all)
-    all[:math].zip(all[:reading]).zip(all[:writing]).map{|a| (a.flatten.inject(:+)/all[:divisor])}
-  end
-
-  def apply_weighting(stats, weight)
-    stats.map{|stat| stat * weight}
-  end
-
-  def round_stats(all)
-    map_growth_stats(all).each{|val| val[1] = val[1].round(3)}
-  end
-
-  def find_subject_stats(args, subject)
-    new_arg = {grade: args[:grade], subject: subject.to_sym}
-    compile_subject_data(new_arg)
-  end
-
-  def statewide_test_year_over_year_growth(args)
-    percent_growth = compile_subject_data(args)
-    round_stats(percent_growth)
-  end
-
-  def compile_subject_data(args)
-    subject_stats_per_district =  subject_stats_per_district(args)
-    valid_statistics = valid_stats(subject_stats_per_district)
-    calculate_growth(valid_statistics)
-  end
-
-  def map_growth_stats(percent_growth)
-    all_districts.zip(percent_growth).sort_by do |array|
-      array[1]
-    end.reverse
-  end
-
-  def calculate_growth(valid_statistics)
-    valid_statistics.map do |stats|
-      if stats.empty? || stats.count == 1
-        0.0
-      else
-        (stat_diff(stats)/ year_diff(stats))
-      end
-    end
-  end
-
-  def valid_stats(all_stats)
-    all_stats.map do |stats|
-      collect_valid_statistic(stats)
-    end
-  end
-
-  def subject_stats_per_district(args)
-    @district_repository.districts.values.collect do |value|
-      proficiency_for_subject_in_all_years(args, value)
-    end
-  end
-  def proficiency_for_subject_in_all_years(args, value)
-    (2008..2014).collect do |number|
-      [number, value.statewide_test.proficient_for_subject_by_grade_in_year(args[:subject],args[:grade], number)]
-    end
-  end
-
-  def collect_valid_statistic(array)
-    array.select do |value|
-      value[1].is_a?(Float) || value[1].is_a?(Integer)
-    end
-  end
-
-  def stat_diff(stat)
-    (stat[-1][1] - stat[0][1])
-  end
-
-  def year_diff(stat)
-    (stat[-1][0] - stat[0][0])
-  end
-
-  def all_districts
-    @district_repository.districts.keys
   end
 
   def participations_correlated?(correlation)
