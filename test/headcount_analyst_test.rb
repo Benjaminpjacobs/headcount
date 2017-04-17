@@ -1,6 +1,7 @@
 require_relative 'test_helper'
 require_relative '../lib/headcount_analyst'
 require_relative '../lib/district_repository'
+require_relative '../lib/result_set'
 
 class HeadcountAnalystTest < Minitest::Test
 
@@ -29,75 +30,76 @@ class HeadcountAnalystTest < Minitest::Test
       @hc = HeadcountAnalyst.new(@dr)
     end
 
-    def test_it_exists
-      assert_instance_of HeadcountAnalyst, @hc
-    end
+    # def test_it_exists
+    #   # binding.pry
+    #   assert_instance_of HeadcountAnalyst, @hc
+    # end
     
-    def test_can_take_arg_from_direct_repository
-      actual = @hc.district_repository
-      assert_instance_of DistrictRepository, actual
-    end
+    # def test_can_take_arg_from_direct_repository
+    #   actual = @hc.district_repository
+    #   assert_instance_of DistrictRepository, actual
+    # end
     
-    def test_kindergarten_participation_rate_variation_colorado
-      actual = @hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
-      expected = 0.766
-      assert_equal expected, actual
-    end
+    # def test_kindergarten_participation_rate_variation_colorado
+    #   actual = @hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'COLORADO')
+    #   expected = 0.766
+    #   assert_equal expected, actual
+    # end
     
-    def test_kindergarten_participation_rate_variation_district
-      actual = @hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'YUMA SCHOOL DISTRICT 1')
-      expected = 0.447
-      assert_equal expected, actual
-    end
+    # def test_kindergarten_participation_rate_variation_district
+    #   actual = @hc.kindergarten_participation_rate_variation('ACADEMY 20', :against => 'YUMA SCHOOL DISTRICT 1')
+    #   expected = 0.447
+    #   assert_equal expected, actual
+    # end
     
-    def test_kindergarten_participation_rate_variation_trend
-      actual = @hc.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
-      expected = {2004=>1.258, 2005=>0.961, 2006=>1.05, 2007=>0.992, 2008=>0.718, 2009=>0.652, 2010=>0.681, 2011=>0.728, 2012=>0.689, 2013=>0.694, 2014=>0.661}
-      assert_equal expected, actual
-    end
+    # def test_kindergarten_participation_rate_variation_trend
+    #   actual = @hc.kindergarten_participation_rate_variation_trend('ACADEMY 20', :against => 'COLORADO')
+    #   expected = {2004=>1.258, 2005=>0.961, 2006=>1.05, 2007=>0.992, 2008=>0.718, 2009=>0.652, 2010=>0.681, 2011=>0.728, 2012=>0.689, 2013=>0.694, 2014=>0.661}
+    #   assert_equal expected, actual
+    # end
     
-    def test_high_school_graduation_variation
-      actual = @hc.high_school_graduation_variation('ACADEMY 20')
-      expected = 1.194
-      assert_equal expected, actual
-    end
+    # def test_high_school_graduation_variation
+    #   actual = @hc.high_school_graduation_variation('ACADEMY 20')
+    #   expected = 1.194
+    #   assert_equal expected, actual
+    # end
     
-    def test_kindergarten_participation_against_hs_graduation
-      actual = @hc.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
-      expected = 0.642
-      assert_equal expected, actual
-    end
+    # def test_kindergarten_participation_against_hs_graduation
+    #   actual = @hc.kindergarten_participation_against_high_school_graduation('ACADEMY 20')
+    #   expected = 0.642
+    #   assert_equal expected, actual
+    # end
     
-    def test_kindergarten_participation_against_hs_graduation
-      assert @hc.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
-    end
+    # def test_kindergarten_participation_against_hs_graduation
+    #   assert @hc.kindergarten_participation_correlates_with_high_school_graduation(for: 'ACADEMY 20')
+    # end
     
-    def test_calculates_statewide_correlation
-      refute @hc.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
-    end
+    # def test_calculates_statewide_correlation
+    #   refute @hc.kindergarten_participation_correlates_with_high_school_graduation(:for => "STATEWIDE")
+    # end
     
-    def test_calculates_across_subsets
-      assert @hc.kindergarten_participation_correlates_with_high_school_graduation(
-      :across => ["ACADEMY 20", "ARICKAREE R-2", 'YUMA SCHOOL DISTRICT 1'])
-    end
-    
-    def test_top_statewide_test_year_over_year_growth
-      actual = @hc.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
-      expected = ["WILEY RE-13 JT", 0.3]
-      assert_equal expected, actual
-    end
+    # def test_calculates_across_subsets
+    #   assert @hc.kindergarten_participation_correlates_with_high_school_graduation(
+    #   :across => ["ACADEMY 20", "ARICKAREE R-2", 'YUMA SCHOOL DISTRICT 1'])
+    # end
 
-    def test_top_three_statewide_test_year_over_year_growth
-      actual = @hc.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
-      expected = [["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.072], ["COTOPAXI RE-3", 0.07]]
-      assert_equal expected, actual
-    end
+    # def test_top_statewide_test_year_over_year_growth
+    #   actual = @hc.top_statewide_test_year_over_year_growth(grade: 3, subject: :math)
+    #   expected = ["WILEY RE-13 JT", 0.3]
+    #   assert_equal expected, actual
+    # end
+
+    # def test_top_three_statewide_test_year_over_year_growth
+    #   actual = @hc.top_statewide_test_year_over_year_growth(grade: 3, top: 3, subject: :math)
+    #   expected = [["WILEY RE-13 JT", 0.3], ["SANGRE DE CRISTO RE-22J", 0.071], ["COTOPAXI RE-3", 0.07]]
+    #   assert_equal expected, actual
+    # end
     
-    def test_top_three_statewide_test_year_over_year_growth
-      actual = @hc.top_statewide_test_year_over_year_growth(grade: 3)
-      expected = ["SANGRE DE CRISTO RE-22J", 0.071]
-      assert_equal expected, actual
-    end
+    # def test_top_three_statewide_test_year_over_year_growth_across_subject
+    #   actual = @hc.top_statewide_test_year_over_year_growth(grade: 3)
+    #   expected = ["SANGRE DE CRISTO RE-22J", 0.071]
+    #   assert_equal expected, actual
+    # end
     
     def test_top_three_statewide_test_year_over_year_growth_weighted
       actual = @hc.top_statewide_test_year_over_year_growth(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
@@ -105,33 +107,32 @@ class HeadcountAnalystTest < Minitest::Test
       assert_equal expected, actual
     end
 
-    def test_find_statewide_average_free_reduced_lunch
-      actual = @hc.statewide_average_free_reduced_lunch
-      expected = 1584.368
-      assert_equal expected, actual
-    end
-
     def test_find_districts_over_avg_free_reduced_lunch
-      actual = @hc.districts_over_state_avg_free_reduced_lunch.first.name
-      expected = "ACADEMY 20"
-      assert_equal expected, actual
-    end
-
-    def test_find_single_district_avg_percentage_s_a_children_poverty
-      actual = @hc.district_avg_child_poverty("AGUILAR REORGANIZED 6")
-      expected = 0.389
-      assert_equal expected, actual
-    end
-
-    def test_find_state_avg_child_poverty
-      actual = @hc.statewide_child_poverty
-      expected = 0.164
+      actual = @hc.over_state_average(:lunch).first
+      expected = ["ACADEMY 20", 1884]
       assert_equal expected, actual
     end
 
     def test_find_districts_over_state_avg_school_age_poverty
-      actual = @hc.districts_over_state_avg_child_poverty.first.name
-      expected = "ADAMS COUNTY 14"
+      actual = @hc.over_state_average(:poverty).first
+      expected = ["ADAMS COUNTY 14", 0.23]
       assert_equal expected, actual
     end
+
+    def test_find_districts_over_state_avg_hs_grad_rate
+      actual = @hc.over_state_average(:graduation).first
+      expected = ["ACADEMY 20",0.898]
+      assert_equal expected, actual
+    end
+
+    def test_high_poverty_and_high_school_graduation
+      actual = @hc.high_poverty_and_high_school_graduation
+      assert_instance_of ResultSet, actual
+    end
+
+    def test_high_income_disparity
+      actual = @hc.high_income_disparity
+      assert_instance_of ResultSet, actual 
+    end
+    
   end

@@ -1,3 +1,4 @@
+require 'pry'
 class Enrollment
   attr_accessor :name, :enrollment_statistics
 
@@ -23,6 +24,11 @@ class Enrollment
     @enrollment_statistics[find_key_by_tag("kindergarte")][year].round(3)
   end
 
+  def kindergarten_participation_average
+    yearly = @enrollment_statistics[find_key_by_tag("kindergarte")].values
+    average(yearly).round(3)
+  end
+
   def graduation_rate_by_year
     @enrollment_statistics[find_key_by_tag("high_school")]
   end
@@ -31,10 +37,26 @@ class Enrollment
     @enrollment_statistics[find_key_by_tag("high_school")][year].round(3)
   end
 
+  def graduation_rate_average
+    yearly = @enrollment_statistics[find_key_by_tag("high_school")].values
+    yearly = yearly.reject do |value|
+      !value.is_a?(Float)
+    end
+    if yearly.empty?
+      nil
+    else
+      average(yearly).round(3)
+    end
+  end
+
 private
 
   def find_key_by_tag(tag)
     keys = @enrollment_statistics.keys.map{|key| key.to_s}
     keys.find{ |key| key[0..10] == tag}.to_sym
+  end
+
+  def average(data)
+    (data.inject(:+)/data.count)
   end
 end

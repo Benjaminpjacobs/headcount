@@ -42,7 +42,7 @@ class EnrollmentRepository
   end
 
   private
-  
+
   def add_or_create_district(district_enrollments, row)
     if district_exists?(district_enrollments, row)
       add_data_to_district(district_enrollments, row)
@@ -53,7 +53,7 @@ class EnrollmentRepository
 
   def create_new_district_item(district_contents, row)
     district_contents[row[:location].upcase] =
-    [[row[:timeframe].to_i, check_if_na(row[:data])]]  
+    [[row[:timeframe].to_i, check_if_na(row[:data])]]
   end
 
   def add_data_to_district(district_contents, row)

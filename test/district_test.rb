@@ -12,9 +12,4 @@ class DistrictTest < Minitest::Test
     assert_equal "ACADEMY 20", d.name
   end
 
-  def test_delegator
-    d = District.new({:name => "ACADEMY 20"})
-    d.testing = "test"
-    assert_equal "test", d.statewide_test
-  end
 end

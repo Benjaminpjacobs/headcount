@@ -1,6 +1,8 @@
 require_relative "custom_errors"
+require 'pry'
 
 class EconomicProfile
+
   attr_accessor :name, :economic_profile
 
   def initialize(args)
@@ -23,7 +25,7 @@ class EconomicProfile
 
   def median_household_income_average
     all_ranges = map_incomes_to_ranges(median_ranges)
-    average(all_ranges)
+    average(all_ranges).to_i
   end
 
   def children_in_poverty_in_year(year)
@@ -32,22 +34,46 @@ class EconomicProfile
     @economic_profile[:children_in_poverty][year]
   end
 
+  def children_in_poverty_average
+    yearly = @economic_profile[:children_in_poverty].values
+    average(yearly).round(3)
+  end
+
   def free_or_reduced_price_lunch_percentage_in_year(year)
     raise UnknownDataError unless
     data_known?(:free_or_reduced_price_lunch, year)
     @economic_profile[:free_or_reduced_price_lunch][year][:percentage]
   end
 
+  def free_or_reduced_price_lunch_percentage_average
+    yearly = @economic_profile[:free_or_reduced_price_lunch].values.map do |v|
+      v[:percentage] unless v[:percentage].nil?
+    end.compact
+    average(yearly).round(3)
+  end
+
   def free_or_reduced_price_lunch_number_in_year(year)
-    raise UnknownDataError unless 
+    raise UnknownDataError unless
     data_known?(:free_or_reduced_price_lunch, year)
     @economic_profile[:free_or_reduced_price_lunch][year][:total]
+  end
+
+  def free_or_reduced_price_lunch_number_average
+    yearly = @economic_profile[:free_or_reduced_price_lunch].values.map do |v|
+      v[:total] unless v[:total].nil?
+    end.compact
+    average(yearly).to_i
   end
 
   def title_i_in_year(year)
     raise UnknownDataError unless
     data_known?(:title_i, year)
     @economic_profile[:title_i][year]
+  end
+
+  def title_i_average
+    yearly = @economic_profile[:title_i].each_value
+    average(yearly).round(3)
   end
 
   private
@@ -84,6 +110,6 @@ class EconomicProfile
   end
 
   def average(data)
-    (data.inject(:+)/data.count).to_i
+    (data.inject(:+)/data.count)
   end
 end

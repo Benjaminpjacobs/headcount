@@ -1,4 +1,3 @@
-require 'pry'
 require_relative 'test_helper'
 require_relative '../lib/statewide_test'
 require_relative '../lib/statewide_test_repository'
@@ -64,4 +63,46 @@ class StatewideTestTest < Minitest::Test
     expected = 'N/A'
     assert_equal expected, actual
   end
+
+  def test_avg_prof_by_grade
+    actual = @str.tests["ACADEMY 20"].average_proficiency_by_grade(3)
+    expected = {:math=>0.838, :reading=>0.86, :writing=>0.669}
+    assert_equal expected, actual
+  end
+
+  def test_year_over_year_growth_grade_subject
+    district = @str.tests["ACADEMY 20"]
+    actual = district.year_over_year_growth_per_subject(grade: 3, subject: :reading)
+    expected = -0.005831666666666661
+    assert_equal expected, actual
+  end
+
+  def test_year_over_year_growth_across_subjects
+    district = @str.tests["OURAY R-1"]
+    actual = district.year_over_year_growth_across_subject(grade: 8)
+    expected = 0.11016666666666668
+    assert_equal expected, actual
+  end
+
+  def test_year_over_year_growth_across_subjects
+    district = @str.tests["OURAY R-1"]
+    actual = district.year_over_year_growth_across_subject(grade: 8)
+    expected = 0.11016666666666668
+    assert_equal expected, actual
+  end
+
+  def test_year_over_year_growth_across_subjects_weighted
+    district = @str.tests["OURAY R-1"]
+    actual = district.year_over_year_growth_across_subject(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.0})
+    expected = 0.1535
+    assert_equal expected, actual
+  end
+
+    def test_year_over_year_growth_across_subjects_weighted_error
+    district = @str.tests["OURAY R-1"]
+    assert_raises(WeightingError) do  
+      district.year_over_year_growth_across_subject(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.2})
+    end
+  end
+
 end

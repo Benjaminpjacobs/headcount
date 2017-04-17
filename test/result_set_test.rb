@@ -30,14 +30,47 @@ class ResultSetTest < Minitest::Test
     end
 
     def test_it_exists
-      rs = ResultSet.new(@hc)
+      rs = ResultSet.new({empty: "hash", test: "hash"})
       assert_instance_of ResultSet, rs
     end
 
-    def test_it_is_connected_to_headcount
-      rs = ResultSet.new(@hc)
-      assert_instance_of HeadcountAnalyst, rs.headcount
+    def test_it_counts_matching_districts
+      rs = @hc.high_poverty_and_high_school_graduation
+      actual = rs.matching_districts.count
+      expected = 5
+      assert_equal expected, actual
     end
 
-    
+    def test_it_finds_name_of_district
+      rs = @hc.high_poverty_and_high_school_graduation
+      actual = rs.matching_districts.first.name
+      expected = "DELTA COUNTY 50(J)"
+      assert_equal expected, actual
+    end
+  
+    def test_it_can_access_free_lunch
+      rs = @hc.high_poverty_and_high_school_graduation
+      actual = rs.matching_districts.first.free_and_reduced_price_lunch_rate
+      expected = 2296
+      assert_equal expected, actual
+    end
+
+    def test_it_sees_statewide_average
+      rs = @hc.high_poverty_and_high_school_graduation
+      assert rs.statewide_average.free_and_reduced_price_lunch_rate
+      assert rs.statewide_average.children_in_poverty_rate
+      assert rs.statewide_average.high_school_graduation_rate
+    end
+
+    def test_income_disparity
+      rs = @hc.high_income_disparity
+      assert rs.matching_districts.count
+      assert rs.matching_districts
+      assert rs.matching_districts.first.name
+      assert rs.matching_districts.first.median_household_income
+      assert rs.matching_districts.first.children_in_poverty_rate
+      assert rs.statewide_average
+      assert rs.statewide_average.median_household_income
+      assert rs.statewide_average.children_in_poverty_rate
+    end
   end
