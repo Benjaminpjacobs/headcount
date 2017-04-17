@@ -62,35 +62,106 @@ class HeadcountAnalyst
     top
   end
 
-  def statewide_average_free_reduced_lunch(year=2014)
-    state_statistics = state_economic_statistics(:free_or_reduced_price_lunch)
-    total = state_statistics.each_value.map{ |v| v[:total] }
-    determine_average(total, state_statistics)
+  def over_state_avg_free_reduced_lunch
+    all_dist_stats = all_district_lunch_statistics
+    state_avg = average(all_dist_stats, all_dist_stats)
+    districts = individual_district_names
+    collect_stat_over_average(districts, all_dist_stats, state_avg)
   end
 
-  def districts_over_state_avg_free_reduced_lunch
-    all = map_districts_lunch_data
-    collect_districts_over_state_avg_for_free_reduced_lunch(all)
+  def over_state_avg_child_poverty
+    all_dist_stats = all_district_child_poverty_statistics
+    state_avg = average(all_dist_stats, all_dist_stats)
+    districts = individual_district_names
+    collect_stat_over_average(districts, all_dist_stats, state_avg)
   end
 
-  def statewide_child_poverty
-    stats = @district_repository.districts.keys.map do |key|
-      key == "COLORADO"? next : district_avg_child_poverty(key)
-    end
-    average(stats.compact, stats)
+  def over_state_average_hs_graduation
+    all_dist_stats = all_district_hs_grad_stats
+    state_avg =  average(all_dist_stats, all_dist_stats)
+    districts = individual_district_names
+    collect_stat_over_average(districts, all_dist_stats, state_avg)
   end
 
-  def district_avg_child_poverty(district)
-    stats = @district_repository.districts[district].economic_profile.economic_profile[:children_in_poverty]
-    average_or_nil(stats)
-  end
 
-  def districts_over_state_avg_child_poverty
-    state_avg = statewide_child_poverty
-    collect_districts_over_state_avg_for_child_poverty(state_avg)
-  end
 
+#########################
+  
+ 
+
+  # def collect_districts_over_state_avg_for_free_reduced_lunch(all)
+  #   all.compact.collect do |stat|
+  #     @district_repository.districts[stat[0]] if stat[1] > statewide_average_free_reduced_lunch
+  #   end
+  # end
+
+  # def collect_districts_over_state_avg_for_child_poverty(state_avg)
+  #   @district_repository.districts.keys.map do |key|
+  #     @district_repository.districts[key] if district_avg_child_poverty(key) > state_avg
+  #   end.compact
+  # end
+
+  # def map_districts_lunch_data
+  #   @district_repository.economic_profile_repository.profiles.map do |k,v|
+  #     k == "COLORADO" ? next : [k, average_across_years(v)]
+  #   end
+  # end
+
+  # def average_across_years(v)
+  #   profile = v.economic_profile[:free_or_reduced_price_lunch]
+  #   totals = profile.each_value.map do |v|
+  #     v[:total]
+  #   end
+  #   average(totals, profile.keys)
+  # end
+
+  # def determine_average(total, state_statistics)
+  #   ((total.inject(:+)/ state_statistics.keys.count)/(@district_repository.districts.keys.count - 1)).round(3)
+  # end
+
+  # def state_economic_statistics(study)
+  #   @district_repository.economic_profile_repository.profiles["COLORADO"].economic_profile[study]
+  # end
+#####################
   private
+
+    
+  def all_district_hs_grad_stats
+    @district_repository.districts.each.collect do |key, value|
+      next if key == "COLORADO"
+      value.enrollment.graduation_rate_average
+    end.compact
+  end
+
+  def all_district_child_poverty_statistics
+    @district_repository.districts.each.collect do |key, value|
+      next if key == "COLORADO"
+      value.economic_profile.children_in_poverty_average
+    end.compact
+  end
+
+  def all_district_lunch_statistics
+    @district_repository.districts.each.collect do |key, value|
+      next if key == "COLORADO"
+      value.economic_profile.free_or_reduced_price_lunch_number_average
+    end.compact
+  end
+
+  def individual_district_names
+    districts = all_districts
+    districts.delete("COLORADO")
+    districts
+  end
+
+  def collect_stat_over_average(districts, all_dist_stats, state_avg)
+    districts.zip(all_dist_stats).map do |district|
+      if district[1].nil?
+        next
+      else
+        @district_repository.districts[district[0]] if district[1] > state_avg
+      end
+    end.compact
+  end
 
   def map_top_districts(args, districts)
     (1..args[:top]).map do |x|
@@ -125,48 +196,6 @@ class HeadcountAnalyst
   
   def all_districts
     @district_repository.districts.keys
-  end
-
-  def average_or_nil(stats)
-    if stats.nil?
-      0.0
-    else
-      average(stats.values, stats.keys)
-    end
-  end
-
-  def collect_districts_over_state_avg_for_free_reduced_lunch(all)
-    all.compact.collect do |stat|
-      @district_repository.districts[stat[0]] if stat[1] > statewide_average_free_reduced_lunch
-    end
-  end
-
-  def collect_districts_over_state_avg_for_child_poverty(state_avg)
-    @district_repository.districts.keys.map do |key|
-      @district_repository.districts[key] if district_avg_child_poverty(key) > state_avg
-    end.compact
-  end
-
-  def map_districts_lunch_data
-    @district_repository.economic_profile_repository.profiles.map do |k,v|
-      k == "COLORADO" ? next : [k, average_across_years(v)]
-    end
-  end
-
-  def average_across_years(v)
-    profile = v.economic_profile[:free_or_reduced_price_lunch]
-    totals = profile.each_value.map do |v|
-      v[:total]
-    end
-    average(totals, profile.keys)
-  end
-
-  def determine_average(total, state_statistics)
-    ((total.inject(:+)/ state_statistics.keys.count)/(@district_repository.districts.keys.count - 1)).round(3)
-  end
-
-  def state_economic_statistics(study)
-    @district_repository.economic_profile_repository.profiles["COLORADO"].economic_profile[study]
   end
 
   def participations_correlated?(correlation)

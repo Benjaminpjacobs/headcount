@@ -6,3 +6,6 @@ end
 
 class InsufficientInformationError < Exception
 end
+
+class WeightingError < Exception
+end

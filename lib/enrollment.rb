@@ -1,3 +1,4 @@
+require 'pry'
 class Enrollment
   attr_accessor :name, :enrollment_statistics
 
@@ -38,7 +39,14 @@ class Enrollment
 
   def graduation_rate_average
     yearly = @enrollment_statistics[find_key_by_tag("high_school")].values
-    average(yearly).round(3)
+    yearly = yearly.reject do |value|
+      !value.is_a?(Float)
+    end
+    if yearly.empty?
+      nil
+    else
+      average(yearly).round(3)
+    end
   end
 
 private

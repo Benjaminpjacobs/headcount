@@ -98,4 +98,11 @@ class StatewideTestTest < Minitest::Test
     assert_equal expected, actual
   end
 
+    def test_year_over_year_growth_across_subjects_weighted_error
+    district = @str.tests["OURAY R-1"]
+    assert_raises(WeightingError) do  
+      district.year_over_year_growth_across_subject(grade: 8, :weighting => {:math => 0.5, :reading => 0.5, :writing => 0.2})
+    end
+  end
+
 end

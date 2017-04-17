@@ -57,6 +57,7 @@ class StatewideTest
   end
 
   def year_over_year_growth_across_subject(args)
+    raise InsufficientInformationError unless GRADE_MAP.keys.include?(args[:grade])
     stats = retrieve_yearly_growth_per_subject(args)
     if args[:weighting]
       weights = map_weights(args)
@@ -67,6 +68,7 @@ class StatewideTest
   end
 
   def year_over_year_growth_per_subject(args)
+    raise InsufficientInformationError unless GRADE_MAP.keys.include?(args[:grade])
     subject_stats = organize_subject_stats(args)
     years = collect_years(args)
     stats = collect_subject_statistics(subject_stats, args)
@@ -79,8 +81,10 @@ class StatewideTest
   def weighted_yearly_growth(stats, weights)
     stats.zip(weights).map{|statweight| statweight.inject(:*)}.inject(:+)
   end
+  
   def map_weights(args)
-    [args[:weighting][:math], args[:weighting][:reading], args[:weighting][:writing]]
+    raise WeightingError, "weights must add up to 1.0" unless args[:weighting].values.inject(:+) == 1.0
+    [args[:weighting][:math], args[:weighting][:reading],args[:weighting][:writing]]
   end
   
   def retrieve_yearly_growth_per_subject(args)
