@@ -65,48 +65,33 @@ class HeadcountAnalyst
     top
   end
 
-  def prep_statewide_average
-    {
-      free_and_reduced_price_lunch_rate:
-      average(all_district_lunch_statistics,all_district_lunch_statistics),
-      children_in_poverty_rate:
-      average(all_district_child_poverty_statistics,all_district_child_poverty_statistics),
-      high_school_graduation_rate:
-      average(all_district_hs_grad_stats, all_district_hs_grad_stats),
-    }
-  end
-
-  def over_state_avg_free_reduced_lunch
-    all_dist_stats = all_district_lunch_statistics
-    state_avg = average(all_dist_stats, all_dist_stats)
-    districts = individual_district_names
-    results = collect_stat_over_average(districts, all_dist_stats, state_avg)
-    format_results(results, :free_and_reduced_price_lunch)
-  end
-
-
-  def over_state_avg_child_poverty
-    all_dist_stats = all_district_child_poverty_statistics
-    state_avg = average(all_dist_stats, all_dist_stats)
-    districts = individual_district_names
-    results = collect_stat_over_average(districts, all_dist_stats, state_avg)
-    format_results(results, :children_in_poverty)
-  end
-
-  def over_state_average_hs_graduation
-    all_dist_stats = all_district_hs_grad_stats
+  def over_state_average(key)
+    all_dist_stats = all_district_statistics(key)
     state_avg =  average(all_dist_stats, all_dist_stats)
     districts = individual_district_names
     results = collect_stat_over_average(districts, all_dist_stats, state_avg)
     format_results(results, :high_school_graduation_rate)
   end
-
+  
   def high_poverty_and_high_school_graduation
     studies = all_study_data
     common = collect_district_names_in_common(studies)
     districts = prep_result_entries(common, studies)
     average = ResultEntry.new(prep_statewide_average)
     ResultSet.new({matching_districts: districts, statewide_average: average})
+  end
+
+  private
+
+  def prep_statewide_average
+    {
+      free_and_reduced_price_lunch_rate:
+      average(all_district_statistics(:lunch),all_district_statistics(:lunch)),
+      children_in_poverty_rate:
+      average(all_district_statistics(:poverty),all_district_statistics(:poverty)),
+      high_school_graduation_rate:
+      average(all_district_statistics(:graduation), all_district_statistics(:graduation)),
+    }
   end
 
   def prep_result_entries(common, studies)
@@ -117,16 +102,9 @@ class HeadcountAnalyst
       children_in_poverty_rate: studies[:poverty][district],
       high_school_graduation_rate: studies[:graduation][district]
      })
-    end
-    
+    end  
   end
     
-
-  
-
-  private
-
-
   def format_results(results, study)
     Hash[*results.collect{|h| h.to_a}.flatten]
   end
@@ -139,32 +117,28 @@ class HeadcountAnalyst
 
   def all_study_data
     {
-    lunch: over_state_avg_free_reduced_lunch,
-    poverty: over_state_avg_child_poverty,
-    graduation: over_state_average_hs_graduation
+    lunch: over_state_average(:lunch),
+    poverty: over_state_average(:poverty),
+    graduation: over_state_average(:graduation)
     }
   end
-
     
-  def all_district_hs_grad_stats
+  def all_district_statistics(study)
     @district_repository.districts.each.collect do |key, value|
-      next if key == "COLORADO"
-      value.enrollment.graduation_rate_average
+      if key_co?(key)
+        next
+      elsif study == :lunch
+        value.economic_profile.free_or_reduced_price_lunch_number_average
+      elsif study == :poverty
+        value.economic_profile.children_in_poverty_average
+      elsif study == :graduation
+        value.enrollment.graduation_rate_average
+      end
     end.compact
   end
-
-  def all_district_child_poverty_statistics
-    @district_repository.districts.each.collect do |key, value|
-      next if key == "COLORADO"
-      value.economic_profile.children_in_poverty_average
-    end.compact
-  end
-
-  def all_district_lunch_statistics
-    @district_repository.districts.each.collect do |key, value|
-      next if key == "COLORADO"
-      value.economic_profile.free_or_reduced_price_lunch_number_average
-    end.compact
+ 
+  def key_co?(key)
+    key == "COLORADO"
   end
 
   def individual_district_names
