@@ -1,6 +1,7 @@
 require_relative 'test_helper'
 require_relative '../lib/headcount_analyst'
 require_relative '../lib/district_repository'
+require_relative '../lib/result_set'
 
 class HeadcountAnalystTest < Minitest::Test
 
@@ -107,20 +108,26 @@ class HeadcountAnalystTest < Minitest::Test
     # end
 
     # def test_find_districts_over_avg_free_reduced_lunch
-    #   actual = @hc.over_state_avg_free_reduced_lunch.first.name
-    #   expected = "ACADEMY 20"
+    #   actual = @hc.over_state_avg_free_reduced_lunch.first
+    #   expected = ["ACADEMY 20", {:free_and_reduced_price_lunch=>1884}]
     #   assert_equal expected, actual
     # end
 
     # def test_find_districts_over_state_avg_school_age_poverty
-    #   actual = @hc.over_state_avg_child_poverty.first.name
-    #   expected = "ADAMS COUNTY 14"
+    #   actual = @hc.over_state_avg_child_poverty.first
+    #   expected = ["ADAMS COUNTY 14", {:children_in_poverty=>0.23}]
     #   assert_equal expected, actual
     # end
 
-    def test_find_districts_over_state_avg_hs_grad_rate
-      actual = @hc.over_state_average_hs_graduation.first.name
-      expected = "ACADEMY 20"
-      assert_equal expected, actual
+    # def test_find_districts_over_state_avg_hs_grad_rate
+    #   actual = @hc.over_state_average_hs_graduation.first
+    #   expected = ["ACADEMY 20", {:high_school_graduation_rate=>0.898}]
+    #   assert_equal expected, actual
+    # end
+
+    def test_high_poverty_and_high_school_graduation
+      actual = @hc.high_poverty_and_high_school_graduation
+      assert_instance_of ResultSet, actual
     end
+    
   end

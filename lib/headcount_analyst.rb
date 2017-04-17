@@ -1,4 +1,7 @@
 require 'pry'
+require_relative 'result_set'
+require_relative 'result_entry'
+
 class HeadcountAnalyst
   attr_reader :district_repository
 
@@ -66,64 +69,67 @@ class HeadcountAnalyst
     all_dist_stats = all_district_lunch_statistics
     state_avg = average(all_dist_stats, all_dist_stats)
     districts = individual_district_names
-    collect_stat_over_average(districts, all_dist_stats, state_avg)
+    results = collect_stat_over_average(districts, all_dist_stats, state_avg)
+    format_results(results, :free_and_reduced_price_lunch)
   end
+
 
   def over_state_avg_child_poverty
     all_dist_stats = all_district_child_poverty_statistics
     state_avg = average(all_dist_stats, all_dist_stats)
     districts = individual_district_names
-    collect_stat_over_average(districts, all_dist_stats, state_avg)
+    results = collect_stat_over_average(districts, all_dist_stats, state_avg)
+    format_results(results, :children_in_poverty)
+  end
+
+  def format_results(results, study)
+    Hash[*results.collect{|h| h.to_a}.flatten]
   end
 
   def over_state_average_hs_graduation
     all_dist_stats = all_district_hs_grad_stats
     state_avg =  average(all_dist_stats, all_dist_stats)
     districts = individual_district_names
-    collect_stat_over_average(districts, all_dist_stats, state_avg)
+    results = collect_stat_over_average(districts, all_dist_stats, state_avg)
+    format_results(results, :high_school_graduation_rate)
   end
 
+  def high_poverty_and_high_school_graduation
+    studies = all_study_data
+    common = collect_district_names_in_common(studies)
+    ResultSet.new(prep_result_entries(common, studies))
+  end
 
+  def prep_result_entries(common, studies)
+    common.map do |district|
+      ResultEntry.new({
+      name: district, 
+      free_and_reduced_price_lunch_rate: studies[:lunch][district],
+      children_in_poverty_rate: studies[:poverty][district],
+      high_school_graduation_rate: studies[:graduation][district]
+     })
+    end
+    
+  end
+    
 
-#########################
   
- 
 
-  # def collect_districts_over_state_avg_for_free_reduced_lunch(all)
-  #   all.compact.collect do |stat|
-  #     @district_repository.districts[stat[0]] if stat[1] > statewide_average_free_reduced_lunch
-  #   end
-  # end
-
-  # def collect_districts_over_state_avg_for_child_poverty(state_avg)
-  #   @district_repository.districts.keys.map do |key|
-  #     @district_repository.districts[key] if district_avg_child_poverty(key) > state_avg
-  #   end.compact
-  # end
-
-  # def map_districts_lunch_data
-  #   @district_repository.economic_profile_repository.profiles.map do |k,v|
-  #     k == "COLORADO" ? next : [k, average_across_years(v)]
-  #   end
-  # end
-
-  # def average_across_years(v)
-  #   profile = v.economic_profile[:free_or_reduced_price_lunch]
-  #   totals = profile.each_value.map do |v|
-  #     v[:total]
-  #   end
-  #   average(totals, profile.keys)
-  # end
-
-  # def determine_average(total, state_statistics)
-  #   ((total.inject(:+)/ state_statistics.keys.count)/(@district_repository.districts.keys.count - 1)).round(3)
-  # end
-
-  # def state_economic_statistics(study)
-  #   @district_repository.economic_profile_repository.profiles["COLORADO"].economic_profile[study]
-  # end
-#####################
   private
+
+  def collect_district_names_in_common(studies)
+    studies[:lunch].keys & 
+    studies[:poverty].keys &
+    studies[:graduation].keys
+  end
+
+  def all_study_data
+    {
+    lunch: over_state_avg_free_reduced_lunch,
+    poverty: over_state_avg_child_poverty,
+    graduation: over_state_average_hs_graduation
+    }
+  end
 
     
   def all_district_hs_grad_stats
@@ -154,12 +160,9 @@ class HeadcountAnalyst
   end
 
   def collect_stat_over_average(districts, all_dist_stats, state_avg)
-    districts.zip(all_dist_stats).map do |district|
-      if district[1].nil?
-        next
-      else
-        @district_repository.districts[district[0]] if district[1] > state_avg
-      end
+    districts.zip(all_dist_stats).select do |district|
+      next if district[1].nil?
+      district[1] > state_avg
     end.compact
   end
 

@@ -30,14 +30,22 @@ class ResultSetTest < Minitest::Test
     end
 
     def test_it_exists
-      rs = ResultSet.new(@hc)
+      rs = ResultSet.new({empty: "hash"})
       assert_instance_of ResultSet, rs
     end
 
-    def test_it_is_connected_to_headcount
-      rs = ResultSet.new(@hc)
-      assert_instance_of HeadcountAnalyst, rs.headcount
+    def test_it_counts_matching_districts
+      rs = ResultSet.new(@hc.high_poverty_and_high_school_graduation)
+      actual = rs.matching_districts.count
+      expected = 5
+      assert_equal expected, actual
     end
 
+    def test_it_finds_name_of_district
+      rs = ResultSet.new(@hc.high_poverty_and_high_school_graduation)
+      actual = rs.matching_districts.first.name
+      expected = "DELTA COUNTY 50(J)"
+      assert_equal expected, actual
+    end
     
   end
