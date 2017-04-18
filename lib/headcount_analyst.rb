@@ -8,32 +8,103 @@ class HeadcountAnalyst
   def initialize(district_repository)
     @district_repository = district_repository
   end
+################################
+  # def kindergarten_participation_rate_variation(comparison, base)
+  #   comparison = district_kindergarten_participation(comparison).values
+  #   base = district_kindergarten_participation(base[:against]).values
+  #   rate_variation(comparison, base)
+  # end
 
-  def kindergarten_participation_rate_variation(comparison, base)
-    comparison = district_kindergarten_participation(comparison).values
-    base = district_kindergarten_participation(base[:against]).values
-    rate_variation(comparison, base)
-  end
+  # def kindergarten_participation_rate_variation_trend(comparison, base)
+  #   comparison_values = district_kindergarten_participation(comparison)
+  #   base_values = district_kindergarten_participation(base[:against])
+  #   statistical_average_per_year(comparison_values, base_values)
+  # end
 
-  def kindergarten_participation_rate_variation_trend(comparison, base)
-    comparison_values = district_kindergarten_participation(comparison)
-    base_values = district_kindergarten_participation(base[:against])
-    statistical_average_per_year(comparison_values, base_values)
-  end
+  # def kindergarten_participation_against_high_school_graduation(district)
+  #   kinder_part_var =
+  #   kindergarten_participation_rate_variation(district, :against => 'COLORADO')
+  #   hs_grad_var = high_school_graduation_variation(district)
+  #   variation_quotient(kinder_part_var, hs_grad_var)
+  # end
 
-  def kindergarten_participation_against_high_school_graduation(district)
-    kinder_part_var =
-    kindergarten_participation_rate_variation(district, :against => 'COLORADO')
-    hs_grad_var = high_school_graduation_variation(district)
-    variation_quotient(kinder_part_var, hs_grad_var)
-  end
+  # def high_school_graduation_variation(district)
+  #   base = graduation_rate_by_year("COLORADO")
+  #   comparison = graduation_rate_by_year(district)
+  #   rate_variation(comparison.values, base.values)
+  # end
 
-  def high_school_graduation_variation(district)
-    base = graduation_rate_by_year("COLORADO")
-    comparison = graduation_rate_by_year(district)
-    rate_variation(comparison.values, base.values)
-  end
+  # def district_kindergarten_participation(district)
+  #   district = district_repository.find_by_name(district)
+  #   district.enrollment.kindergarten_participation_by_year
+  # end
 
+  # def rate_variation(comparison, base)
+  #   comparison = comparison.reject{|value| !value.is_a?(Float)}
+  #   base = base.reject{|value| !value.is_a?(Float)}
+  #   generate_average_if_not_empty(comparison, base)
+  # end
+
+  # def generate_average_if_not_empty(comparison, base)
+  #   if comparison.empty?|| base.empty?
+  #     return
+  #   else
+  #     compare_averages(comparison, base)
+  #   end
+  # end
+
+  # def compare_averages(comparison, base)
+  #   (generate_yearly_statistical_average(comparison)/
+  #   generate_yearly_statistical_average(base)).round(3)
+  # end
+
+  # def generate_yearly_statistical_average(district_values)
+  #   average(district_values, district_values)
+  # end
+
+  # def statistical_average_per_year(comp_values, base_values)
+  #   comp_values =
+  #   comp_values.merge(base_values){ |key, comp, base| (comp/base).round(3) }
+  #   comp_values.sort.to_h
+  # end
+
+  # def variation_quotient(kinder_part_var, hs_grad_var)
+  #   if hs_grad_var.nil?|| hs_grad_var.zero?
+  #     return nil
+  #   else
+  #     (kinder_part_var/hs_grad_var).round(3)
+  #   end
+  # end
+
+  # def graduation_rate_by_year(district)
+  #   district_repository.find_by_name(district)
+  #   .enrollment.graduation_rate_by_year
+  # end
+
+  #  def kindergarten_participation_correlates_with_high_school_graduation(district)
+  #   if district[:for] == "STATEWIDE"
+  #     kindergarten_participation_correlates_with_high_school_graduation_across_districts(all_districts)
+  #   elsif district[:across]
+  #     kindergarten_participation_correlates_with_high_school_graduation_across_districts(district[:across])
+  #   else
+  #     kindergarten_participation_correlates_with_high_school_graduation_per_district(district[:for])
+  #   end
+  # end
+
+  # def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
+  #   participations =
+  #   kindergarten_participation_against_high_school_graduation(district)
+  #   participation_correlated?(participations)
+  # end
+
+  # def kindergarten_participation_correlates_with_high_school_graduation_across_districts(districts)
+  #   correlation = districts.map do |district|
+  #     kindergarten_participation_correlates_with_high_school_graduation(for: district)
+  #   end
+  #   participations_correlated?(correlation)
+  # end
+
+##########################################
 
   def top_statewide_test_year_over_year_growth(args)
     args[:top] = 1 if args[:top].nil?
@@ -67,76 +138,58 @@ class HeadcountAnalyst
     create_result_set([:poverty, :income])
   end
 
+############################################
+
+  # def kindergarten_participation_against_household_income(district)
+  #   state_k_avg = state_average(:kindergarten)
+  #   district_k_avg = @district_repository.districts[district].enrollment.kindergarten_participation_average
+  #   #binding.pry
+  #   kindergarten_variation = district_k_avg/state_k_avg
+  #   state_i_avg = state_average(:income)
+  #   district_i_avg = @district_repository.districts[district].economic_profile.median_household_income_average
+  #   #binding.pry
+  #   income_variation = district_i_avg/state_i_avg
+  #   return 0.0 if income_variation.zero?
+  #   (kindergarten_variation/income_variation).round(3)
+  # end
+
   def kindergarten_participation_against_household_income(district)
-    state_k_avg = state_average_kindergarten_participation
-    district_k_avg = @district_repository.districts[district].enrollment.kindergarten_participation_average
-    #binding.pry
-    kindergarten_variation = district_k_avg/state_k_avg
-    state_i_avg = state_average_median_income
-    district_i_avg = @district_repository.districts[district].economic_profile.median_household_income_average
-    #binding.pry
-    income_variation = district_i_avg/state_i_avg
-    return 0.0 if income_variation.zero?
-    (kindergarten_variation/income_variation).round(3)
+    study_one_against_study_two_for_district(:kindergarten, :income, district)
   end
 
-  def state_average_kindergarten_participation
-    all_dist_stats = all_district_statistics(:kindergarten)
-    average(all_dist_stats, all_dist_stats)
-  end
-
-  def state_average_median_income
-    all_dist_stats = all_district_statistics(:income)
-    average(all_dist_stats, all_dist_stats)
+  def study_one_against_study_two_for_district(study_one, study_two, district)
+    state_avg_study_one = state_average(study_one)
+    district_avg_study_one = district_study(district, study_one)
+    variation_study_one = district_avg_study_one/state_avg_study_one 
+    state_avg_study_two = state_average(study_two)
+    district_avg_study_two = district_study(district, study_two)
+    variation_study_two = district_avg_study_two/state_avg_study_two
+    return 0.0 if variation_study_two.zero?
+    (variation_study_one/variation_study_two).round(3)
   end
 
   def kindergarten_participation_correlates_with_household_income(args)
     if args[:for] == "STATEWIDE"
-      statewide_correlation?
+      correlation?(individual_district_names)
     elsif args[:across] 
-      across_district_correlation(args[:across])
+      correlation?(args[:across])
     else
       kindergarten_participation_against_household_income(args[:for]).between?(0.6, 1.5)
     end    
   end
 
-  def across_district_correlation(args)
+  def correlation?(args)
     correlation = args.map do |name|
       kindergarten_participation_correlates_with_household_income(for: name)
     end
     participations_correlated?(correlation)
   end
-  
-  def statewide_correlation?
-   correlation = individual_district_names.map do |name|
-      kindergarten_participation_correlates_with_household_income(for: name)
-    end
-    participations_correlated?(correlation)
+
+  def state_average(key)
+    all_dist_stats = all_district_statistics(key)
+    average(all_dist_stats, all_dist_stats)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(district)
-    if district[:for] == "STATEWIDE"
-      kindergarten_participation_correlates_with_high_school_graduation_across_districts(all_districts)
-    elsif district[:across]
-      kindergarten_participation_correlates_with_high_school_graduation_across_districts(district[:across])
-    else
-      kindergarten_participation_correlates_with_high_school_graduation_per_district(district[:for])
-    end
-  end
-
-  def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
-    participations =
-    kindergarten_participation_against_high_school_graduation(district)
-    participation_correlated?(participations)
-  end
-
-  def kindergarten_participation_correlates_with_high_school_graduation_across_districts(districts)
-    correlation = districts.map do |district|
-      kindergarten_participation_correlates_with_high_school_graduation(for: district)
-    end
-    participations_correlated?(correlation)
-  end
-  
   private
 
   def prep_statewide_average(studies)
@@ -216,6 +269,17 @@ class HeadcountAnalyst
     end.compact
   end
 
+  def district_study(district, study)
+    district_study = 
+      {
+        kindergarten: @district_repository.districts[district].enrollment.kindergarten_participation_average,
+        graduation: @district_repository.districts[district].enrollment.graduation_rate_average,
+        income: @district_repository.districts[district].economic_profile.median_household_income_average
+      }
+      district_study[study]
+  end
+  
+
   def which_profile(study, value)
     which_profile = 
       {
@@ -288,54 +352,10 @@ class HeadcountAnalyst
     correlation.nil? || !correlation.between?(0.6, 1.5) ? false : true
   end
 
-  def graduation_rate_by_year(district)
-    district_repository.find_by_name(district)
-    .enrollment.graduation_rate_by_year
-  end
-
-  def rate_variation(comparison, base)
-    comparison = comparison.reject{|value| !value.is_a?(Float)}
-    base = base.reject{|value| !value.is_a?(Float)}
-    generate_average_if_not_empty(comparison, base)
-  end
-
-  def generate_average_if_not_empty(comparison, base)
-    if comparison.empty?|| base.empty?
-      return
-    else
-      compare_averages(comparison, base)
-    end
-  end
-
-  def compare_averages(comparison, base)
-    (generate_yearly_statistical_average(comparison)/
-    generate_yearly_statistical_average(base)).round(3)
-  end
-
-  def variation_quotient(kinder_part_var, hs_grad_var)
-    if hs_grad_var.nil?|| hs_grad_var.zero?
-      return nil
-    else
-      (kinder_part_var/hs_grad_var).round(3)
-    end
-  end
-
-  def statistical_average_per_year(comp_values, base_values)
-    comp_values =
-    comp_values.merge(base_values){ |key, comp, base| (comp/base).round(3) }
-    comp_values.sort.to_h
-  end
-
-  def generate_yearly_statistical_average(district_values)
-    average(district_values, district_values)
-  end
 
   def average(values_a, values_b)
     (values_a.inject(:+)/values_b.length).round(3)
   end
 
-  def district_kindergarten_participation(district)
-    district = district_repository.find_by_name(district)
-    district.enrollment.kindergarten_participation_by_year
-  end
+
 end
