@@ -34,7 +34,6 @@ class HeadcountAnalyst
     rate_variation(comparison.values, base.values)
   end
 
-
   def top_statewide_test_year_over_year_growth(args)
     args[:top] = 1 if args[:top].nil?
     districts = all_districts_year_over_year_growth(args)
@@ -68,47 +67,45 @@ class HeadcountAnalyst
   end
 
   def kindergarten_participation_against_household_income(district)
-    state_k_avg = state_average_kindergarten_participation
-    district_k_avg = @district_repository.districts[district].enrollment.kindergarten_participation_average
-    #binding.pry
-    kindergarten_variation = district_k_avg/state_k_avg
-    state_i_avg = state_average_median_income
-    district_i_avg = @district_repository.districts[district].economic_profile.median_household_income_average
-    #binding.pry
-    income_variation = district_i_avg/state_i_avg
+    kindergarten_variation = study_variation(district, :kindergarten)
+    income_variation = study_variation(district, :income)
     return 0.0 if income_variation.zero?
     (kindergarten_variation/income_variation).round(3)
   end
 
-  def state_average_kindergarten_participation
-    all_dist_stats = all_district_statistics(:kindergarten)
-    average(all_dist_stats, all_dist_stats)
+  def study_variation(district, study)
+    state_avg = state_average(study)
+    district_avg = study_data(district, study)
+    (district_avg/state_avg)
   end
 
-  def state_average_median_income
-    all_dist_stats = all_district_statistics(:income)
+  def study_data(district, study)
+    studies=
+      {
+        kindergarten: @district_repository.districts[district].enrollment.kindergarten_participation_average,
+        income: @district_repository.districts[district].economic_profile.median_household_income_average
+      }
+    studies[study]
+  end
+
+  def state_average(key)
+    all_dist_stats = all_district_statistics(key)
     average(all_dist_stats, all_dist_stats)
   end
 
   def kindergarten_participation_correlates_with_household_income(args)
     if args[:for] == "STATEWIDE"
-      statewide_correlation?
+      across_district_correlation(individual_district_names)
     elsif args[:across] 
       across_district_correlation(args[:across])
     else
-      kindergarten_participation_against_household_income(args[:for]).between?(0.6, 1.5)
+      correlation = kindergarten_participation_against_household_income(args[:for])
+      participation_correlated?(correlation)
     end    
   end
 
   def across_district_correlation(args)
     correlation = args.map do |name|
-      kindergarten_participation_correlates_with_household_income(for: name)
-    end
-    participations_correlated?(correlation)
-  end
-  
-  def statewide_correlation?
-   correlation = individual_district_names.map do |name|
       kindergarten_participation_correlates_with_household_income(for: name)
     end
     participations_correlated?(correlation)
