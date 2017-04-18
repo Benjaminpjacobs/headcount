@@ -140,45 +140,57 @@ class HeadcountAnalyst
 
 ############################################
 
-  # def kindergarten_participation_against_household_income(district)
-  #   state_k_avg = state_average(:kindergarten)
-  #   district_k_avg = @district_repository.districts[district].enrollment.kindergarten_participation_average
-  #   #binding.pry
-  #   kindergarten_variation = district_k_avg/state_k_avg
-  #   state_i_avg = state_average(:income)
-  #   district_i_avg = @district_repository.districts[district].economic_profile.median_household_income_average
-  #   #binding.pry
-  #   income_variation = district_i_avg/state_i_avg
-  #   return 0.0 if income_variation.zero?
-  #   (kindergarten_variation/income_variation).round(3)
-  # end
 
-  def kindergarten_participation_against_household_income(district)
+  def kindergarten_participation_against_household_income_per_district(district)
     study_one_against_study_two_for_district(:kindergarten, :income, district)
   end
 
+  def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
+    study_one_against_study_two_for_district(:kindergarten, :graduation, district)
+  end
+
   def study_one_against_study_two_for_district(study_one, study_two, district)
-    state_avg_study_one = state_average(study_one)
-    district_avg_study_one = district_study(district, study_one)
-    variation_study_one = district_avg_study_one/state_avg_study_one 
-    state_avg_study_two = state_average(study_two)
-    district_avg_study_two = district_study(district, study_two)
-    variation_study_two = district_avg_study_two/state_avg_study_two
+    variation_study_one = study_variation(study_one, district)
+    variation_study_two = study_variation(study_two, district)
     return 0.0 if variation_study_two.zero?
     (variation_study_one/variation_study_two).round(3)
   end
 
+  def study_variation(study, district)
+    state_avg = state_average(study)
+    district_avg = district_study(district, study)
+    district_avg/state_avg
+  end
+
   def kindergarten_participation_correlates_with_household_income(args)
     if args[:for] == "STATEWIDE"
-      correlation?(individual_district_names)
+      correlation_kindergarten_income?(individual_district_names)
     elsif args[:across] 
-      correlation?(args[:across])
+      correlation_kindergarten_income?(args[:across])
     else
-      kindergarten_participation_against_household_income(args[:for]).between?(0.6, 1.5)
+      kindergarten_participation_against_household_income_per_district(args[:for]).between?(0.6, 1.5)
     end    
   end
 
-  def correlation?(args)
+  def kindergarten_participation_correlates_with_high_school_graduation(args)
+    if args[:for] == "STATEWIDE"
+      correlation_kindergarten_graduation?(individual_district_names)
+    elsif args[:across]
+      correlation_kindergarten_graduation?(args[:across])
+    else
+      kindergarten_participation_correlates_with_high_school_graduation_per_district(args[:for]).between?(0.6, 1.5)
+    end
+  end
+
+
+  def correlation_kindergarten_graduation?(args)
+    correlation = args.map do |name|
+      kindergarten_participation_correlates_with_high_school_graduation_per_district(for: name)
+    end
+    participations_correlated?(correlation)
+  end
+
+  def correlation_kindergarten_income?(args)
     correlation = args.map do |name|
       kindergarten_participation_correlates_with_household_income(for: name)
     end
@@ -270,6 +282,7 @@ class HeadcountAnalyst
   end
 
   def district_study(district, study)
+    binding.pry
     district_study = 
       {
         kindergarten: @district_repository.districts[district].enrollment.kindergarten_participation_average,

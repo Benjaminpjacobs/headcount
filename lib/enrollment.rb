@@ -32,7 +32,7 @@ class Enrollment
       !value.is_a?(Float)
     end
     if yearly.empty?
-      0.0
+      nil
     else
       average(yearly).round(3)
     end
