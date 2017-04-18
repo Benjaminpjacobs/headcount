@@ -14,22 +14,18 @@ class HeadcountAnalyst
     compare_and_round(comparison, base)
   end
 
-  def high_school_graduation_variation(district)
-    comparison = district_study(district, :graduation)
-    base = district_study("COLORADO", :graduation)
-    compare_and_round(comparison, base)
-  end
-
   def kindergarten_participation_rate_variation_trend(comparison, base)
     comparison_values = district_study(comparison, :participation)
     base_values = district_study(base[:against], :participation)
     statistical_average_per_year(comparison_values, base_values)
   end
+  
+  def high_school_graduation_variation(district)
+    study_variation(:graduation, district)
+  end
 
   def kindergarten_participation_against_high_school_graduation(district)
-    k_variation = kindergarten_participation_rate_variation(district, :against => 'COLORADO')
-    hs_variation = high_school_graduation_variation(district)
-    variation_quotient(k_variation, hs_variation)
+    study_one_against_study_two_for_district(:kindergarten, :graduation, district)
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(args)
@@ -40,6 +36,21 @@ class HeadcountAnalyst
     else
       kindergarten_participation_correlates_with_high_school_graduation_per_district(args[:for])
     end
+  end
+
+  def kindergarten_participation_correlates_with_household_income(args)
+    if args[:for] == "STATEWIDE"
+      correlation_kindergarten_income?(individual_district_names)
+    elsif args[:across] 
+      correlation_kindergarten_income?(args[:across])
+    else
+      correlation = kindergarten_participation_against_household_income_per_district(args[:for])
+      participation_correlated?(correlation)
+    end    
+  end
+
+  def kindergarten_participation_against_household_income_per_district(district)
+    study_one_against_study_two_for_district(:kindergarten, :income, district)
   end
 
   def top_statewide_test_year_over_year_growth(args)
@@ -58,20 +69,6 @@ class HeadcountAnalyst
     create_result_set([:poverty, :income])
   end
 
-  def kindergarten_participation_correlates_with_household_income(args)
-    if args[:for] == "STATEWIDE"
-      correlation_kindergarten_income?(individual_district_names)
-    elsif args[:across] 
-      correlation_kindergarten_income?(args[:across])
-    else
-      correlation = kindergarten_participation_against_household_income_per_district(args[:for])
-      participation_correlated?(correlation)
-    end    
-  end
-
-  def kindergarten_participation_against_household_income_per_district(district)
-    study_one_against_study_two_for_district(:kindergarten, :income, district)
-  end
 
   def over_state_average(key)
     all_dist_stats = all_district_statistics(key)
@@ -99,9 +96,21 @@ class HeadcountAnalyst
   end
 
   def study_variation(study, district)
-    state_avg = state_average(study)
+    state_avg = check_for_statewide_study(study)
     district_avg = district_study(district, study)
     compare_and_round(district_avg, state_avg)
+  end
+
+  def check_for_statewide_study(study)
+    if state_wide_study?(study)
+      district_study("COLORADO", study)
+    else
+      state_average(study)
+    end
+  end
+
+  def state_wide_study?(study)
+    district_study("COLORADO", study)
   end
 
   def state_average(key)
