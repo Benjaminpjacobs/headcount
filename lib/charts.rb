@@ -1,40 +1,21 @@
-require 'gchart'
+require 'erb'
 
 class Chart
+  def enrollment(name, statistics, stat, stat_label)
+    enrollment_view = File.read "./views/enrollment_erb_template.erb"
+    erb_template = ERB.new enrollment_view
+    data = statistics[stat].values
+    years = statistics[stat].keys.map{|year| year.to_s}
+    label = [stat_label]
+    title = ["#{stat_label} for #{name}"]
+    data_set = erb_template.result(binding)
+     
+    Dir.mkdir("output/#{name}") unless Dir.exists? "output/#{name}"
+    filename = "output/#{name}/#{name}_#{stat_label}_enrollment_data.html"
 
-  def initialize(args)
-    @data = args[:data]
-    @labels = args[:labels]
-    @legend = args[:legend]
-    @title = args[:title]
-  end
-
-  def chart
-    chart = GChart.bar do |g|
-      g.data   = @data
-      g.colors = [:black ]
-      g.legend = @legend
-
-      g.width             = 600
-      g.height            = 150
-      g.entire_background = "f4f4f4"
-
-      g.axis(:bottom) { |a| a.range = (@data.min..@data.max)}
-
-      g.axis :left do |a|
-        a.labels          = @labels
-        # a.label_positions = [14.2,    28.4,    43.6,    57.8,    72,   86.2, 100]
-        a.text_color      = :black
-      end
-
-      g.axis :left do |a|
-        a.labels          = [@title]
-        a.label_positions = [50]
-      end
+    File.open(filename, 'w') do |file|
+      file.puts data_set
     end
-
-    title = @title
-    chart.write title
+    
   end
-
 end

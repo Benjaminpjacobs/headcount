@@ -88,6 +88,54 @@ class HeadcountAnalyst
   def high_income_disparity
     create_result_set([:poverty, :income])
   end
+
+  def kindergarten_participation_against_household_income(district)
+    state_k_avg = state_average_kindergarten_participation
+    district_k_avg = @district_repository.districts[district].enrollment.kindergarten_participation_average
+    #binding.pry
+    kindergarten_variation = district_k_avg/state_k_avg
+    state_i_avg = state_average_median_income
+    district_i_avg = @district_repository.districts[district].economic_profile.median_household_income_average
+    #binding.pry
+    income_variation = district_i_avg/state_i_avg
+    return 0.0 if income_variation.zero?
+    (kindergarten_variation/income_variation).round(3)
+  end
+
+  def state_average_kindergarten_participation
+    all_dist_stats = all_district_statistics(:kindergarten)
+    average(all_dist_stats, all_dist_stats)
+  end
+
+  def state_average_median_income
+    all_dist_stats = all_district_statistics(:income)
+    average(all_dist_stats, all_dist_stats)
+  end
+
+  def kindergarten_participation_correlates_with_household_income(args)
+    if args[:for] == "STATEWIDE"
+      statewide_correlation?
+    elsif args[:across] 
+      across_district_correlation(args[:across])
+    else
+      x = kindergarten_participation_against_household_income(args[:for])
+      x.between?(0.6, 1.5)
+    end    
+  end
+
+  def across_district_correlation(args)
+    correlation = args.map do |name|
+      kindergarten_participation_correlates_with_household_income(for: name)
+    end
+    participations_correlated?(correlation)
+  end
+  
+  def statewide_correlation?
+   correlation = individual_district_names.map do |name|
+      kindergarten_participation_correlates_with_household_income(for: name)
+    end
+    participations_correlated?(correlation)
+  end
   
   private
 
@@ -174,7 +222,8 @@ class HeadcountAnalyst
         lunch: value.economic_profile.free_or_reduced_price_lunch_number_average,
         poverty: value.economic_profile.children_in_poverty_average,
         graduation: value.enrollment.graduation_rate_average,
-        income: value.economic_profile.median_household_income_average
+        income: value.economic_profile.median_household_income_average,
+        kindergarten: value.enrollment.kindergarten_participation_average
       }
     which_profile[study]
   end
@@ -226,7 +275,7 @@ class HeadcountAnalyst
   def sort_district_results(keys, values)
     keys.zip(values).sort_by{|stat| stat[1]}.reverse
   end
-  
+
   def all_districts
     @district_repository.districts.keys
   end

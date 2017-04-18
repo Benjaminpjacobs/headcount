@@ -1,4 +1,6 @@
 require 'pry'
+require_relative "charts"
+
 class Enrollment
   attr_accessor :name, :enrollment_statistics
 
@@ -26,7 +28,14 @@ class Enrollment
 
   def kindergarten_participation_average
     yearly = @enrollment_statistics[find_key_by_tag("kindergarte")].values
-    average(yearly).round(3)
+     yearly = yearly.reject do |value|
+      !value.is_a?(Float)
+    end
+    if yearly.empty?
+      0.0
+    else
+      average(yearly).round(3)
+    end
   end
 
   def graduation_rate_by_year
@@ -48,6 +57,21 @@ class Enrollment
       average(yearly).round(3)
     end
   end
+
+  def chart_data
+    stats = enrollment_statistics.keys
+    stat_labels = enrollment_statistics.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    to_chart = stats.zip(stat_labels)
+    to_chart.each do |stat|
+      generate_chart(stat[0], stat[1])
+    end 
+  end
+  
+  def generate_chart(stat, stat_label)
+    chart = Chart.new
+    chart.enrollment(@name, @enrollment_statistics, stat, stat_label)
+  end
+
 
 private
 
