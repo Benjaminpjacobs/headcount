@@ -34,28 +34,6 @@ class HeadcountAnalyst
     rate_variation(comparison.values, base.values)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(district)
-    if district[:across]
-      kindergarten_participation_correlates_with_high_school_graduation_across_districts(district[:across])
-    elsif district[:for] == "STATEWIDE"
-      kindergarten_participation_correlates_with_high_school_graduation_across_districts(all_districts)
-    else
-      kindergarten_participation_correlates_with_high_school_graduation_per_district(district[:for])
-    end
-  end
-
-  def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
-    participations =
-    kindergarten_participation_against_high_school_graduation(district)
-    participation_correlated?(participations)
-  end
-
-  def kindergarten_participation_correlates_with_high_school_graduation_across_districts(districts)
-    correlation = districts.map do |district|
-      kindergarten_participation_correlates_with_high_school_graduation(for: district)
-    end
-    participations_correlated?(correlation)
-  end
 
   def top_statewide_test_year_over_year_growth(args)
     args[:top] = 1 if args[:top].nil?
@@ -118,8 +96,7 @@ class HeadcountAnalyst
     elsif args[:across] 
       across_district_correlation(args[:across])
     else
-      x = kindergarten_participation_against_household_income(args[:for])
-      x.between?(0.6, 1.5)
+      kindergarten_participation_against_household_income(args[:for]).between?(0.6, 1.5)
     end    
   end
 
@@ -133,6 +110,29 @@ class HeadcountAnalyst
   def statewide_correlation?
    correlation = individual_district_names.map do |name|
       kindergarten_participation_correlates_with_household_income(for: name)
+    end
+    participations_correlated?(correlation)
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation(district)
+    if district[:for] == "STATEWIDE"
+      kindergarten_participation_correlates_with_high_school_graduation_across_districts(all_districts)
+    elsif district[:across]
+      kindergarten_participation_correlates_with_high_school_graduation_across_districts(district[:across])
+    else
+      kindergarten_participation_correlates_with_high_school_graduation_per_district(district[:for])
+    end
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
+    participations =
+    kindergarten_participation_against_high_school_graduation(district)
+    participation_correlated?(participations)
+  end
+
+  def kindergarten_participation_correlates_with_high_school_graduation_across_districts(districts)
+    correlation = districts.map do |district|
+      kindergarten_participation_correlates_with_high_school_graduation(for: district)
     end
     participations_correlated?(correlation)
   end
