@@ -31,7 +31,6 @@ class HeadcountAnalystTest < Minitest::Test
     end
 
     def test_it_exists
-      # binding.pry
       assert_instance_of HeadcountAnalyst, @hc
     end
     

@@ -144,21 +144,6 @@ class HeadcountAnalyst
     state_avg
   end
 
-  def which_average(state_avg, study)
-    which_average = 
-      {
-        lunch: state_avg[:free_and_reduced_price_lunch_rate] = 
-        average(all_district_statistics(study),all_district_statistics(study)),
-        poverty: state_avg[:children_in_poverty_rate] = 
-        average(all_district_statistics(study),all_district_statistics(study)),
-        graduation: state_avg[:high_school_graduation_rate] = 
-        average(all_district_statistics(study),all_district_statistics(study)),
-        income: state_avg[:median_household_income] = 
-        average(all_district_statistics(study),all_district_statistics(study))
-      }
-    which_average[study]
-  end
-
   def prep_result_entries(common, studies)
     common.map do |district|
       results = {}
@@ -211,6 +196,22 @@ class HeadcountAnalyst
       next if key_co?(key)
       which_profile(study, value)
     end.compact
+  end
+
+
+  def which_average(state_avg, study)
+    which_average = 
+      {
+        lunch: state_avg[:free_and_reduced_price_lunch_rate] = 
+        average(all_district_statistics(study),all_district_statistics(study)),
+        poverty: state_avg[:children_in_poverty_rate] = 
+        average(all_district_statistics(study),all_district_statistics(study)),
+        graduation: state_avg[:high_school_graduation_rate] = 
+        average(all_district_statistics(study),all_district_statistics(study)),
+        income: state_avg[:median_household_income] = 
+        average(all_district_statistics(study),all_district_statistics(study))
+      }
+    which_average[study]
   end
 
   def which_profile(study, value)

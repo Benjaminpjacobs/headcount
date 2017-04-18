@@ -58,7 +58,7 @@ class Enrollment
     end
   end
 
-  def chart_data
+  def chart_all_data
     stats = enrollment_statistics.keys
     stat_labels = enrollment_statistics.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
     to_chart = stats.zip(stat_labels)
@@ -71,7 +71,6 @@ class Enrollment
     chart = Chart.new
     chart.enrollment(@name, @enrollment_statistics, stat, stat_label)
   end
-
 
 private
 
