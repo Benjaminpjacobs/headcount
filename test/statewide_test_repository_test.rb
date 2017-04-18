@@ -35,7 +35,6 @@ class StatewideTestRepositoryTest < Minitest::Test
   end
 
   def test_find_by_name
-    # skip
     str = StatewideTestRepository.new
     str.load_data({:statewide_testing => {:third_grade => "./data/3rd grade students scoring proficient or above on the CSAP_TCAP.csv"}})
     actual = str.find_by_name("colorado").name
