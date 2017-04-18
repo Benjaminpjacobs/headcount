@@ -130,7 +130,7 @@ class HeadcountAnalyst
     end  
   end
     
-  def format_results(results, study)
+  def format_results(results, _study)
     Hash[*results.collect{|h| h.to_a}.flatten]
   end
 
@@ -142,7 +142,7 @@ class HeadcountAnalyst
   def intersection(args, compare)
     if args.length == 2
       compare[0] & compare[1]
-    else args.length == 3     
+    else  
       compare[0] & compare[1] & compare[2]
     end
   end
@@ -197,7 +197,7 @@ class HeadcountAnalyst
   end
 
   def map_top_districts(args, districts)
-    (1..args[:top]).map do |x|
+    (1..args[:top]).map do
       district = districts.shift
       district[1] = district[1].round(3)
       district

@@ -123,7 +123,7 @@ class EconomicProfileRepository
   end
 
   def reject_non_percentages(district_profiles)
-        district_profiles.each do |k, v|
+    district_profiles.each do |k, v|
       district_profiles[k] = v.reject{ |stat| stat[1] > 1.0}
     end
   end
