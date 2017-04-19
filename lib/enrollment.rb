@@ -59,9 +59,10 @@ class Enrollment
   
   def generate_chart(stat, stat_label)
     chart = Chart.new
-    chart.enrollment(@name, @enrollment_statistics, stat, stat_label)
+    name = @name.split("/").join("_")
+    chart.enrollment(name, @enrollment_statistics, stat, stat_label)
   end
-
+  
 private
 
   def reject_non_floats(yearly)
