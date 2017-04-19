@@ -59,5 +59,15 @@ class EconomicProfileRepositoryTest < Minitest::Test
     expected = {[2005, 2009]=>56222.0, [2006, 2010]=>56456.0, [2008, 2012]=>58244.0, [2007, 2011]=> 57685.0, [2009, 2013]=>58433.0}
     assert_equal expected, actual
   end
+
+  def test_chart_all_data
+    ec = EconomicProfileRepository.new
+    ec.load_data({:economic_profile => {
+    :median_household_income => "./data/Median household income.csv",
+    :children_in_poverty => "./data/School-aged children in poverty.csv",
+    :free_or_reduced_price_lunch => "./data/Students qualifying for free or reduced price lunch.csv",
+    :title_i => "./data/Title I students.csv"}})
+    ec.chart_all_districts
+  end
   
 end

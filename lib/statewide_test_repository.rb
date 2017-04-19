@@ -56,6 +56,12 @@ class StatewideTestRepository
     end
   end
 
+  def chart_all_districts
+    @tests.each do |test|
+      test[1].chart_all_data
+    end
+  end
+
   private
 
   def format_race_heading(race)

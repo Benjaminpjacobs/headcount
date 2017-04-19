@@ -77,6 +77,30 @@ class StatewideTest
     yearly_growth(year_subject_stats)
   end
 
+
+  def chart_all_data
+    stats = @tests.keys
+    stat_labels = @tests.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    to_chart = stats.zip(stat_labels)
+    grade = to_chart[0..1]
+    subjects = to_chart[2..4]
+
+    grade.each do |grade|
+      generate_chart(grade[0], grade[1])
+    end
+
+    subjects.each do |grade|
+      generate_chart(grade[0], grade[1])
+    end
+  end
+  
+  def generate_chart(which_stat, stat_labels)
+    chart = Chart.new
+    name = @name.split("/").join("_")
+    chart.statewide_tests(name, @tests, which_stat, stat_labels)
+  end  
+
+
   private
 
   def weighted_yearly_growth(stats, weights)

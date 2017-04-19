@@ -41,6 +41,12 @@ class EnrollmentRepository
     end
   end
 
+  def chart_all_districts
+    @enrollments.each do |enrollment|
+      enrollment[1].chart_all_data
+    end
+  end
+
   private
 
   def add_or_create_district(district_enrollments, row)

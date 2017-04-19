@@ -46,5 +46,12 @@ class EnrollmentRepositoryTest < Minitest::Test
     expected = 0.895
     assert_equal expected, actual
   end
-
+  
+  def test_chart_all_enrollments
+    er = EnrollmentRepository.new
+    er.load_data({ :enrollment => {:kindergarten => "./data/Kindergartners in full-day program.csv", :high_school_graduation => './data/High school graduation rates.csv', :pupil_enrollment => "./data/Pupil enrollment.csv", :special_education => "./data/Special education.csv"}})
+    actual  = er.chart_all_districts.count
+    expected = 181
+    assert_equal expected, actual
+  end
 end

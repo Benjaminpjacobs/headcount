@@ -94,4 +94,9 @@ class EconomicProfileTest < Minitest::Test
       ec.title_i_in_year(2016)
     end
   end
+
+  def test_charts
+    ec = @epr.profiles["PLATTE VALLEY RE-3"]
+    assert ec.chart_all_data
+  end
 end

@@ -78,6 +78,25 @@ class EconomicProfile
     # average(yearly).round(3)
   end
 
+
+  def chart_all_data
+    # binding.pry
+    which_stat = @economic_profile.keys
+    stat_labels = @economic_profile.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    to_chart = which_stat.zip(stat_labels)
+    to_chart.each do |stat|
+      generate_chart(stat[0], stat[1])
+    end 
+  end
+  
+  def generate_chart(which_stat, stat_label)
+    # binding.pry
+    chart = Chart.new
+    name = @name.split("/").join("_")
+    chart.economic_profile(name, @economic_profile, which_stat, stat_label)
+  end
+
+
   private
 
   def median_ranges
