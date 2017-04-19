@@ -1,9 +1,8 @@
 require_relative 'test_helper.rb'
 require_relative '../lib/enrollment_repository.rb'
 require_relative '../lib/enrollment'
-require 'pry'
-class EnrollmentRepositoryTest < Minitest::Test
 
+class EnrollmentRepositoryTest < Minitest::Test
   def test_it_exists
     er = EnrollmentRepository.new
     assert_instance_of EnrollmentRepository, er

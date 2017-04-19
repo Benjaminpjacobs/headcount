@@ -2,7 +2,6 @@ require_relative 'test_helper'
 require_relative '../lib/economic_profile_repository'
 
 class EconomicProfileRepositoryTest < Minitest::Test
-
   def test_it_exists
     ec = EconomicProfileRepository.new
     assert_instance_of EconomicProfileRepository, ec
@@ -69,5 +68,4 @@ class EconomicProfileRepositoryTest < Minitest::Test
     :title_i => "./data/Title I students.csv"}})
     ec.chart_all_districts
   end
-  
 end

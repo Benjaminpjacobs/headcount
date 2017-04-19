@@ -4,7 +4,6 @@ require_relative '../lib/district_repository'
 require_relative '../lib/headcount_analyst'
 
 class ResultSetTest < Minitest::Test
-
   def setup
     dr = DistrictRepository.new
     dr.load_data({

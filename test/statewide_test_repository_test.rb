@@ -1,8 +1,6 @@
-require 'pry'
 require_relative 'test_helper'
 require_relative '../lib/statewide_test_repository'
 require_relative '../lib/statewide_test'
-
 
 class StatewideTestRepositoryTest < Minitest::Test
   def test_it_exists
@@ -55,5 +53,4 @@ class StatewideTestRepositoryTest < Minitest::Test
       })
     str.chart_all_districts
   end
-
 end

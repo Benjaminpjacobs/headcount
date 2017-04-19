@@ -55,5 +55,4 @@ class ResultEntryTest < Minitest::Test
       expected = 50_000
       assert_equal expected, actual
   end            
-
 end

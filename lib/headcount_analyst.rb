@@ -227,6 +227,19 @@ class HeadcountAnalyst
     which_profile[study]
   end
 
+  def study_data(district, study)
+    studies=
+      {
+        kindergarten:
+        @district_repository.districts[district]
+        .enrollment.kindergarten_participation_average,
+        income:
+        @district_repository.districts[district]
+        .economic_profile.median_household_income_average
+      }
+    studies[study]
+  end
+
   def key_co?(key)
     key == "COLORADO"
   end

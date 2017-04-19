@@ -87,7 +87,6 @@ class EconomicProfileTest < Minitest::Test
     assert_equal expected, actual
   end
 
-
   def test_unknown_data_error_lunch_number
     assert_raises(UnknownDataError) do  
       ec = @epr.profiles["BETHUNE R-5"]
