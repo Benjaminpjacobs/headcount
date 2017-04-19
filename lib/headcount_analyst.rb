@@ -36,9 +36,7 @@ class HeadcountAnalyst
   def top_statewide_test_year_over_year_growth(args)
     args[:top] = 1 if args[:top].nil?
     districts = all_districts_year_over_year_growth(args)
-    top = map_top_districts(args, districts)
-    top.flatten! if top.count == 1
-    top
+    top(args, districts)
   end
 
   def over_state_average(key)
@@ -135,6 +133,12 @@ class HeadcountAnalyst
   end
   
   private
+
+  def top(args, districts)
+    top = map_top_districts(args, districts)
+    top.flatten! if top.count == 1
+    top
+  end
 
   def prep_statewide_average(studies)
     state_avg = {}

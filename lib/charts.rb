@@ -20,13 +20,12 @@ class Chart
   private
 
   def which_add_data(study, args)
-    case args[:directory]
-    when "enrollment"
-    add_enrollment_to_data(study, args[:stat_label], args[:name])
-    when "economin_profile"
-    add_economic_profile_to_data(study, args[:stat_label], args[:name])
-    when "statewide_testing"
-    add_tests_to_data(study, args[:stat_label], args[:name])
+    if args[:directory] == "enrollment"
+      add_enrollment_to_data(study, args[:stat_label], args[:name])
+    elsif args[:directory] == "economic_profile"
+      add_economic_profile_to_data(study, args[:stat_label], args[:name])
+    elsif args[:directory] == "statewide_test"
+      add_tests_to_data(study, args[:stat_label], args[:name])
     end
   end
 

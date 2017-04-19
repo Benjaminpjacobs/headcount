@@ -108,7 +108,7 @@ class StatewideTest
 
   def set_args(name, stat_label, which_stat)
     {
-      directory: "enrollment", 
+      directory: "statewide_test", 
       repo: @tests, 
       name: name, 
       stat_label: stat_label, 

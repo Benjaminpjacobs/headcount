@@ -98,7 +98,7 @@ class EconomicProfile
 
   def set_args(name, stat_label, which_stat)
     {
-      directory: "enrollment", 
+      directory: "economic_profile", 
       repo: @economic_profile, 
       name: name, 
       stat_label: stat_label, 
