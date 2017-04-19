@@ -68,23 +68,26 @@ class HeadcountAnalyst
     end
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation(district)
-    if district[:for] == "STATEWIDE"
-      kindergarten_participation_correlates_with_high_school_graduation_across_districts(all_districts)
-    elsif district[:across]
-      kindergarten_participation_correlates_with_high_school_graduation_across_districts(district[:across])
+  def kindergarten_participation_correlates_with_high_school_graduation(dist)
+    if dist[:for] == "STATEWIDE"
+      kinder_part_corr_hsg_cross_dist(all_districts)
+    elsif dist[:across]
+      kinder_part_corr_hsg_cross_dist(dist[:across])
     else
-      kindergarten_participation_correlates_with_high_school_graduation_per_district(district[:for])
+      kinder_part_corr_hsg_per_dist(dist[:for])
     end
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation_per_district(district)
+  alias_method :kinder_part_corr_hsg,
+  :kindergarten_participation_correlates_with_high_school_graduation
+
+  def kinder_part_corr_hsg_per_dist(district)
     participations =
     kindergarten_participation_against_high_school_graduation(district)
     participation_correlated?(participations)
   end
 
-  def kindergarten_participation_correlates_with_high_school_graduation_across_districts(districts)
+  def kinder_part_corr_hsg_cross_dist(districts)
     correlation = correlation_statistic(districts)
     participations_correlated?(correlation)
   end
@@ -101,7 +104,7 @@ class HeadcountAnalyst
 
   def correlation_statistic(districts)
     districts.map do |district|
-      kindergarten_participation_correlates_with_high_school_graduation(for: district)
+      kinder_part_corr_hsg(for: district)
     end
   end
 
@@ -218,11 +221,16 @@ class HeadcountAnalyst
   def which_profile(study, value)
     which_profile =
       {
-        lunch: value.economic_profile.free_or_reduced_price_lunch_number_average,
-        poverty: value.economic_profile.children_in_poverty_average,
-        graduation: value.enrollment.graduation_rate_average,
-        income: value.economic_profile.median_household_income_average,
-        kindergarten: value.enrollment.kindergarten_participation_average
+        lunch:
+        value.economic_profile.free_or_reduced_price_lunch_number_average,
+        poverty:
+        value.economic_profile.children_in_poverty_average,
+        graduation:
+        value.enrollment.graduation_rate_average,
+        income:
+        value.economic_profile.median_household_income_average,
+        kindergarten:
+        value.enrollment.kindergarten_participation_average
       }
     which_profile[study]
   end
