@@ -19,10 +19,10 @@
             var myChart = new Chart(ctx, {
                 type: 'bar',
                 data: {
-                    labels: <%= years %> ,
+                    labels: <%= @data[:economic_years] %> ,
                     datasets: [{
-                        label:<%= label1 %>,
-                        data: <%= data1 %>,
+                        label:<%= @data[:economic_label] %>,
+                        data: <%= @data[:economic_data]%>,
                         backgroundColor: [
                             'rgba(255, 99, 132, 0.2)',
                             'rgba(54, 162, 235, 0.2)',
@@ -45,7 +45,7 @@
                 options: {
                     title: {
                       display: true,
-                      text: <%= title %>
+                      text: <%= @data[:economic_title] %>
                     }
 
                }

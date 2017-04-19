@@ -50,20 +50,36 @@ class Enrollment
 
   def chart_all_data
     stats = enrollment_statistics.keys
-    stat_labels = enrollment_statistics.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    stat_labels = stat_labeling
     to_chart = stats.zip(stat_labels)
     to_chart.each do |stat|
       generate_chart(stat[0], stat[1])
-    end 
+    end
   end
-  
-  def generate_chart(stat, stat_label)
-    chart = Chart.new
+
+  def stat_labeling
+    enrollment_statistics.keys.map do |key|
+      key.to_s.split("_").join(" ").capitalize
+    end
+  end
+  def generate_chart(which_stat, stat_label)
     name = @name.split("/").join("_")
-    chart.enrollment(name, @enrollment_statistics, stat, stat_label)
+    chart = Chart.new
+    args = set_args(name, stat_label, which_stat)
+    chart.make_chart(args)
   end
-  
+
 private
+
+  def set_args(name, stat_label, which_stat)
+    {
+      directory: "enrollment",
+      repo: @enrollment_statistics,
+      name: name,
+      stat_label: stat_label,
+      study_heading: which_stat
+    }
+  end
 
   def reject_non_floats(yearly)
     yearly.reject do |value|

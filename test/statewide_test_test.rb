@@ -109,5 +109,4 @@ class StatewideTestTest < Minitest::Test
     district = @str.tests["ACADEMY 20"]
     district.chart_all_data
   end
-  
 end

@@ -4,7 +4,6 @@ require_relative '../lib/district_repository'
 require_relative '../lib/result_set'
 
 class HeadcountAnalystTest < Minitest::Test
-
   def setup
     @dr = DistrictRepository.new
     @dr.load_data({
@@ -59,7 +58,7 @@ class HeadcountAnalystTest < Minitest::Test
     
     def test_high_school_graduation_variation
       actual = @hc.high_school_graduation_variation('ACADEMY 20')
-      expected = 1.194
+      expected = 1.195
       assert_equal expected, actual
     end
     

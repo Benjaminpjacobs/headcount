@@ -8,7 +8,7 @@ require 'pry'
 module Repository
 
   class ObjectFactory
-  TYPES = 
+  TYPES =
       {
       enrollment: Enrollment,
       statewide_test: StatewideTest,

@@ -5,7 +5,8 @@ require_relative 'economic_profile_repository'
 require 'csv'
 
 class DistrictRepository
-  attr_accessor :districts, :enrollment_repository, :economic_profile_repository, :statewide_test_repository
+  attr_accessor :districts, :enrollment_repository,
+                :economic_profile_repository, :statewide_test_repository
 
   def initialize
     @districts = {}
@@ -34,15 +35,18 @@ class DistrictRepository
 private
 
   def load_enrollment_repo(args)
-    @enrollment_repository.load_data(args) if args.keys.include?(:enrollment)
+    @enrollment_repository.load_data(args) if
+    args.keys.include?(:enrollment)
   end
 
   def load_testing_repo(args)
-    @statewide_test_repository.load_data(args) if args.keys.include?(:statewide_testing)
+    @statewide_test_repository.load_data(args) if
+    args.keys.include?(:statewide_testing)
   end
 
   def load_economics_repo(args)
-    @economic_profile_repository.load_data(args) if args.keys.include?(:economic_profile)
+    @economic_profile_repository.load_data(args) if
+    args.keys.include?(:economic_profile)
   end
 
   def collect_matching_keys(name)

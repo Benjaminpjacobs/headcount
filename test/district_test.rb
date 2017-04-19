@@ -1,6 +1,6 @@
 require_relative 'test_helper'
 require_relative '../lib/district'
-require 'pry'
+
 class DistrictTest < Minitest::Test
   def test_it_exists
     d = District.new({:name => "ACADEMY 20"})
@@ -11,5 +11,4 @@ class DistrictTest < Minitest::Test
     d = District.new({:name => "ACADEMY 20", :enrollments => "test", :testing => "test2", :economic_profile => "test3"})
     assert_equal "ACADEMY 20", d.name
   end
-
 end

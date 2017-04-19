@@ -75,29 +75,42 @@ class EconomicProfile
   def title_i_average
     yearly = @economic_profile[:title_i].each_value
     average_and_round(yearly)
-    # average(yearly).round(3)
   end
 
 
   def chart_all_data
-    # binding.pry
     which_stat = @economic_profile.keys
-    stat_labels = @economic_profile.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    stat_labels = stat_labeling
     to_chart = which_stat.zip(stat_labels)
     to_chart.each do |stat|
       generate_chart(stat[0], stat[1])
-    end 
-  end
-  
-  def generate_chart(which_stat, stat_label)
-    # binding.pry
-    chart = Chart.new
-    name = @name.split("/").join("_")
-    chart.economic_profile(name, @economic_profile, which_stat, stat_label)
+    end
   end
 
+  def stat_labeling
+    @economic_profile.keys.map do |key|
+      key.to_s.split("_").join(" ").capitalize
+    end
+  end
+
+  def generate_chart(which_stat, stat_label)
+    name = @name.split("/").join("_")
+    chart = Chart.new
+    args = set_args(name, stat_label, which_stat)
+    chart.make_chart(args)
+  end
 
   private
+
+  def set_args(name, stat_label, which_stat)
+    {
+      directory: "economic_profile",
+      repo: @economic_profile,
+      name: name,
+      stat_label: stat_label,
+      study_heading: which_stat
+    }
+  end
 
   def median_ranges
     @economic_profile[:median_household_income].keys

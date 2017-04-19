@@ -4,7 +4,6 @@ require_relative '../lib/district_repository'
 require_relative '../lib/headcount_analyst'
 
 class ResultSetTest < Minitest::Test
-
   def setup
     dr = DistrictRepository.new
     dr.load_data({
@@ -37,7 +36,7 @@ class ResultSetTest < Minitest::Test
     def test_it_counts_matching_districts
       rs = @hc.high_poverty_and_high_school_graduation
       actual = rs.matching_districts.count
-      expected = 5
+      expected = 6
       assert_equal expected, actual
     end
 
