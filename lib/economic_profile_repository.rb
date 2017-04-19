@@ -67,7 +67,7 @@ class EconomicProfileRepository
       profile[1].chart_all_data
     end
   end
-  
+
   private
 
   def format_free_lunch_data(data)

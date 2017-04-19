@@ -42,7 +42,7 @@ module Statistics
       compare_averages(comparison, base)
     end
   end
-  
+
   def participations_correlated?(correlation)
     (correlation.count(true).to_f/correlation.length.to_f) > 0.70
   end

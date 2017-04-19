@@ -59,12 +59,13 @@ class HeadcountAnalyst
   def kindergarten_participation_correlates_with_household_income(args)
     if args[:for] == "STATEWIDE"
       across_district_correlation(individual_district_names)
-    elsif args[:across] 
+    elsif args[:across]
       across_district_correlation(args[:across])
     else
-      correlation = kindergarten_participation_against_household_income(args[:for])
+      correlation =
+      kindergarten_participation_against_household_income(args[:for])
       participation_correlated?(correlation)
-    end    
+    end
   end
 
   def kindergarten_participation_correlates_with_high_school_graduation(district)
@@ -88,13 +89,21 @@ class HeadcountAnalyst
     participations_correlated?(correlation)
   end
 
+  def high_poverty_and_high_school_graduation
+    create_result_set([:lunch, :poverty, :graduation])
+  end
+
+  def high_income_disparity
+    create_result_set([:poverty, :income])
+  end
+
   private
-  
+
   def correlation_statistic(districts)
     districts.map do |district|
       kindergarten_participation_correlates_with_high_school_graduation(for: district)
     end
-  end  
+  end
 
   def create_result_set(arg)
     studies = all_study_data(arg)
@@ -102,14 +111,6 @@ class HeadcountAnalyst
     districts = prep_result_entries(common, studies)
     average = ResultEntry.new(prep_statewide_average(arg))
     ResultSet.new({matching_districts: districts, statewide_average: average})
-  end
-
-  def high_poverty_and_high_school_graduation
-    create_result_set([:lunch, :poverty, :graduation])
-  end
-
-  def high_income_disparity
-    create_result_set([:poverty, :income])
   end
 
   def study_variation(district, study)
@@ -149,18 +150,18 @@ class HeadcountAnalyst
     common.map do |district|
       results = {}
       results[:name] = district
-      results[:free_and_reduced_price_lunch_rate] = 
+      results[:free_and_reduced_price_lunch_rate] =
       studies[:lunch][district] if studies[:lunch]
-      results[:children_in_poverty_rate] = 
+      results[:children_in_poverty_rate] =
       studies[:poverty][district] if studies[:poverty]
-      results[:high_school_graduation_rate] = 
+      results[:high_school_graduation_rate] =
       studies[:graduation][district] if studies[:graduation]
-      results[:median_household_income] = 
-      studies[:income][district] if studies[:income] 
+      results[:median_household_income] =
+      studies[:income][district] if studies[:income]
       ResultEntry.new(results)
-    end  
+    end
   end
-    
+
   def format_results(results, _study)
     Hash[*results.collect{|h| h.to_a}.flatten]
   end
@@ -173,7 +174,7 @@ class HeadcountAnalyst
   def intersection(args, compare)
     if args.length == 2
       compare[0] & compare[1]
-    else  
+    else
       compare[0] & compare[1] & compare[2]
     end
   end
@@ -191,7 +192,7 @@ class HeadcountAnalyst
     end
     study_data
   end
-    
+
   def all_district_statistics(study)
     @district_repository.districts.each.collect do |key, value|
       next if key_co?(key)
@@ -200,22 +201,22 @@ class HeadcountAnalyst
   end
 
   def which_average(state_avg, study)
-    which_average = 
+    which_average =
       {
-        lunch: state_avg[:free_and_reduced_price_lunch_rate] = 
+        lunch: state_avg[:free_and_reduced_price_lunch_rate] =
         average(all_district_statistics(study)),
-        poverty: state_avg[:children_in_poverty_rate] = 
+        poverty: state_avg[:children_in_poverty_rate] =
         average(all_district_statistics(study)),
-        graduation: state_avg[:high_school_graduation_rate] = 
+        graduation: state_avg[:high_school_graduation_rate] =
         average(all_district_statistics(study)),
-        income: state_avg[:median_household_income] = 
+        income: state_avg[:median_household_income] =
         average(all_district_statistics(study))
       }
     which_average[study]
   end
 
   def which_profile(study, value)
-    which_profile = 
+    which_profile =
       {
         lunch: value.economic_profile.free_or_reduced_price_lunch_number_average,
         poverty: value.economic_profile.children_in_poverty_average,
@@ -225,7 +226,7 @@ class HeadcountAnalyst
       }
     which_profile[study]
   end
- 
+
   def key_co?(key)
     key == "COLORADO"
   end
@@ -262,7 +263,7 @@ class HeadcountAnalyst
     else
       value.statewide_test.year_over_year_growth_per_subject(args)
     end
-  end  
+  end
 
   def return_district_test_statistics(args)
     @district_repository.districts.values.map do |value|

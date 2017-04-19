@@ -58,7 +58,8 @@ class StatewideTest
   end
 
   def year_over_year_growth_across_subject(args)
-    raise InsufficientInformationError unless GRADE_MAP.keys.include?(args[:grade])
+    raise InsufficientInformationError unless
+    GRADE_MAP.keys.include?(args[:grade])
     stats = retrieve_yearly_growth_per_subject(args)
     if args[:weighting]
       weights = map_weights(args)
@@ -69,7 +70,8 @@ class StatewideTest
   end
 
   def year_over_year_growth_per_subject(args)
-    raise InsufficientInformationError unless GRADE_MAP.keys.include?(args[:grade])
+    raise InsufficientInformationError unless
+    GRADE_MAP.keys.include?(args[:grade])
     subject_stats = organize_subject_stats(args)
     years = collect_years(args)
     stats = collect_subject_statistics(subject_stats, args)
@@ -87,8 +89,14 @@ class StatewideTest
 
   def to_chart
     stats = @tests.keys
-    stat_labels = @tests.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    stat_labels = stat_labeling
     stats.zip(stat_labels)
+  end
+
+  def stat_labeling
+    @tests.keys.map do |key|
+      key.to_s.split("_").join(" ").capitalize
+    end
   end
 
   def chart(heading)
@@ -108,10 +116,10 @@ class StatewideTest
 
   def set_args(name, stat_label, which_stat)
     {
-      directory: "statewide_test", 
-      repo: @tests, 
-      name: name, 
-      stat_label: stat_label, 
+      directory: "statewide_test",
+      repo: @tests,
+      name: name,
+      stat_label: stat_label,
       study_heading: which_stat
     }
   end
@@ -119,16 +127,22 @@ class StatewideTest
   def weighted_yearly_growth(stats, weights)
     stats.zip(weights).map{|statweight| statweight.inject(:*)}.inject(:+)
   end
-  
+
   def map_weights(args)
-    raise WeightingError, "weights must add up to 1.0" unless args[:weighting].values.inject(:+) == 1.0
-    [args[:weighting][:math], args[:weighting][:reading],args[:weighting][:writing]]
+    raise WeightingError, "weights must add up to 1.0" unless
+    args[:weighting].values.inject(:+) == 1.0
+    [args[:weighting][:math],
+     args[:weighting][:reading],
+     args[:weighting][:writing]]
   end
-  
+
   def retrieve_yearly_growth_per_subject(args)
-    m = year_over_year_growth_per_subject({grade: args[:grade], subject: :math})
-    r = year_over_year_growth_per_subject({grade: args[:grade], subject: :reading})
-    w = year_over_year_growth_per_subject({grade: args[:grade], subject: :writing})
+    m = year_over_year_growth_per_subject(
+      {grade: args[:grade], subject: :math})
+    r = year_over_year_growth_per_subject(
+      {grade: args[:grade], subject: :reading})
+    w = year_over_year_growth_per_subject(
+      {grade: args[:grade], subject: :writing})
     [m, r, w]
   end
 
@@ -136,7 +150,8 @@ class StatewideTest
     if year_subject_stats.count <= 1
       0.0
     else
-      (year_subject_stats.last[1]-year_subject_stats.first[1])/(year_subject_stats.last[0]-year_subject_stats.first[0])
+      (year_subject_stats.last[1]-year_subject_stats.first[1])/
+      (year_subject_stats.last[0]-year_subject_stats.first[0])
     end
   end
 
@@ -182,9 +197,12 @@ class StatewideTest
 
   def map_statistics_per_subject(v, heading)
     v.each do |subject|
-      heading[0] << subject[1] if subject[0] == :math && subject[1].is_a?(Float)
-      heading[1] << subject[1] if subject[0] == :reading  && subject[1].is_a?(Float)
-      heading[2] << subject[1] if subject[0] == :writing && subject[1].is_a?(Float)
+      heading[0] << subject[1] if
+      subject[0] == :math && subject[1].is_a?(Float)
+      heading[1] << subject[1] if
+      subject[0] == :reading  && subject[1].is_a?(Float)
+      heading[2] << subject[1] if
+      subject[0] == :writing && subject[1].is_a?(Float)
     end
   end
 

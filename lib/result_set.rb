@@ -5,5 +5,5 @@ class ResultSet
     @matching_districts = args[:matching_districts]
     @statewide_average = args[:statewide_average]
   end
-  
+
 end

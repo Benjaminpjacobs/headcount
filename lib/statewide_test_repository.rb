@@ -87,7 +87,7 @@ class StatewideTestRepository
     [[format_race_heading(row[:race_ethnicity]),
     row[:timeframe].to_i, check_if_na(row[:data])]]
   end
-  
+
   def add_subject_results_to_district(district_tests, row)
     district_tests[row[:location].upcase] <<
     [format_race_heading(row[:race_ethnicity]),

@@ -37,7 +37,7 @@ class ResultSetTest < Minitest::Test
     def test_it_counts_matching_districts
       rs = @hc.high_poverty_and_high_school_graduation
       actual = rs.matching_districts.count
-      expected = 5
+      expected = 6
       assert_equal expected, actual
     end
 
