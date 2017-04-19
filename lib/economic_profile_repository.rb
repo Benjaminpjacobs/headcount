@@ -95,11 +95,11 @@ class EconomicProfileRepository
   def hash_total_and_percentage(data)
     data.each do |key, value|
       change_heading_names(value)
-      data[key] = value_hash(value)
+      data[key] = set_total_and_percent_value(value)
     end
   end
 
-  def value_hash(value)
+  def set_total_and_percent_value(value)
     {value[0][0].downcase.to_sym => value[0][1],
     value[1][0].downcase.to_sym => value[1][1]}
   end
@@ -113,10 +113,10 @@ class EconomicProfileRepository
 
   def format_normal(district_profiles)
     district_profiles = reject_non_percentages(district_profiles)
-    hash_out_values(district_profiles)
+    hash_value_normal(district_profiles)
   end
 
-  def hash_out_values(district_profiles)
+  def hash_value_normal(district_profiles)
     district_profiles.each do |key, value|
       district_profiles[key] = Hash[*value.flatten]
     end
@@ -130,11 +130,11 @@ class EconomicProfileRepository
 
   def format_income_data(district_profiles)
     district_profiles.each do |key, value|
-      district_profiles[key] = hash_value(value)
+      district_profiles[key] = hash_value_income(value)
     end
   end
 
-  def hash_value(data)
+  def hash_value_income(data)
     hash = {}
     data.each{|value| hash[value[0]] = value[1]}
     hash

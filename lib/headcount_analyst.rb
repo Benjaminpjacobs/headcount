@@ -1,4 +1,3 @@
-require 'pry'
 require_relative 'result_set'
 require_relative 'result_entry'
 
@@ -76,6 +75,7 @@ class HeadcountAnalyst
   def study_variation(district, study)
     state_avg = state_average(study)
     district_avg = study_data(district, study)
+    return 0.0 if district_avg.nil?
     (district_avg/state_avg)
   end
 

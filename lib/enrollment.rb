@@ -1,13 +1,15 @@
-require 'pry'
+require_relative "statistics_module"
 require_relative "charts"
+require 'pry'
 
 class Enrollment
+  include Statistics
   attr_accessor :name, :enrollment_statistics
 
   def initialize(args)
     @name = args[:name]
     @enrollment_statistics = {}
-    @enrollment_statistics[args.keys[1]] = args[args.keys[1]]
+    add_new_statistics(args)
   end
 
   def statistics
@@ -28,14 +30,8 @@ class Enrollment
 
   def kindergarten_participation_average
     yearly = @enrollment_statistics[find_key_by_tag("kindergarte")].values
-     yearly = yearly.reject do |value|
-      !value.is_a?(Float)
-    end
-    if yearly.empty?
-      0.0
-    else
-      average(yearly).round(3)
-    end
+    yearly = reject_non_floats(yearly)
+    average_and_round(yearly)
   end
 
   def graduation_rate_by_year
@@ -48,14 +44,8 @@ class Enrollment
 
   def graduation_rate_average
     yearly = @enrollment_statistics[find_key_by_tag("high_school")].values
-    yearly = yearly.reject do |value|
-      !value.is_a?(Float)
-    end
-    if yearly.empty?
-      nil
-    else
-      average(yearly).round(3)
-    end
+    yearly = reject_non_floats(yearly)
+    average_and_round(yearly)
   end
 
   def chart_all_data
@@ -74,12 +64,14 @@ class Enrollment
 
 private
 
+  def reject_non_floats(yearly)
+    yearly.reject do |value|
+      !value.is_a?(Float)
+    end
+  end
+
   def find_key_by_tag(tag)
     keys = @enrollment_statistics.keys.map{|key| key.to_s}
     keys.find{ |key| key[0..10] == tag}.to_sym
-  end
-
-  def average(data)
-    (data.inject(:+)/data.count)
   end
 end

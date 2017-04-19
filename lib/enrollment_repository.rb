@@ -28,7 +28,7 @@ class EnrollmentRepository
 
   def divide_districts(contents)
     district_enrollments = {}
-    contents.map do |row|
+    contents.each do |row|
       add_or_create_district(district_enrollments, row)
     end
     district_enrollments

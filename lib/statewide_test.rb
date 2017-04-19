@@ -1,7 +1,8 @@
 require_relative 'custom_errors'
-require "pry"
+require_relative "statistics_module"
 
 class StatewideTest
+  include Statistics
   attr_accessor :name, :tests
 
   VALID_RACES = [:asian, :black, :pacific_islander, :hispanic,
@@ -201,9 +202,4 @@ class StatewideTest
   def group_stats_by_race(race_stats)
     race_stats.flatten.each_slice(2).to_a.group_by{ |sub| sub.shift }
   end
-
-  def average(data)
-    (data.inject(:+)/data.count)
-  end
-
 end

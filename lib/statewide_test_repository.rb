@@ -28,7 +28,7 @@ class StatewideTestRepository
 
   def divide_districts(contents)
     district_tests = {}
-    contents.map do |row|
+    contents.each do |row|
       which_populate(district_tests, row)
     end
     district_tests
@@ -38,37 +38,15 @@ class StatewideTestRepository
     if district_exists?(district_tests, row)
       add_test_to_district(district_tests, row)
     else
-      district_tests[row[:location].upcase] =
-      [[row[:timeframe].to_i, row[:score].downcase.to_sym,
-      check_if_na(row[:data])]]
+      create_new_district(district_tests, row)
     end
-  end
-
-  def add_test_to_district(district_tests, row)
-    district_tests[row[:location].upcase] <<
-    [row[:timeframe].to_i, row[:score].downcase.to_sym,
-    check_if_na(row[:data])]
   end
 
   def populate_district_tests_subject(district_tests, row)
     if district_exists?(district_tests, row)
-      district_tests[row[:location].upcase] <<
-      [format_race_heading(row[:race_ethnicity]),
-      row[:timeframe].to_i, check_if_na(row[:data])]
+      add_subject_results_to_district(district_tests, row)
     else
-      district_tests[row[:location].upcase] =
-      [[format_race_heading(row[:race_ethnicity]),
-      row[:timeframe].to_i, check_if_na(row[:data])]]
-    end
-  end
-
-  def format_race_heading(race)
-    if race.include?("Hawaiian")
-      race = race.scan(/\w+/)
-      race.delete("Hawaiian")
-      race.join("_").downcase.to_sym
-    else
-      race.scan(/\w+/).join("_").downcase.to_sym
+      create_new_subject_test(district_tests, row)
     end
   end
 
@@ -79,6 +57,48 @@ class StatewideTestRepository
   end
 
   private
+
+  def format_race_heading(race)
+    if race.include?("Hawaiian")
+      delete_hawaiian(race)
+    else
+      add_underscore(race)
+    end
+  end
+
+  def add_underscore(race)
+    race.scan(/\w+/).join("_").downcase.to_sym
+  end
+
+  def delete_hawaiian(race)
+    race = race.scan(/\w+/)
+    race.delete("Hawaiian")
+    race.join("_").downcase.to_sym
+  end
+
+  def create_new_subject_test(district_tests, row)
+    district_tests[row[:location].upcase] =
+    [[format_race_heading(row[:race_ethnicity]),
+    row[:timeframe].to_i, check_if_na(row[:data])]]
+  end
+  
+  def add_subject_results_to_district(district_tests, row)
+    district_tests[row[:location].upcase] <<
+    [format_race_heading(row[:race_ethnicity]),
+    row[:timeframe].to_i, check_if_na(row[:data])]
+  end
+
+  def create_new_district(district_tests, row)
+    district_tests[row[:location].upcase] =
+    [[row[:timeframe].to_i, row[:score].downcase.to_sym,
+    check_if_na(row[:data])]]
+  end
+
+  def add_test_to_district(district_tests, row)
+    district_tests[row[:location].upcase] <<
+    [row[:timeframe].to_i, row[:score].downcase.to_sym,
+    check_if_na(row[:data])]
+  end
 
   def district_exists?(district_tests, row)
     district_tests.keys.include?(row[:location].upcase)

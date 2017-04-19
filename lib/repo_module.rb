@@ -8,11 +8,12 @@ require 'pry'
 module Repository
 
   class ObjectFactory
-  TYPES = {
+  TYPES = 
+      {
       enrollment: Enrollment,
       statewide_test: StatewideTest,
       economic_profile: EconomicProfile
-    }
+      }
 
     def self.for(type, attributes)
       TYPES[type].new(attributes)

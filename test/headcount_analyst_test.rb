@@ -136,7 +136,7 @@ class HeadcountAnalystTest < Minitest::Test
     
     def test_kindergarten_participation_against_household_income
       actual = @hc.kindergarten_participation_against_household_income("ACADEMY 20")
-      expected = 0.333
+      expected = 0.33
       assert_equal expected, actual
     end
 
@@ -154,5 +154,4 @@ class HeadcountAnalystTest < Minitest::Test
     def test_part_income_correlation_across_districts
       refute @hc.kindergarten_participation_correlates_with_household_income(:across => ['ACADEMY 20', 'YUMA SCHOOL DISTRICT 1', 'WILEY RE-13 JT', 'SPRINGFIELD RE-4'])
     end
-
   end

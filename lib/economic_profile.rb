@@ -1,8 +1,8 @@
 require_relative "custom_errors"
-require 'pry'
+require_relative "statistics_module"
 
 class EconomicProfile
-
+  include Statistics
   attr_accessor :name, :economic_profile
 
   def initialize(args)
@@ -16,11 +16,10 @@ class EconomicProfile
   end
 
   def median_household_income_in_year(year)
-    ranges = @economic_profile[:median_household_income].keys
-    ranges = select_included_ranges(ranges, year)
-    raise UnknownDataError if ranges.empty?
-    ranges = map_incomes_to_ranges(ranges)
-    average(ranges)
+    selected_ranges = select_included_ranges(median_ranges, year)
+    raise UnknownDataError if selected_ranges.empty?
+    incomes = map_incomes_to_ranges(selected_ranges)
+    average(incomes)
   end
 
   def median_household_income_average
@@ -36,7 +35,8 @@ class EconomicProfile
 
   def children_in_poverty_average
     yearly = @economic_profile[:children_in_poverty].values
-    average(yearly).round(3)
+    average_and_round(yearly)
+    # average(yearly).round(3)
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
@@ -49,7 +49,8 @@ class EconomicProfile
     yearly = @economic_profile[:free_or_reduced_price_lunch].values.map do |v|
       v[:percentage] unless v[:percentage].nil?
     end.compact
-    average(yearly).round(3)
+    average_and_round(yearly)
+    # average(yearly).round(3)
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
@@ -73,7 +74,8 @@ class EconomicProfile
 
   def title_i_average
     yearly = @economic_profile[:title_i].each_value
-    average(yearly).round(3)
+    average_and_round(yearly)
+    # average(yearly).round(3)
   end
 
   private
@@ -107,9 +109,5 @@ class EconomicProfile
     ranges.map do |range|
       @economic_profile[:median_household_income][range]
     end
-  end
-
-  def average(data)
-    (data.inject(:+)/data.count)
   end
 end
