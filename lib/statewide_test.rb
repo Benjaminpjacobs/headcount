@@ -79,29 +79,42 @@ class StatewideTest
 
 
   def chart_all_data
-    stats = @tests.keys
-    stat_labels = @tests.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
-    to_chart = stats.zip(stat_labels)
     grade = to_chart[0..1]
     subjects = to_chart[2..4]
+    chart(grade)
+    chart(subjects)
+  end
 
-    grade.each do |grade|
-      generate_chart(grade[0], grade[1])
-    end
+  def to_chart
+    stats = @tests.keys
+    stat_labels = @tests.keys.map{|key| key.to_s.split("_").join(" ").capitalize}
+    stats.zip(stat_labels)
+  end
 
-    subjects.each do |grade|
+  def chart(heading)
+    heading.each do |grade|
       generate_chart(grade[0], grade[1])
     end
   end
-  
-  def generate_chart(which_stat, stat_labels)
-    chart = Chart.new
-    name = @name.split("/").join("_")
-    chart.statewide_tests(name, @tests, which_stat, stat_labels)
-  end  
 
+  def generate_chart(which_stat, stat_label)
+    name = @name.split("/").join("_")
+    chart = Chart.new
+    args = set_args(name, stat_label, which_stat)
+    chart.make_chart(args)
+  end
 
   private
+
+  def set_args(name, stat_label, which_stat)
+    {
+      directory: "enrollment", 
+      repo: @tests, 
+      name: name, 
+      stat_label: stat_label, 
+      study_heading: which_stat
+    }
+  end
 
   def weighted_yearly_growth(stats, weights)
     stats.zip(weights).map{|statweight| statweight.inject(:*)}.inject(:+)

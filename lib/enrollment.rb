@@ -57,13 +57,24 @@ class Enrollment
     end 
   end
   
-  def generate_chart(stat, stat_label)
-    chart = Chart.new
+  def generate_chart(which_stat, stat_label)
     name = @name.split("/").join("_")
-    chart.enrollment(name, @enrollment_statistics, stat, stat_label)
+    chart = Chart.new
+    args = set_args(name, stat_label, which_stat)
+    chart.make_chart(args)
   end
   
 private
+
+  def set_args(name, stat_label, which_stat)
+    {
+      directory: "enrollment", 
+      repo: @enrollment_statistics, 
+      name: name, 
+      stat_label: stat_label, 
+      study_heading: which_stat
+    }
+  end
 
   def reject_non_floats(yearly)
     yearly.reject do |value|
