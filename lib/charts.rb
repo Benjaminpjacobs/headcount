@@ -9,7 +9,8 @@ class Chart
     label = [stat_label]
     title = ["#{stat_label} for #{name}"]
     data_set = erb_template.result(binding)
-     
+
+    Dir.mkdir("output") unless Dir.exists? "output"
     Dir.mkdir("output/#{name}") unless Dir.exists? "output/#{name}"
     filename = "output/#{name}/#{name}_#{stat_label}_enrollment_data.html"
 
