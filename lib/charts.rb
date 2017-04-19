@@ -30,7 +30,7 @@ class Chart
   end
 
   def add_tests_to_data(study, stat_label, name)
-    @data = 
+    @data =
     {
     st_years: study.keys.map{|year| year.to_s.split("_").join(" ").capitalize},
     st_data1: study.values.map{|value| value[0][1]},
@@ -44,7 +44,7 @@ class Chart
   end
 
   def add_economic_profile_to_data(study, stat_label, name)
-    @data = 
+    @data =
     {
     economic_years: format_years(study),
     economic_data: format_data(study),
@@ -52,9 +52,9 @@ class Chart
     economic_title:["#{stat_label} for #{name}"]
     }
   end
-  
+
   def add_enrollment_to_data(study, stat_label, name)
-    @data = 
+    @data =
     {
     enrollment_data: study.values,
     enrollment_years: study.keys.map{|year| year.to_s},
@@ -64,7 +64,7 @@ class Chart
   end
 
   def format_years(study)
-    study.keys.map do |year| 
+    study.keys.map do |year|
       year_or_range(year)
     end
   end
@@ -73,14 +73,14 @@ class Chart
     if year.is_a?(Integer)
       year.to_s.split("_").join(" ").capitalize
     else
-      year.join("-")    
+      year.join("-")
     end
   end
 
   def format_data(study)
     if data_is_hash(study)
       study.values.map{|value| value[:percentage]}
-    else  
+    else
       study.values
     end
   end
@@ -107,7 +107,8 @@ class Chart
   def make_dir(statistic, name)
     Dir.mkdir("output") unless Dir.exists? "output"
     Dir.mkdir("output/#{name}") unless Dir.exists? "output/#{name}"
-    Dir.mkdir("output/#{name}/#{statistic}") unless Dir.exists? "output/#{name}/#{statistic}"
+    Dir.mkdir("output/#{name}/#{statistic}") unless
+    Dir.exists? "output/#{name}/#{statistic}"
   end
 
 end

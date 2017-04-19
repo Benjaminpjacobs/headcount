@@ -59,7 +59,7 @@ class HeadcountAnalystTest < Minitest::Test
     
     def test_high_school_graduation_variation
       actual = @hc.high_school_graduation_variation('ACADEMY 20')
-      expected = 1.194
+      expected = 1.195
       assert_equal expected, actual
     end
     
