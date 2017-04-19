@@ -41,3 +41,4 @@ Thumbs.db
 /coverage.data
 /coverage/
 /node_modules/
+/output/
