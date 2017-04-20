@@ -9,7 +9,7 @@ class Chart
 
   def make_chart(args)
     erb_template = erb_object(args[:directory])
-    study = args[:repo][args[:study_heading]]
+    study = args[:repo][args[:study_heading]].sort.to_h
     which_add_data(study, args)
     data_set = erb_template.result(binding)
     make_dir(args[:directory], args[:name])
