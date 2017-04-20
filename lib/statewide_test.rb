@@ -79,7 +79,6 @@ class StatewideTest
     yearly_growth(year_subject_stats)
   end
 
-
   def chart_all_data
     grade = to_chart[0..1]
     subjects = to_chart[2..4]
