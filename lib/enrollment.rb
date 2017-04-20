@@ -1,6 +1,5 @@
 require_relative "statistics_module"
 require_relative "charts"
-require 'pry'
 
 class Enrollment
   include Statistics
@@ -49,12 +48,16 @@ class Enrollment
   end
 
   def chart_all_data
-    stats = enrollment_statistics.keys
-    stat_labels = stat_labeling
-    to_chart = stats.zip(stat_labels)
+    to_chart = prep_chart_data
     to_chart.each do |stat|
       generate_chart(stat[0], stat[1])
     end
+  end
+
+  def prep_chart_data
+    stats = enrollment_statistics.keys
+    stat_labels = stat_labeling
+    stats.zip(stat_labels)
   end
 
   def stat_labeling

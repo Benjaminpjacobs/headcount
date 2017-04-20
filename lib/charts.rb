@@ -1,5 +1,4 @@
 require 'erb'
-require 'pry'
 
 class Chart
 
@@ -8,13 +7,17 @@ class Chart
   end
 
   def make_chart(args)
-    erb_template = erb_object(args[:directory])
-    study = args[:repo][args[:study_heading]].sort.to_h
-    which_add_data(study, args)
-    data_set = erb_template.result(binding)
+    data_set = create_data_set(args)
     make_dir(args[:directory], args[:name])
     filename = file_name(args[:name], args[:stat_label], args[:directory])
     write_files(filename, data_set)
+  end
+
+  def create_data_set(args)
+    erb_template = erb_object(args[:directory])
+    study = args[:repo][args[:study_heading]].sort.to_h
+    which_add_data(study, args)
+    erb_template.result(binding)
   end
 
   private
@@ -49,7 +52,7 @@ class Chart
     economic_years: format_years(study),
     economic_data: format_data(study),
     economic_label: [stat_label],
-    economic_title:["#{stat_label} for #{name}"]
+    economic_title: ["#{stat_label} for #{name}"]
     }
   end
 

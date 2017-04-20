@@ -1,7 +1,6 @@
 require_relative 'statewide_test'
 require_relative 'repo_module'
 require 'csv'
-require 'pry'
 
 class StatewideTestRepository
   include Repository

@@ -1,6 +1,7 @@
 require_relative 'result_set'
 require_relative 'result_entry'
 require_relative 'statistics_module'
+
 class HeadcountAnalyst
   include Statistics
 

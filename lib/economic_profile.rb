@@ -36,7 +36,6 @@ class EconomicProfile
   def children_in_poverty_average
     yearly = @economic_profile[:children_in_poverty].values
     average_and_round(yearly)
-    # average(yearly).round(3)
   end
 
   def free_or_reduced_price_lunch_percentage_in_year(year)
@@ -50,7 +49,6 @@ class EconomicProfile
       v[:percentage] unless v[:percentage].nil?
     end.compact
     average_and_round(yearly)
-    # average(yearly).round(3)
   end
 
   def free_or_reduced_price_lunch_number_in_year(year)
@@ -77,14 +75,17 @@ class EconomicProfile
     average_and_round(yearly)
   end
 
-
   def chart_all_data
-    which_stat = @economic_profile.keys
-    stat_labels = stat_labeling
-    to_chart = which_stat.zip(stat_labels)
+    to_chart = prep_chart_data
     to_chart.each do |stat|
       generate_chart(stat[0], stat[1])
     end
+  end
+
+  def prep_chart_data
+    which_stat = @economic_profile.keys
+    stat_labels = stat_labeling
+    which_stat.zip(stat_labels)
   end
 
   def stat_labeling

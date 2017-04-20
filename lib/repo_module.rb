@@ -3,7 +3,6 @@ require_relative 'district'
 require_relative 'statewide_test'
 require_relative 'economic_profile'
 require 'csv'
-require 'pry'
 
 module Repository
 

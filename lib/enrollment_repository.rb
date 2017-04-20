@@ -1,7 +1,6 @@
 require_relative 'enrollment'
 require_relative 'repo_module'
 require 'csv'
-require 'pry'
 
 class EnrollmentRepository
   include Repository
